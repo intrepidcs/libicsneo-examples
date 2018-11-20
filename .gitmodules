@@ -1,0 +1,3 @@
+[submodule "libicsneo"]
+	path = libicsneocpp-example/third-party/libicsneo
+	url = https://github.com/intrepidcs/libicsneo.git
