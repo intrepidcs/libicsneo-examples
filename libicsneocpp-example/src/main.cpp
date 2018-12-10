@@ -35,13 +35,41 @@ int main() {
 		}
 		std::cout << "OK" << std::endl;
 
+		std::cout << "\tGetting HSCAN Baudrate... ";
+		int64_t baud = device->settings->getBaudrateFor(icsneo::Network::NetID::HSCAN);
+		if(baud < 0)
+			std::cout << "FAIL" << std::endl;
+		else
+			std::cout << "OK, " << (baud/1000) << "kbit/s" << std::endl;
+
 		std::cout << "\tSetting HSCAN to operate at 125kbit/s... ";
 		ret = device->settings->setBaudrateFor(icsneo::Network::NetID::HSCAN, 125000);
 		std::cout << (ret ? "OK" : "FAIL") << std::endl;
 
+		std::cout << "\tGetting HSCAN Baudrate... ";
+		baud = device->settings->getBaudrateFor(icsneo::Network::NetID::HSCAN);
+		if(baud < 0)
+			std::cout << "FAIL" << std::endl;
+		else
+			std::cout << "OK, " << (baud/1000) << "kbit/s" << std::endl;
+
+		std::cout << "\tGetting HSCANFD Baudrate... ";
+		baud = device->settings->getFDBaudrateFor(icsneo::Network::NetID::HSCAN);
+		if(baud < 0)
+			std::cout << "FAIL" << std::endl;
+		else
+			std::cout << "OK, " << (baud/1000) << "kbit/s" << std::endl;
+
 		std::cout << "\tSetting HSCANFD to operate at 8Mbit/s... ";
 		ret = device->settings->setFDBaudrateFor(icsneo::Network::NetID::HSCAN, 8000000);
 		std::cout << (ret ? "OK" : "FAIL") << std::endl;
+
+		std::cout << "\tGetting HSCANFD Baudrate... ";
+		baud = device->settings->getFDBaudrateFor(icsneo::Network::NetID::HSCAN);
+		if(baud < 0)
+			std::cout << "FAIL" << std::endl;
+		else
+			std::cout << "OK, " << (baud/1000) << "kbit/s" << std::endl;
 
 		// Setting settings temporarily does not need to be done before committing to device EEPROM
 		// It's done here to test both functionalities
