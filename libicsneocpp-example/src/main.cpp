@@ -158,8 +158,28 @@ int main() {
 					std::cout << std::dec << '(' << canMessage->timestamp << " ns since 1/1/2007)\n";
 					break;
 				}
+				case icsneo::Network::Type::Ethernet: {
+					auto ethMessage = std::static_pointer_cast<icsneo::EthernetMessage>(message);
+					
+					std::cout << "\t\t" << ethMessage->network << " Frame - " << std::dec << ethMessage->data.size() << " bytes on wire\n";
+					std::cout << "\t\t  Timestamped:\t"<< ethMessage->timestamp << " ns since 1/1/2007\n";
+					
+					// The MACAddress may be printed directly or accessed with the `data` member
+					std::cout << "\t\t  Source:\t" << ethMessage->getSourceMAC() << "\n";
+					std::cout << "\t\t  Destination:\t" << ethMessage->getDestinationMAC();
+					
+					// Print the data
+					for(size_t i = 0; i < ethMessage->data.size(); i++) {
+						if(i % 8 == 0)
+							std::cout << "\n\t\t  " << std::hex << std::setw(4) << std::setfill('0') << i << '\t';
+						std::cout << std::hex << std::setw(2) << (uint32_t)ethMessage->data[i] << ' ';
+					}
+
+					std::cout << std::dec << std::endl;
+					break;
+				}
 				default:
-					// Ignoring non-CAN messages
+					// Ignoring non-network messages
 					break;
 			}
 		}));
@@ -193,6 +213,18 @@ int main() {
 		txMessage->isExtended = true;
 		txMessage->isCANFD = true;
 		ret = device->transmit(txMessage); // This will return false if the device does not support CAN FD, or does not have HSCAN
+		std::cout << (ret ? "OK" : "FAIL") << std::endl;
+
+		std::cout << "\tTransmitting an ethernet frame on OP (BR) Ethernet 2... ";
+		auto ethTxMessage = std::make_shared<icsneo::EthernetMessage>();
+		ethTxMessage->network = icsneo::Network::NetID::OP_Ethernet2;
+		ethTxMessage->data.insert(ethTxMessage->data.end(), {
+			0x00, 0xFC, 0x70, 0x00, 0x01, 0x02, /* Destination MAC */
+			0x00, 0xFC, 0x70, 0x00, 0x01, 0x01, /* Source MAC */
+			0x00, 0x00, /* Ether Type */
+			0x01, 0xC5, 0x01, 0xC5 /* Payload (will automatically be padded on transmit unless you set `ethTxMessage->noPadding`) */
+		});
+		ret = device->transmit(ethTxMessage); // For the moment, this will return true even if the device does not support the network
 		std::cout << (ret ? "OK" : "FAIL") << std::endl;
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(50));
