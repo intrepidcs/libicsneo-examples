@@ -46,7 +46,9 @@ int main() {
 		ret = device->settings->setBaudrateFor(icsneo::Network::NetID::HSCAN, 125000);
 		std::cout << (ret ? "OK" : "FAIL") << std::endl;
 
-		std::cout << "\tGetting HSCAN Baudrate... ";
+		// Changes to the settings do not take affect until you call settings->apply()!
+		// When you get the baudrate here, you're reading what the device is currently operating on
+		std::cout << "\tGetting HSCAN Baudrate... (expected to be unchanged) ";
 		baud = device->settings->getBaudrateFor(icsneo::Network::NetID::HSCAN);
 		if(baud < 0)
 			std::cout << "FAIL" << std::endl;
@@ -64,7 +66,7 @@ int main() {
 		ret = device->settings->setFDBaudrateFor(icsneo::Network::NetID::HSCAN, 8000000);
 		std::cout << (ret ? "OK" : "FAIL") << std::endl;
 
-		std::cout << "\tGetting HSCANFD Baudrate... ";
+		std::cout << "\tGetting HSCANFD Baudrate... (expected to be unchanged) ";
 		baud = device->settings->getFDBaudrateFor(icsneo::Network::NetID::HSCAN);
 		if(baud < 0)
 			std::cout << "FAIL" << std::endl;
@@ -78,9 +80,24 @@ int main() {
 		ret = device->settings->apply(true);
 		std::cout << (ret ? "OK" : "FAIL") << std::endl;
 
+		// Now that we have applied, we expect that our operating baudrates have changed
+		std::cout << "\tGetting HSCAN Baudrate... ";
+		baud = device->settings->getBaudrateFor(icsneo::Network::NetID::HSCAN);
+		if(baud < 0)
+			std::cout << "FAIL" << std::endl;
+		else
+			std::cout << "OK, " << (baud/1000) << "kbit/s" << std::endl;
+		
+		std::cout << "\tGetting HSCANFD Baudrate... ";
+		baud = device->settings->getFDBaudrateFor(icsneo::Network::NetID::HSCAN);
+		if(baud < 0)
+			std::cout << "FAIL" << std::endl;
+		else
+			std::cout << "OK, " << (baud/1000) << "kbit/s" << std::endl;
+
 		std::cout << "\tSetting settings permanently... ";
 		ret = device->settings->apply();
-		std::cout << (ret ? "OK" : "FAIL") << std::endl;
+		std::cout << (ret ? "OK\n\n" : "FAIL\n\n");
 
 		// The concept of going "online" tells the connected device to start listening, i.e. ACKing traffic and giving it to us
 		std::cout << "\tGoing online... ";
