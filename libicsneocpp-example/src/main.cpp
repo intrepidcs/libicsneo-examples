@@ -224,7 +224,7 @@ int main() {
 			0x00, 0x00, /* Ether Type */
 			0x01, 0xC5, 0x01, 0xC5 /* Payload (will automatically be padded on transmit unless you set `ethTxMessage->noPadding`) */
 		});
-		ret = device->transmit(ethTxMessage); // For the moment, this will return true even if the device does not support the network
+		ret = device->transmit(ethTxMessage); // This will return false if the device does not support OP (BR) Ethernet 2
 		std::cout << (ret ? "OK" : "FAIL") << std::endl;
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(50));
