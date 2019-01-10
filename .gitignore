@@ -4,3 +4,4 @@ build*/
 Thumbs.db
 **/.vscode/
 .vs
+CMakeSettings.json
