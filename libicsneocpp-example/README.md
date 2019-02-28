@@ -28,7 +28,7 @@ to get all dependencies. If you haven't done this, `third-party/libicsneo` will 
 
 ### Ubuntu 18.04 LTS
 
-1. Install dependencies with `sudo apt install build-essential cmake libusb-1.0-0-dev libboost-dev`
+1. Install dependencies with `sudo apt install build-essential ninja cmake libusb-1.0-0-dev`
 2. Create a build directory by running `mkdir -p build` within your clone
 3. Enter the build directory with `cd build`
 4. Run `cmake ..` to generate your Makefile
