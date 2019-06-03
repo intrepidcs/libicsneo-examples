@@ -20,7 +20,7 @@ else() #if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-switch -Wno-nested-anon-types -Wno-gnu-anonymous-struct -Wno-unknown-pragmas -Wno-zero-length-array")
 endif()
 
-add_subdirectory("third-party/libicsneo")
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../third-party/libicsneo ${CMAKE_CURRENT_BINARY_DIR}/third-party/libicsneo)
 
 add_executable(libicsneocpp-example src/main.cpp)
 target_link_libraries(libicsneocpp-example icsneocpp)
