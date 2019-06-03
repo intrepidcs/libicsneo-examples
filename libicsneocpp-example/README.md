@@ -6,21 +6,22 @@ This is an example console application which uses libicsneo to connect to an Int
 
 This example shows how to use the C++ version of libicsneo with CMake. This means that it will build libicsneo with your project.
 
-When you first clone, be sure to run:
+First, you need to clone the repository onto your local machine. Run:
 ```shell
-git submodule update --recursive --init
+git clone https://github.com/intrepidcs/libicsneo-examples --recursive
 ```
-or clone with
+
+Alternatively, if you cloned without the --recursive flag, you must enter the libicsneo-examples folder and run the following:
 ```shell
-git clone --recursive
+git submodule update --recursive --init 
 ```
-to get all dependencies. If you haven't done this, `third-party/libicsneo` will be empty and you won't be able to build!
+If you haven't done this, `third-party/libicsneo` will be empty and you won't be able to build!
 
 ### Windows using Visual Studio 2017+
 
-1. Open Visual Studio
+1. Launch Visual Studio and open the libicsneo-examples folder
 2. Choose File->Open->CMake...
-3. Navigate to your source directory and choose the CMakeLists.txt
+3. Navigate to the libicsneocpp-example folder and select the CMakeLists.txt file
 4. Visual Studio will process the CMake project
 5. Choose the dropdown attached to the green play button (labelled "select startup item...") in the toolbar
 6. Select `libicsneocpp-example.exe`
@@ -28,8 +29,8 @@ to get all dependencies. If you haven't done this, `third-party/libicsneo` will 
 
 ### Ubuntu 18.04 LTS
 
-1. Install dependencies with `sudo apt install build-essential ninja cmake libusb-1.0-0-dev`
-2. Create a build directory by running `mkdir -p build` within your clone
+1. Install dependencies with `sudo apt update` then `sudo apt install build-essential cmake libusb-1.0-0-dev`
+2. Change directories to your libicsneo-examples/libicsneocpp-example folder and create a build directory by running `mkdir -p build`
 3. Enter the build directory with `cd build`
 4. Run `cmake ..` to generate your Makefile
 	- Hint! Running `cmake -DCMAKE_BUILD_TYPE=Debug ..` will generate the proper scripts to build debug, and `cmake -DCMAKE_BUILD_TYPE=Release ..` will generate the proper scripts to build with all optimizations on
