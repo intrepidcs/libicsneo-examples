@@ -45,12 +45,14 @@ void printMainMenu() {
 	printf("Press the letter next to the function you want to use\n");
 	printf("A - Scan for new devices\n");
 	printf("B - Connect to a device\n");
-	printf("C - Get messages\n");
-	printf("D - Send message\n");
-	printf("E - Get errors\n");
-	printf("F - Set HS CAN to 250K\n");
-	printf("G - Set HS CAN to 500K\n");
-	printf("H - Disconnect from device\n");
+	printf("C - Set a device to online\n");
+	printf("D - Get messages\n");
+	printf("E - Send message\n");
+	printf("F - Get errors\n");
+	printf("G - Set HS CAN to 250K\n");
+	printf("H - Set HS CAN to 500K\n");
+	printf("I - Disconnect from device\n");
+	printf("J - Set a device to offline\n");
 	printf("X - Exit\n\n");
 }
 
@@ -131,8 +133,9 @@ int main() {
 	
 	while (running) {
 		printMainMenu();
-		char input = getCharInput(18, 'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g', 'H', 'h', 'X', 'x');
+		char input = getCharInput(20, 'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g', 'H', 'h', 'I', 'i', 'X', 'x');
 		switch (input) {
+		// Scan for new devices
 		case 'A':
 		case 'a':
 			printf("\n");
@@ -145,6 +148,7 @@ int main() {
 			}
 			printAllDevices();
 			break;
+		// Connect to (open) a device
 		case 'B':
 		case 'b':
 		{
@@ -171,8 +175,36 @@ int main() {
 			}
 		}
 			break;
+		// Go online
 		case 'C':
 		case 'c':
+		{
+			if (numDevices == 0) {
+				printf("No devices found! Please scan for new devices.\n");
+				break;
+			}
+			selectedDevice = selectDevice();
+
+			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
+			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
+			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
+
+			if (icsneo_isOnline(selectedDevice)) {
+				printf("\n%s already online!\n", productDescription);
+			}
+			else {
+				if (icsneo_goOnline(selectedDevice)) {
+					printf("\n%s successfully went online!\n\n", productDescription);
+				}
+				else {
+					printf("\n%s failed to go online!\n\n", productDescription);
+				}
+			}
+		}
+			break;
+		// Get messages
+		case 'D':
+		case 'd':
 		{
 			if (numDevices == 0) {
 				printf("No devices found! Please scan for new devices.\n");
@@ -182,14 +214,17 @@ int main() {
 		}
 			
 			break;
-		case 'D':
-		case 'd':
-			break;
+		// Send message
 		case 'E':
 		case 'e':
 			break;
+		// Get errors
 		case 'F':
 		case 'f':
+			break;
+		// Set HS CAN to 250k
+		case 'G':
+		case 'g':
 			if (numDevices == 0) {
 				printf("No devices found! Please scan for new devices.\n");
 				break;
@@ -204,12 +239,19 @@ int main() {
 				printf("Device not online!\n");
 			}
 			break;
-		case 'G':
-		case 'g':
-			break;
+		// Set HS CAN to 500k
 		case 'H':
 		case 'h':
 			break;
+		// Disconnect
+		case 'I':
+		case 'i':
+			break;
+		// Go offline
+		case 'J':
+		case 'j':
+			break;
+		// Exit
 		case 'X':
 		case 'x':
 			break;
