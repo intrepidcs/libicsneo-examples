@@ -233,7 +233,7 @@ int main() {
 
 			if (icsneo_isOnline(selectedDevice)) {
 				icsneo_setBaudrate(selectedDevice, ICSNEO_NETID_HSCAN, 250000);
-				printf("Successfully set HS CAN baudrate to 250k!");
+				printf("Successfully set HS CAN baudrate to 250k!\n");
 			}
 			else {
 				printf("Device not online!\n");
@@ -242,6 +242,19 @@ int main() {
 		// Set HS CAN to 500k
 		case 'H':
 		case 'h':
+			if (numDevices == 0) {
+				printf("No devices found! Please scan for new devices.\n");
+				break;
+			}
+			selectedDevice = selectDevice();
+
+			if (icsneo_isOnline(selectedDevice)) {
+				icsneo_setBaudrate(selectedDevice, ICSNEO_NETID_HSCAN, 500000);
+				printf("Successfully set HS CAN baudrate to 500k!\n");
+			}
+			else {
+				printf("Device not online!\n");
+			}
 			break;
 		// Disconnect
 		case 'I':
@@ -254,10 +267,11 @@ int main() {
 		// Exit
 		case 'X':
 		case 'x':
-			break;
+			printf("Exiting program\n");
+			return !icsneo_close();
 		default:
 			printf("Unexpected input, exiting!\n");
-			break;
+			return 1;
 		}
 	}
 
