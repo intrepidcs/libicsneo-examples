@@ -10,6 +10,13 @@ size_t numDevices = 0;
 neodevice_t devices[99];
 neodevice_t* selectedDevice = NULL;
 
+/**
+ * \brief Prints all current known devices to output in the following format:
+ * [num] DeviceType SerialNum    Connected: Yes/No    Online: Yes/No
+ *
+ * If any devices are invalid, they will appear in the following format:
+ * Device num not found!
+ */
 void printAllDevices() {
 	if (numDevices == 0) {
 		printf("No devices found! Please scan for new devices.\n");
@@ -39,10 +46,11 @@ void printAllDevices() {
 	}
 }
 
-// Scans for any new devices
-// Adds them to devices and updates numDevices accordingly
-// Does not shrink devices or numDevices
-// Appends new devices to the end of the current array, if too many are found (total lifetime over 99) undefined behavior ensues
+/**
+ * \brief Scans for any new devices, adding them to devices and updating numDevices accordingly
+ * It is important to note that devices and numDevices can only grow. Old unplugged or closed devices will continue to be stored but are unusable.
+ * Additionally, a total of 99 devices may be stored over the program's lifetime.
+ */
 size_t scanNewDevices() {
 	neodevice_t newDevices[99];
 	size_t numNewDevices = 99;
@@ -55,6 +63,7 @@ size_t scanNewDevices() {
 	return numNewDevices;
 }
 
+// Prints the main menu options to output
 void printMainMenu() {
 	printf("Press the letter next to the function you want to use:\n");
 	printf("A - List all devices\n");
@@ -71,6 +80,10 @@ void printMainMenu() {
 	printf("X - Exit\n");
 }
 
+/**
+ * \brief Gets all current API errors and prints them to output.
+ * Flushes the API error cache, meaning future calls (barring any new errors) will not detect any further API errors.
+ */
 void printAPIErrors() {
 	neoerror_t errors[99];
 	size_t errorCount = 99;
@@ -91,6 +104,11 @@ void printAPIErrors() {
 	}
 }
 
+/**
+ * \brief Gets all current device errors and prints them to output. If no device errors were found, printAPIErrors() is called.
+ * Flushes the device error cache, meaning future calls (barring any new errors) will not detect any further device errors.
+ * If no device errors were found, the APi error cache will be flushed as well, since printAPIErrors() is called.
+ */
 void printDeviceErrors(neodevice_t* device) {
 	neoerror_t errors[99];
 	size_t errorCount = 99;
@@ -104,7 +122,6 @@ void printDeviceErrors(neodevice_t* device) {
 			for (int i = 0; i < errorCount; ++i) {
 				printf("Error 0x%x: %s\n", errors[i].errorNumber, errors[i].description);
 			}
-			printf("\n");
 		}
 	}
 	else {
@@ -158,6 +175,11 @@ char getCharInput(int numArgs, ...) {
 	return input[0];
 }
 
+/**
+ * \brief Prompts the user to select a device from the list of currently known devices
+ * \returns a pointer to the device in devices[] selected by the user
+ * Requires an input from 1-9, so a maximum of 9 devices are supported.
+ */
 neodevice_t* selectDevice() {
 	printf("Please select a device:\n");
 	printAllDevices();
@@ -197,13 +219,13 @@ int main() {
 		char input = getCharInput(24, 'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g', 'H', 'h', 'I', 'i', 'J', 'j', 'K', 'k', 'X', 'x');
 		printf("\n");
 		switch (input) {
-			// List current devices
+		// List current devices
 		case 'A':
 		case 'a':
 			printAllDevices();
 			printf("\n");
 			break;
-			// Scan for new devices
+		// Scan for new devices
 		case 'B':
 		case 'b':
 		{
@@ -212,7 +234,7 @@ int main() {
 				printf("1 new device found!\n");
 			}
 			else {
-				printf("%d new devices found!\n", (int)numNewDevices);
+				printf("%d new devices found!\n", (int) numNewDevices);
 			}
 			printAllDevices();
 			printf("\n");
@@ -386,6 +408,7 @@ int main() {
 			}
 			selectedDevice = selectDevice();
 
+			// set baudrate and apply settings
 			if (icsneo_setBaudrate(selectedDevice, ICSNEO_NETID_HSCAN, 250000) && icsneo_settingsApply(selectedDevice)) {
 				printf("Successfully set HS CAN baudrate to 250k!\n");
 			}
@@ -406,6 +429,7 @@ int main() {
 			}
 			selectedDevice = selectDevice();
 
+			// set baudrate and apply settings
 			if (icsneo_setBaudrate(selectedDevice, ICSNEO_NETID_HSCAN, 500000) && icsneo_settingsApply(selectedDevice)) {
 				printf("Successfully set HS CAN baudrate to 500k!\n");
 			}
