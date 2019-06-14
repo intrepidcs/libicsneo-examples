@@ -6,6 +6,7 @@
 #include <ctype.h>
 #include "icsneo/icsneoc.h"
 
+size_t msgLimit = 50000;
 size_t numDevices = 0;
 neodevice_t devices[99];
 neodevice_t* selectedDevice = NULL;
@@ -25,6 +26,7 @@ void printAllDevices() {
 		char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
 		size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 
+		// Updates productDescription and descriptionLength for each device
 		if(icsneo_describeDevice(devices + i, productDescription, &descriptionLength)) {
 
 			printf("[%d] %s\tConnected: ", i + 1, productDescription);
@@ -86,6 +88,7 @@ void printMainMenu() {
 /**
  * \brief Gets all current API errors and prints them to output.
  * Flushes the API error cache, meaning future calls (barring any new errors) will not detect any further API errors.
+ * Does not get any device errors.
  */
 void printAPIErrors() {
 	neoerror_t errors[99];
@@ -95,7 +98,7 @@ void printAPIErrors() {
 			printf("1 API error found!\n");
 			printf("Error 0x%x: %s\n", errors[0].errorNumber, errors[0].description);
 		} else {
-			printf("%d API errors found!\n", ( int) errorCount);
+			printf("%d API errors found!\n", (int) errorCount);
 			for(int i = 0; i < errorCount; ++i) {
 				printf("Error 0x%x: %s\n", errors[i].errorNumber, errors[i].description);
 			}
@@ -118,7 +121,7 @@ void printDeviceErrors(neodevice_t* device) {
 			printf("1 device error found!\n");
 			printf("Error 0x%x: %s\n", errors[0].errorNumber, errors[0].description);
 		} else {
-			printf("%d device errors found!\n", ( int) errorCount);
+			printf("%d device errors found!\n", (int) errorCount);
 			for(int i = 0; i < errorCount; ++i) {
 				printf("Error 0x%x: %s\n", errors[i].errorNumber, errors[i].description);
 			}
@@ -146,7 +149,7 @@ char getCharInput(int numArgs, ...) {
 	va_list vaList;
 	va_start(vaList, numArgs);
 
-	char* list = ( char*) calloc(numArgs, sizeof(char));
+	char* list = (char*) calloc(numArgs, sizeof(char));
 	for(int i = 0; i < numArgs; ++i) {
 		*(list + i) = va_arg(vaList, int);
 	}
@@ -200,7 +203,6 @@ neodevice_t* selectDevice() {
 }
 
 int main() {
-	bool running = true;
 
 	if(icsneo_init() != 0) {
 		printf("An error occurred when initializing the library!\n");
@@ -208,23 +210,21 @@ int main() {
 	}
 
 	neoversion_t ver = icsneo_getVersion();
-
-	// TODO: If .dll file changes, update this as well
 	printf("ICS icsneoc.dll version %u.%u.%u\n\n", ver.major, ver.minor, ver.patch);
 
-	while(running) {
+	while(true) {
 		printMainMenu();
 		printf("\n");
 		char input = getCharInput(26, 'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g', 'H', 'h', 'I', 'i', 'J', 'j', 'K', 'k', 'L', 'l', 'X', 'x');
 		printf("\n");
 		switch(input) {
-			// List current devices
+		// List current devices
 		case 'A':
 		case 'a':
 			printAllDevices();
 			printf("\n");
 			break;
-			// Scan for new devices
+		// Scan for new devices
 		case 'B':
 		case 'b':
 		{
@@ -232,7 +232,7 @@ int main() {
 			if(numNewDevices == 1) {
 				printf("1 new device found!\n");
 			} else {
-				printf("%d new devices found!\n", ( int) numNewDevices);
+				printf("%d new devices found!\n", (int) numNewDevices);
 			}
 			printAllDevices();
 			printf("\n");
@@ -242,6 +242,7 @@ int main() {
 		case 'C':
 		case 'c':
 		{
+			// Select a device and get its description
 			if(numDevices == 0) {
 				printf("No devices found! Please scan for new devices.\n\n");
 				break;
@@ -252,6 +253,7 @@ int main() {
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
+			// Attempt to open the selected device
 			if(icsneo_openDevice(selectedDevice)) {
 				printf("%s successfully opened!\n\n", productDescription);
 			} else {
@@ -265,6 +267,7 @@ int main() {
 		case 'D':
 		case 'd':
 		{
+			// Select a device and get its description
 			if(numDevices == 0) {
 				printf("No devices found! Please scan for new devices.\n\n");
 				break;
@@ -275,6 +278,7 @@ int main() {
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
+			// Attempt to have the selected device go online
 			if(icsneo_goOnline(selectedDevice)) {
 				printf("%s successfully went online!\n\n", productDescription);
 			} else {
@@ -284,10 +288,11 @@ int main() {
 			}
 		}
 		break;
-		// enable message polling
+		// Enable message polling
 		case 'E':
 		case 'e':
 		{
+			// Select a device and get its description
 			if(numDevices == 0) {
 				printf("No devices found! Please scan for new devices.\n\n");
 				break;
@@ -298,7 +303,7 @@ int main() {
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
-			
+			// Attempt to enable message polling
 			if(icsneo_enableMessagePolling(selectedDevice)) {
 				printf("Successfully enabled message polling for %s!\n", productDescription);
 			} else {
@@ -306,10 +311,10 @@ int main() {
 				printDeviceErrors(selectedDevice);
 				printf("\n");
 			}
-			
-			// manually setting the polling message limit as done below is optional.
-			// default is 20k, we want to use 50k
-			size_t msgLimit = 50000;
+
+			// Manually setting the polling message limit as done below is optional.
+			// It will default to 20k if not set.
+			// Attempt to set the polling message limit
 			if(icsneo_setPollingMessageLimit(selectedDevice, msgLimit)) {
 				printf("Successfully set message polling limit for %s!\n\n", productDescription);
 			} else {
@@ -323,6 +328,7 @@ int main() {
 		case 'F':
 		case 'f':
 		{
+			// Select a device and get its description
 			if(numDevices == 0) {
 				printf("No devices found! Please scan for new devices.\n\n");
 				break;
@@ -333,14 +339,13 @@ int main() {
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
-			// default is 20k, we want to use 50k
-			size_t msgLimit = 50000;
+			// Prepare the array of neomessage_t ptrs for reading in the messages
 			neomessage_t* msgs = malloc(msgLimit * sizeof(neomessage_t));
 
 			// Get messages
 			size_t msgCount;
 
-			// check for success reading msgs
+			// Attempt to get messages
 			if(!icsneo_getMessages(selectedDevice, msgs, &msgCount, 0)) {
 				printf("Failed to get messages for %s!\n\n", productDescription);
 				printDeviceErrors(selectedDevice);
@@ -352,22 +357,23 @@ int main() {
 			if(msgCount == 1) {
 				printf("1 message received from %s!\n", productDescription);
 			} else {
-				printf("%d messages received from %s!\n", ( int) msgCount, productDescription);
+				printf("%d messages received from %s!\n", (int) msgCount, productDescription);
 			}
 
+			// Print out the received messages
 			for(size_t i = 0; i < msgCount; i++) {
 				neomessage_t* msg = &msgs[i];
 				switch(msg->type) {
 				case ICSNEO_NETWORK_TYPE_CAN: // CAN
-					printf("\t0x%03x [%lu] ", (( neomessage_can_t*) msg)->arbid, ( int) msg->length);
+					printf("\t0x%03x [%lu] ", ((neomessage_can_t*) msg)->arbid, (int) msg->length);
 					for(size_t i = 0; i < msg->length; i++) {
 						printf("%02x ", msg->data[i]);
 					}
-					printf("(%lu)\n", ( int) msg->timestamp);
+					printf("(%lu)\n", (int) msg->timestamp);
 					break;
 				default:
 					if(msg->netid != 0)
-						printf("\tMessage on netid %d with length %lu\n", msg->netid, ( int) msg->length);
+						printf("\tMessage on netid %d with length %lu\n", msg->netid, (int) msg->length);
 				}
 			}
 			printf("\n");
@@ -380,6 +386,7 @@ int main() {
 		case 'G':
 		case 'g':
 		{
+			// Select a device and get its description
 			if(numDevices == 0) {
 				printf("No devices found! Please scan for new devices.\n\n");
 				break;
@@ -390,7 +397,7 @@ int main() {
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
-			// start generating sample msg
+			// Start generating sample msg
 			uint8_t sendMessageData[8];
 			sendMessageData[0] = 0xaa;
 			sendMessageData[1] = 0xbb;
@@ -407,8 +414,9 @@ int main() {
 			msg.status.canfdFDF = false;
 			msg.status.extendedFrame = false;
 			msg.status.canfdBRS = false;
-			// end generating sample msg
+			// End generating sample msg
 
+			// Attempt to transmit the sample msg
 			if(icsneo_transmit(selectedDevice, &msg)) {
 				printf("Message transmit successful!\n");
 			} else {
@@ -432,6 +440,7 @@ int main() {
 		case 'I':
 		case 'i':
 		{
+			// Select a device and get its description
 			if(numDevices == 0) {
 				printf("No devices found! Please scan for new devices.\n\n");
 				break;
@@ -442,7 +451,7 @@ int main() {
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
-			// set baudrate and apply settings
+			// Attempt to set baudrate and apply settings
 			if(icsneo_setBaudrate(selectedDevice, ICSNEO_NETID_HSCAN, 250000) && icsneo_settingsApply(selectedDevice)) {
 				printf("Successfully set HS CAN baudrate for %s to 250k!\n", productDescription);
 			} else {
@@ -456,6 +465,7 @@ int main() {
 		case 'J':
 		case 'j':
 		{
+			// Select a device and get its description
 			if(numDevices == 0) {
 				printf("No devices found! Please scan for new devices.\n\n");
 				break;
@@ -466,7 +476,7 @@ int main() {
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
-			// set baudrate and apply settings
+			// Attempt to set baudrate and apply settings
 			if(icsneo_setBaudrate(selectedDevice, ICSNEO_NETID_HSCAN, 500000) && icsneo_settingsApply(selectedDevice)) {
 				printf("Successfully set HS CAN baudrate for %s to 500k!\n", productDescription);
 			} else {
@@ -480,6 +490,7 @@ int main() {
 		case 'K':
 		case 'k':
 		{
+			// Select a device and get its description
 			if(numDevices == 0) {
 				printf("No devices found! Please scan for new devices.\n\n");
 				break;
@@ -490,6 +501,7 @@ int main() {
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
+			// Attempt to close the device
 			if(icsneo_closeDevice(selectedDevice)) {
 				selectedDevice = NULL;
 				printf("Successfully closed %s!\n", productDescription);
@@ -504,6 +516,7 @@ int main() {
 		case 'L':
 		case 'l':
 		{
+			// Select a device and get its description
 			if(numDevices == 0) {
 				printf("No devices found! Please scan for new devices.\n\n");
 				break;
@@ -514,6 +527,7 @@ int main() {
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
+			// Attempt to go offline
 			if(icsneo_goOffline(selectedDevice)) {
 				printf("%s successfully went offline!\n", productDescription);
 			} else {
