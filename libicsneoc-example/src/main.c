@@ -12,7 +12,7 @@ neodevice_t* selectedDevice = NULL;
 
 /**
  * \brief Prints all current known devices to output in the following format:
- * [num] DeviceType SerialNum    Connected: Yes/No    Online: Yes/No
+ * [num] DeviceType SerialNum    Connected: Yes/No    Online: Yes/No    Msg Polling: On/Off
  *
  * If any devices are invalid, they will appear in the following format:
  * Device num not found!
@@ -34,8 +34,13 @@ void printAllDevices() {
 
 			printf("Online: ");
 			if(icsneo_isOnline(devices + i)) {
-				printf("Yes\n");
-			} else printf("No\n");
+				printf("Yes\t");
+			} else printf("No\t");
+
+			printf("Msg Polling: ");
+			if(icsneo_isMessagePollingEnabled(devices + i)) {
+				printf("On\n");
+			} else printf("Off\n");
 
 		} else {
 			printf("Device %d not found!\n", i + 1);
@@ -67,13 +72,14 @@ void printMainMenu() {
 	printf("B - Scan for new devices\n");
 	printf("C - Connect to a device\n");
 	printf("D - Set a device to online\n");
-	printf("E - Get messages\n");
-	printf("F - Send message\n");
-	printf("G - Get errors\n");
-	printf("H - Set HS CAN to 250K\n");
-	printf("I - Set HS CAN to 500K\n");
-	printf("J - Disconnect from device\n");
-	printf("K - Set a device to offline\n");
+	printf("E - Enable message polling\n");
+	printf("F - Get messages\n");
+	printf("G - Send message\n");
+	printf("H - Get errors\n");
+	printf("I - Set HS CAN to 250K\n");
+	printf("J - Set HS CAN to 500K\n");
+	printf("K - Disconnect from device\n");
+	printf("L - Set a device to offline\n");
 	printf("X - Exit\n");
 }
 
@@ -209,7 +215,7 @@ int main() {
 	while(running) {
 		printMainMenu();
 		printf("\n");
-		char input = getCharInput(24, 'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g', 'H', 'h', 'I', 'i', 'J', 'j', 'K', 'k', 'X', 'x');
+		char input = getCharInput(26, 'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g', 'H', 'h', 'I', 'i', 'J', 'j', 'K', 'k', 'L', 'l', 'X', 'x');
 		printf("\n");
 		switch(input) {
 			// List current devices
@@ -278,7 +284,7 @@ int main() {
 			}
 		}
 		break;
-		// Get messages
+		// enable message polling
 		case 'E':
 		case 'e':
 		{
@@ -288,21 +294,55 @@ int main() {
 			}
 			selectedDevice = selectDevice();
 
-			// default is 20k, we want to use 50k
-			size_t msgLimit = 50000;
-			neomessage_t* msgs = malloc(msgLimit * sizeof(neomessage_t));
+			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
+			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
+			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
-			// not potentially fatal errors, we can probably continue safely
-			if(!(icsneo_enableMessagePolling(selectedDevice) && icsneo_setPollingMessageLimit(selectedDevice, msgLimit))) {
+			
+			if(icsneo_enableMessagePolling(selectedDevice)) {
+				printf("Successfully enabled message polling for %s!\n", productDescription);
+			} else {
+				printf("Failed to enable message polling for %s!\n\n", productDescription);
 				printDeviceErrors(selectedDevice);
 				printf("\n");
 			}
+			
+			// manually setting the polling message limit as done below is optional.
+			// default is 20k, we want to use 50k
+			size_t msgLimit = 50000;
+			if(icsneo_setPollingMessageLimit(selectedDevice, msgLimit)) {
+				printf("Successfully set message polling limit for %s!\n\n", productDescription);
+			} else {
+				printf("Failed to set polling message limit for %s!\n\n", productDescription);
+				printDeviceErrors(selectedDevice);
+				printf("\n");
+			}
+		}
+		break;
+		// Get messages
+		case 'F':
+		case 'f':
+		{
+			if(numDevices == 0) {
+				printf("No devices found! Please scan for new devices.\n\n");
+				break;
+			}
+			selectedDevice = selectDevice();
+
+			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
+			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
+			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
+
+			// default is 20k, we want to use 50k
+			size_t msgLimit = 50000;
+			neomessage_t* msgs = malloc(msgLimit * sizeof(neomessage_t));
 
 			// Get messages
 			size_t msgCount;
 
 			// check for success reading msgs
 			if(!icsneo_getMessages(selectedDevice, msgs, &msgCount, 0)) {
+				printf("Failed to get messages for %s!\n\n", productDescription);
 				printDeviceErrors(selectedDevice);
 				free(msgs);
 				printf("\n");
@@ -310,9 +350,9 @@ int main() {
 			}
 
 			if(msgCount == 1) {
-				printf("1 message received!\n");
+				printf("1 message received from %s!\n", productDescription);
 			} else {
-				printf("%d messages received!\n", ( int) msgCount);
+				printf("%d messages received from %s!\n", ( int) msgCount, productDescription);
 			}
 
 			for(size_t i = 0; i < msgCount; i++) {
@@ -337,8 +377,8 @@ int main() {
 
 		break;
 		// Send message
-		case 'F':
-		case 'f':
+		case 'G':
+		case 'g':
 		{
 			if(numDevices == 0) {
 				printf("No devices found! Please scan for new devices.\n\n");
@@ -346,9 +386,9 @@ int main() {
 			}
 			selectedDevice = selectDevice();
 
-			if(!icsneo_enableMessagePolling(selectedDevice)) {
-				printDeviceErrors(selectedDevice);
-			}
+			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
+			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
+			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
 			// start generating sample msg
 			uint8_t sendMessageData[8];
@@ -369,44 +409,26 @@ int main() {
 			msg.status.canfdBRS = false;
 			// end generating sample msg
 
-			if(!icsneo_transmit(selectedDevice, &msg)) {
-				printDeviceErrors(selectedDevice);
-			} else {
+			if(icsneo_transmit(selectedDevice, &msg)) {
 				printf("Message transmit successful!\n");
+			} else {
+				printf("Failed to transmit message to %s!\n\n", productDescription);
+				printDeviceErrors(selectedDevice);
 			}
 
 			printf("\n");
 		}
 		break;
 		// Get errors
-		case 'G':
-		case 'g':
+		case 'H':
+		case 'h':
 		{
+			// API errors only, no device specific ones
 			printAPIErrors();
 			printf("\n");
 		}
 		break;
 		// Set HS CAN to 250k
-		case 'H':
-		case 'h':
-		{
-			if(numDevices == 0) {
-				printf("No devices found! Please scan for new devices.\n\n");
-				break;
-			}
-			selectedDevice = selectDevice();
-
-			// set baudrate and apply settings
-			if(icsneo_setBaudrate(selectedDevice, ICSNEO_NETID_HSCAN, 250000) && icsneo_settingsApply(selectedDevice)) {
-				printf("Successfully set HS CAN baudrate to 250k!\n");
-			} else {
-				printf("Failed to set HS CAN to 250k!\n\n");
-				printDeviceErrors(selectedDevice);
-			}
-			printf("\n");
-		}
-		break;
-		// Set HS CAN to 500k
 		case 'I':
 		case 'i':
 		{
@@ -416,17 +438,21 @@ int main() {
 			}
 			selectedDevice = selectDevice();
 
+			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
+			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
+			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
+
 			// set baudrate and apply settings
-			if(icsneo_setBaudrate(selectedDevice, ICSNEO_NETID_HSCAN, 500000) && icsneo_settingsApply(selectedDevice)) {
-				printf("Successfully set HS CAN baudrate to 500k!\n");
+			if(icsneo_setBaudrate(selectedDevice, ICSNEO_NETID_HSCAN, 250000) && icsneo_settingsApply(selectedDevice)) {
+				printf("Successfully set HS CAN baudrate for %s to 250k!\n", productDescription);
 			} else {
-				printf("Failed to set HS CAN to 500k!\n\n");
+				printf("Failed to set HS CAN for %s to 250k!\n\n", productDescription);
 				printDeviceErrors(selectedDevice);
 			}
 			printf("\n");
 		}
 		break;
-		// Disconnect
+		// Set HS CAN to 500k
 		case 'J':
 		case 'j':
 		{
@@ -436,17 +462,21 @@ int main() {
 			}
 			selectedDevice = selectDevice();
 
-			if(icsneo_closeDevice(selectedDevice)) {
-				selectedDevice = NULL;
-				printf("Successfully closed device!\n");
+			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
+			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
+			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
+
+			// set baudrate and apply settings
+			if(icsneo_setBaudrate(selectedDevice, ICSNEO_NETID_HSCAN, 500000) && icsneo_settingsApply(selectedDevice)) {
+				printf("Successfully set HS CAN baudrate for %s to 500k!\n", productDescription);
 			} else {
-				printf("Failed to close device!\n\n");
+				printf("Failed to set HS CAN for %s to 500k!\n\n", productDescription);
 				printDeviceErrors(selectedDevice);
 			}
 			printf("\n");
 		}
 		break;
-		// Go offline
+		// Disconnect
 		case 'K':
 		case 'k':
 		{
@@ -456,10 +486,38 @@ int main() {
 			}
 			selectedDevice = selectDevice();
 
-			if(icsneo_goOffline(selectedDevice)) {
-				printf("Successfully went offline!\n");
+			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
+			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
+			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
+
+			if(icsneo_closeDevice(selectedDevice)) {
+				selectedDevice = NULL;
+				printf("Successfully closed %s!\n", productDescription);
 			} else {
-				printf("Failed to go offline!\n\n");
+				printf("Failed to close %s!\n\n", productDescription);
+				printDeviceErrors(selectedDevice);
+			}
+			printf("\n");
+		}
+		break;
+		// Go offline
+		case 'L':
+		case 'l':
+		{
+			if(numDevices == 0) {
+				printf("No devices found! Please scan for new devices.\n\n");
+				break;
+			}
+			selectedDevice = selectDevice();
+
+			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
+			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
+			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
+
+			if(icsneo_goOffline(selectedDevice)) {
+				printf("%s successfully went offline!\n", productDescription);
+			} else {
+				printf("%s failed to go offline!\n\n", productDescription);
 				printDeviceErrors(selectedDevice);
 			}
 			printf("\n");
@@ -468,15 +526,11 @@ int main() {
 		// Exit
 		case 'X':
 		case 'x':
-		{
 			printf("Exiting program\n");
 			return !icsneo_close();
-		}
 		default:
-		{
 			printf("Unexpected input, exiting!\n");
 			return 1;
-		}
 		}
 	}
 
