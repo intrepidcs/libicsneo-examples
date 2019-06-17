@@ -110,7 +110,6 @@ void printAPIErrors() {
 /**
  * \brief Gets all current device errors and prints them to output. If no device errors were found, printAPIErrors() is called
  * Flushes the device error cache, meaning future calls (barring any new errors) will not detect any further device errors
- * If no device errors were found, the APi error cache will be flushed as well, since printAPIErrors() is called
  */
 void printDeviceErrors(neodevice_t* device) {
 	neoerror_t errors[99];
@@ -125,9 +124,6 @@ void printDeviceErrors(neodevice_t* device) {
 				printf("Error 0x%x: %s\n", errors[i].errorNumber, errors[i].description);
 			}
 		}
-	} else {
-		printf("Failed to get device errors!\nSearching for API errors...\n");
-		printAPIErrors();
 	}
 }
 
