@@ -15,8 +15,8 @@ neodevice_t* selectedDevice = NULL;
  * \brief Prints all current known devices to output in the following format:
  * [num] DeviceType SerialNum    Connected: Yes/No    Online: Yes/No    Msg Polling: On/Off
  *
- * If any devices are invalid, they will appear in the following format:
- * Device num not found!
+ * If any devices could not be described due to an error, they will appear in the following format:
+ * Description for device num not available!
  */
 void printAllDevices() {
 	if(numDevices == 0) {
@@ -45,15 +45,14 @@ void printAllDevices() {
 			} else printf("Off\n");
 
 		} else {
-			printf("Device %d not found!\n", i + 1);
+			printf("Description for device %d not available!\n", i + 1);
 		}
 	}
 }
 
 /**
  * \brief Scans for any new devices, adding them to devices and updating numDevices accordingly
- * It is important to note that devices and numDevices can only grow. Old unplugged or closed devices will continue to be stored but are unusable.
- * Additionally, a total of 99 devices may be stored over the program's lifetime.
+ * A total of 99 devices may be stored at once
  */
 size_t scanNewDevices() {
 	neodevice_t newDevices[99];
@@ -86,9 +85,9 @@ void printMainMenu() {
 }
 
 /**
- * \brief Gets all current API errors and prints them to output.
- * Flushes the API error cache, meaning future calls (barring any new errors) will not detect any further API errors.
- * Does not get any device errors.
+ * \brief Gets all current API errors and prints them to output
+ * Flushes the API error cache, meaning future calls (barring any new errors) will not detect any further API errors
+ * Does not get any device errors
  */
 void printAPIErrors() {
 	neoerror_t errors[99];
@@ -109,9 +108,9 @@ void printAPIErrors() {
 }
 
 /**
- * \brief Gets all current device errors and prints them to output. If no device errors were found, printAPIErrors() is called.
- * Flushes the device error cache, meaning future calls (barring any new errors) will not detect any further device errors.
- * If no device errors were found, the APi error cache will be flushed as well, since printAPIErrors() is called.
+ * \brief Gets all current device errors and prints them to output. If no device errors were found, printAPIErrors() is called
+ * Flushes the device error cache, meaning future calls (barring any new errors) will not detect any further device errors
+ * If no device errors were found, the APi error cache will be flushed as well, since printAPIErrors() is called
  */
 void printDeviceErrors(neodevice_t* device) {
 	neoerror_t errors[99];
@@ -138,7 +137,7 @@ void printDeviceErrors(neodevice_t* device) {
  * \param[in] ... the possible options for the expected character
  * \returns the entered character
  *
- * This function repeatedly prompts the user for input until a matching input is entered.
+ * This function repeatedly prompts the user for input until a matching input is entered
  * Example usage: char input = getCharInput(5, 'F', 'u', 'b', 'a', 'r');
  */
 char getCharInput(int numArgs, ...) {
@@ -180,7 +179,7 @@ char getCharInput(int numArgs, ...) {
 /**
  * \brief Prompts the user to select a device from the list of currently known devices
  * \returns a pointer to the device in devices[] selected by the user
- * Requires an input from 1-9, so a maximum of 9 devices are supported.
+ * Requires an input from 1-9, so a maximum of 9 devices are supported
  */
 neodevice_t* selectDevice() {
 	printf("Please select a device:\n");
@@ -312,8 +311,8 @@ int main() {
 				printf("\n");
 			}
 
-			// Manually setting the polling message limit as done below is optional.
-			// It will default to 20k if not set.
+			// Manually setting the polling message limit as done below is optional
+			// It will default to 20k if not set
 			// Attempt to set the polling message limit
 			if(icsneo_setPollingMessageLimit(selectedDevice, msgLimit)) {
 				printf("Successfully set message polling limit for %s!\n\n", productDescription);
@@ -503,8 +502,19 @@ int main() {
 
 			// Attempt to close the device
 			if(icsneo_closeDevice(selectedDevice)) {
-				selectedDevice = NULL;
+				numDevices--;
 				printf("Successfully closed %s!\n", productDescription);
+
+				// Shifts everything after the removed device 1 index to the left
+				bool startResizing = false;
+				for(int i = 0; i < numDevices; ++i) {
+					if(selectedDevice == devices + i)
+						startResizing = true;
+					if(startResizing)
+						devices[i] = devices[i + 1];
+				}
+
+				selectedDevice = NULL;
 			} else {
 				printf("Failed to close %s!\n\n", productDescription);
 				printDeviceErrors(selectedDevice);
