@@ -3,3 +3,5 @@
 See the `README.md` documents within each example for more information.
 
 [C++ Example](libicsneocpp-example/)
+
+[C Example](libicsneoc-example/)

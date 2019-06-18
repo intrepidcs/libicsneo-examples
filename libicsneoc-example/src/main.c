@@ -96,11 +96,11 @@ void printAPIErrors() {
 	if(icsneo_getErrors(errors, &errorCount)) {
 		if(errorCount == 1) {
 			printf("1 API error found!\n");
-			printf("Error 0x%x: %s\n", errors[0].errorNumber, errors[0].description);
+			printf("Error 0x%u: %s\n", errors[0].errorNumber, errors[0].description);
 		} else {
 			printf("%d API errors found!\n", (int) errorCount);
 			for(int i = 0; i < errorCount; ++i) {
-				printf("Error 0x%x: %s\n", errors[i].errorNumber, errors[i].description);
+				printf("Error 0x%u: %s\n", errors[i].errorNumber, errors[i].description);
 			}
 		}
 	} else {
