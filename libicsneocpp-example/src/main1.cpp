@@ -36,16 +36,14 @@ void printMainMenu() {
 	std::cout << "Press the letter next to the function you want to use:" << std::endl;
 	std::cout << "A - List all devices" << std::endl;
 	std::cout << "B - Find all devices" << std::endl;
-	std::cout << "C - Connect to a device" << std::endl;
-	std::cout << "D - Set a device to online" << std::endl;
-	std::cout << "E - Enable message polling" << std::endl;
+	std::cout << "C - Open/close" << std::endl;
+	std::cout << "D - Go online/offline" << std::endl;
+	std::cout << "E - Enable/disable message polling" << std::endl;
 	std::cout << "F - Get messages" << std::endl;
 	std::cout << "G - Send message" << std::endl;
 	std::cout << "H - Get errors" << std::endl;
 	std::cout << "I - Set HS CAN to 250K" << std::endl;
 	std::cout << "J - Set LSFT CAN to 250K" << std::endl;
-	std::cout << "K - Disconnect from device" << std::endl;
-	std::cout << "L - Set a device to offline" << std::endl;
 	std::cout << "X - Exit" << std::endl;
 }
 
@@ -131,20 +129,21 @@ void printDeviceWarnings(std::shared_ptr<icsneo::Device> device) {
  *
  * This function repeatedly prompts the user for input until a matching input is entered
  * Example usage: 
- * std::vector<char> options {'F', 'u', 'b', 'a', 'r'};
- * char input = getCharInput(options);
+ * char input = getCharInput(std::vector<char> {'F', 'u', 'b', 'a', 'r'});
  */
 char getCharInput(std::vector<char> allowed) {
 	bool found = false;
-	char input;
+	std::string input;
 
 	while(!found) {
 		std::cin >> input;
 
-		for(char compare : allowed) {
-			if(compare == input) {
-				found = true;
-				break;
+		if(input.length() == 1) {
+			for(char compare : allowed) {
+				if(compare == input.c_str()[0]) {
+					found = true;
+					break;
+				}
 			}
 		}
 
@@ -153,7 +152,7 @@ char getCharInput(std::vector<char> allowed) {
 		}
 	}
 
-	return input;
+	return input.c_str()[0];
 }
 
 /**
@@ -169,8 +168,7 @@ std::shared_ptr<icsneo::Device> selectDevice() {
 	int selectedDeviceNum = 10;
 
 	while(selectedDeviceNum > devices.size()) {
-		std::vector<char> options {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
-		char deviceSelection = getCharInput(options);
+		char deviceSelection = getCharInput(std::vector<char> {'1', '2', '3', '4', '5', '6', '7', '8', '9'});
 		selectedDeviceNum = deviceSelection - '0';
 		if(selectedDeviceNum > devices.size()) {
 			std::cout << "Selected device out of range!" << std::endl;
@@ -188,8 +186,7 @@ int main() {
 	while(true) {
 		printMainMenu();
 		std::cout << std::endl;
-		std::vector<char> options {'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g', 'H', 'h', 'I', 'i', 'J', 'j', 'K', 'k', 'L', 'l', 'X', 'x'};
-		char input = getCharInput(options);
+		char input = getCharInput(std::vector<char> {'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g', 'H', 'h', 'I', 'i', 'J', 'j', 'X', 'x'});
 		std::cout << std::endl;
 
 		switch(input) {
@@ -213,7 +210,7 @@ int main() {
 			std::cout << std::endl;
 			break;
 		}
-		// Connect to (open) a device
+		// Open/Close
 		case 'C':
 		case 'c':
 		{
@@ -224,17 +221,43 @@ int main() {
 			}
 			selectedDevice = selectDevice();
 
-			if(selectedDevice->open()) {
-				std::cout << selectedDevice->describe() << " successfully opened!" << std::endl << std::endl;
-			} else {
-				std::cout << selectedDevice->describe() << " failed to open!" << std::endl << std::endl;
-				printDeviceWarnings(selectedDevice);
-				printDeviceErrors(selectedDevice);
-				std::cout << std::endl;
+			std::cout << "Would you like to open or close " << selectedDevice->describe() << "?" << std::endl;
+			std::cout << "[1] Open" << std::endl << "[2] Close" << std::endl <<  "[3] Cancel" << std::endl << std::endl;
+			char input = getCharInput(std::vector<char> {'1', '2', '3'});
+			std::cout << std::endl;
+			
+			switch(input) {
+			case '1':
+				if(selectedDevice->open()) {
+					std::cout << selectedDevice->describe() << " successfully opened!" << std::endl << std::endl;
+				} else {
+					std::cout << selectedDevice->describe() << " failed to open!" << std::endl << std::endl;
+					printDeviceWarnings(selectedDevice);
+					printDeviceErrors(selectedDevice);
+					std::cout << std::endl;
+				}
+				
+				break;
+			case '2':
+				// Attempt to close the device
+				if(selectedDevice->close()) {
+					std::cout << "Successfully closed " << selectedDevice->describe() << "!" << std::endl << std::endl;
+					selectedDevice = NULL;
+				} else {
+					std::cout << "Failed to close " << selectedDevice->describe() << "!" << std::endl << std::endl;
+					printDeviceWarnings(selectedDevice);
+					printDeviceErrors(selectedDevice);
+					std::cout << std::endl;
+				}
+				
+				break;
+			default:
+				std::cout << "Canceling!" << std::endl << std::endl;
+				break;
 			}
 		}
 		break;
-		// Go online
+		// Go online/offline
 		case 'D':
 		case 'd':
 		{
@@ -245,18 +268,41 @@ int main() {
 			}
 			selectedDevice = selectDevice();
 
-			// Attempt to have the selected device go online
-			if(selectedDevice->goOnline()) {
-				std::cout << selectedDevice->describe() << " succecssfully went online!" << std::endl << std::endl;
-			} else {
-				std::cout << selectedDevice->describe() << " failed to go online!" << std::endl << std::endl;
-				printDeviceWarnings(selectedDevice);
-				printDeviceErrors(selectedDevice);
-				std::cout << std::endl;
+			std::cout << "Would you like to have " << selectedDevice->describe() << " go online or offline?" << std::endl;
+			std::cout << "[1] Online" << std::endl << "[2] Offline" << std::endl << "[3] Cancel" << std::endl << std::endl;
+			char input = getCharInput(std::vector<char> {'1', '2', '3'});
+			std::cout << std::endl;
+
+			switch(input) {
+			case '1':
+				// Attempt to have the selected device go online
+				if(selectedDevice->goOnline()) {
+					std::cout << selectedDevice->describe() << " succecssfully went online!" << std::endl << std::endl;
+				} else {
+					std::cout << selectedDevice->describe() << " failed to go online!" << std::endl << std::endl;
+					printDeviceWarnings(selectedDevice);
+					printDeviceErrors(selectedDevice);
+					std::cout << std::endl;
+				}
+				break;
+			case '2':
+				// Attempt to go offline
+				if(selectedDevice->goOffline()) {
+					std::cout << selectedDevice->describe() << " successfully went offline!" << std::endl << std::endl;
+				} else {
+					std::cout << selectedDevice->describe() << " failed to go offline!" << std::endl << std::endl;
+					printDeviceWarnings(selectedDevice);
+					printDeviceErrors(selectedDevice);
+					std::cout << std::endl;
+				}
+				break;
+			default:
+				std::cout << "Canceling!" << std::endl << std::endl;
+				break;
 			}
 		}
 		break;
-		// Enable message polling
+		// Enable/disable message polling
 		case 'E':
 		case 'e':
 		{
@@ -267,28 +313,49 @@ int main() {
 			}
 			selectedDevice = selectDevice();
 
-			// Attempt to enable message polling
-			selectedDevice->enableMessagePolling();
-			if(selectedDevice->isMessagePollingEnabled()) {
-				std::cout << "Successfully enabled message polling for " << selectedDevice->describe() << "!" << std::endl;
-			} else {
-				std::cout << "Failed to enable message polling for " << selectedDevice->describe() << "!" << std::endl << std::endl;
-				printDeviceWarnings(selectedDevice);
-				printDeviceErrors(selectedDevice);
-				std::cout << std::endl;
-			}
-			// Manually setting the polling message limit as done below is optional
-			// It will default to 20k if not set
-			selectedDevice->setPollingMessageLimit(50000);
-			if(selectedDevice->getPollingMessageLimit() == 50000) {
-				std::cout << "Successfully set polling message limit for " << selectedDevice->describe() << "!" << std::endl << std::endl;
-			} else {
-				std::cout << "Failed to set polling message limit for " << selectedDevice->describe() << "!" << std::endl << std::endl;
-				printDeviceWarnings(selectedDevice);
-				printDeviceErrors(selectedDevice);
-				std::cout << std::endl;
-			}
-			
+			std::cout << "Would you like to enable or disable message polling for " << selectedDevice->describe() << "?" << std::endl;
+			std::cout << "[1] Enable" << std::endl << "[2] Disable" << std::endl << "[3] Cancel" << std::endl << std::endl;
+			char input = getCharInput(std::vector<char> {'1', '2', '3'});
+			std::cout << std::endl;
+
+			switch(input) {
+			case '1':
+				// Attempt to enable message polling
+				if(selectedDevice->enableMessagePolling()) {
+					std::cout << "Successfully enabled message polling for " << selectedDevice->describe() << "!" << std::endl;
+				} else {
+					std::cout << "Failed to enable message polling for " << selectedDevice->describe() << "!" << std::endl << std::endl;
+					printDeviceWarnings(selectedDevice);
+					printDeviceErrors(selectedDevice);
+					std::cout << std::endl;
+				}
+				// Manually setting the polling message limit as done below is optional
+				// It will default to 20k if not set
+				selectedDevice->setPollingMessageLimit(50000);
+				if(selectedDevice->getPollingMessageLimit() == 50000) {
+					std::cout << "Successfully set polling message limit for " << selectedDevice->describe() << "!" << std::endl << std::endl;
+				} else {
+					std::cout << "Failed to set polling message limit for " << selectedDevice->describe() << "!" << std::endl << std::endl;
+					printDeviceWarnings(selectedDevice);
+					printDeviceErrors(selectedDevice);
+					std::cout << std::endl;
+				}
+				break;
+			case '2':
+				// Attempt to disable message polling
+				if(selectedDevice->disableMessagePolling()) {
+					std::cout << "Successfully disabled message polling for " << selectedDevice->describe() << "!" << std::endl;
+				} else {
+					std::cout << "Failed to disable message polling for " << selectedDevice->describe() << "!" << std::endl << std::endl;
+					printDeviceWarnings(selectedDevice);
+					printDeviceErrors(selectedDevice);
+					std::cout << std::endl;
+				}
+				break;
+			default:
+				std::cout << "Canceling!" << std::endl << std::endl;
+				break;
+			}			
 		}
 		break;
 		// Get messages
@@ -423,51 +490,6 @@ int main() {
 				std::cout << "Successfully set LSFT CAN baudrate for " << selectedDevice->describe() << " to 250k!" << std::endl;
 			} else {
 				std::cout << "Failed to set LSFT CAN baudrate for " << selectedDevice->describe() << " to 250k!" << std::endl << std::endl;
-				printDeviceWarnings(selectedDevice);
-				printDeviceErrors(selectedDevice);
-			}
-			std::cout << std::endl;
-		}
-		break;
-		// Disconnect
-		case 'K':
-		case 'k':
-		{
-			// Select a device and get its description
-			if(devices.size() == 0) {
-				std::cout << "No devices found! Please scan for new devices." << std::endl << std::endl;
-				break;
-			}
-			selectedDevice = selectDevice();
-
-			// Attempt to close the device
-			if(selectedDevice->close()) {
-				std::cout << "Successfully closed " << selectedDevice->describe() << "!" << std::endl;
-				selectedDevice = NULL;
-			} else {
-				std::cout << "Failed to close " << selectedDevice->describe() << "!" << std::endl << std::endl;
-				printDeviceWarnings(selectedDevice);
-				printDeviceErrors(selectedDevice);
-			}
-			std::cout << std::endl;
-		}
-		break;
-		// Go offline
-		case 'L':
-		case 'l':
-		{
-			// Select a device and get its description
-			if(devices.size() == 0) {
-				std::cout << "No devices found! Please scan for new devices." << std::endl << std::endl;
-				break;
-			}
-			selectedDevice = selectDevice();
-
-			// Attempt to go offline
-			if(selectedDevice->goOffline()) {
-				std::cout << selectedDevice->describe() << " successfully went offline!" << std::endl;
-			} else {
-				std::cout << selectedDevice->describe() << " failed to go offline!" << std::endl << std::endl;
 				printDeviceWarnings(selectedDevice);
 				printDeviceErrors(selectedDevice);
 			}
