@@ -1,9 +1,12 @@
+// Signal to dynamically load the library from a .dll file
 #define ICSNEOC_DYNAMICLOAD
 
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
 #include <ctype.h>
+
+// Include icsneo/icsneoc.h to access library functions
 #include "icsneo/icsneoc.h"
 
 size_t msgLimit = 50000;
@@ -197,6 +200,8 @@ neodevice_t* selectDevice() {
 
 int main() {
 
+	// Attempt to initialize the library and access its functions
+	// This call searches for icsneoc.dll according to the standard dynamic-link library search order
 	if(icsneo_init() != 0) {
 		printf("An error occurred when initializing the library!\n");
 		return 1;
@@ -242,6 +247,7 @@ int main() {
 			}
 			selectedDevice = selectDevice();
 
+			// Get the product description for the device
 			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
@@ -302,6 +308,7 @@ int main() {
 			}
 			selectedDevice = selectDevice();
 
+			// Get the product description for the device
 			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
@@ -349,6 +356,7 @@ int main() {
 			}
 			selectedDevice = selectDevice();
 
+			// Get the product description for the device
 			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
@@ -407,6 +415,7 @@ int main() {
 			}
 			selectedDevice = selectDevice();
 
+			// Get the product description for the device
 			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
@@ -465,6 +474,7 @@ int main() {
 			}
 			selectedDevice = selectDevice();
 
+			// Get the product description for the device
 			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
@@ -490,13 +500,12 @@ int main() {
 
 			// Attempt to transmit the sample msg
 			if(icsneo_transmit(selectedDevice, &msg)) {
-				printf("Message transmit successful!\n");
+				printf("Message transmit successful!\n\n");
 			} else {
 				printf("Failed to transmit message to %s!\n\n", productDescription);
 				printDeviceErrors(selectedDevice);
+				printf("\n");
 			}
-
-			printf("\n");
 		}
 		break;
 		// Get errors
@@ -519,18 +528,19 @@ int main() {
 			}
 			selectedDevice = selectDevice();
 
+			// Get the product description for the device
 			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
 			// Attempt to set baudrate and apply settings
 			if(icsneo_setBaudrate(selectedDevice, ICSNEO_NETID_HSCAN, 250000) && icsneo_settingsApply(selectedDevice)) {
-				printf("Successfully set HS CAN baudrate for %s to 250k!\n", productDescription);
+				printf("Successfully set HS CAN baudrate for %s to 250k!\n\n", productDescription);
 			} else {
 				printf("Failed to set HS CAN for %s to 250k!\n\n", productDescription);
 				printDeviceErrors(selectedDevice);
+				printf("\n");
 			}
-			printf("\n");
 		}
 		break;
 		// Set HS CAN to 500k
@@ -544,18 +554,19 @@ int main() {
 			}
 			selectedDevice = selectDevice();
 
+			// Get the product description for the device
 			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
 			// Attempt to set baudrate and apply settings
 			if(icsneo_setBaudrate(selectedDevice, ICSNEO_NETID_HSCAN, 500000) && icsneo_settingsApply(selectedDevice)) {
-				printf("Successfully set HS CAN baudrate for %s to 500k!\n", productDescription);
+				printf("Successfully set HS CAN baudrate for %s to 500k!\n\n", productDescription);
 			} else {
 				printf("Failed to set HS CAN for %s to 500k!\n\n", productDescription);
 				printDeviceErrors(selectedDevice);
+				printf("\n");
 			}
-			printf("\n");
 		}
 		break;
 		// Exit
