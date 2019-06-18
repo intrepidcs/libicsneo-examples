@@ -71,16 +71,14 @@ void printMainMenu() {
 	printf("Press the letter next to the function you want to use:\n");
 	printf("A - List all devices\n");
 	printf("B - Scan for new devices\n");
-	printf("C - Connect to a device\n");
-	printf("D - Set a device to online\n");
-	printf("E - Enable message polling\n");
+	printf("C - Open/close\n");
+	printf("D - Go online/offline\n");
+	printf("E - Enable/disable message polling\n");
 	printf("F - Get messages\n");
 	printf("G - Send message\n");
 	printf("H - Get errors\n");
 	printf("I - Set HS CAN to 250K\n");
 	printf("J - Set HS CAN to 500K\n");
-	printf("K - Disconnect from device\n");
-	printf("L - Set a device to offline\n");
 	printf("X - Exit\n");
 }
 
@@ -210,7 +208,7 @@ int main() {
 	while(true) {
 		printMainMenu();
 		printf("\n");
-		char input = getCharInput(26, 'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g', 'H', 'h', 'I', 'i', 'J', 'j', 'K', 'k', 'L', 'l', 'X', 'x');
+		char input = getCharInput(22, 'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g', 'H', 'h', 'I', 'i', 'J', 'j', 'X', 'x');
 		printf("\n");
 		switch(input) {
 		// List current devices
@@ -233,7 +231,7 @@ int main() {
 			printf("\n");
 			break;
 		}
-		// Connect to (open) a device
+		// Open/close a device
 		case 'C':
 		case 'c':
 		{
@@ -248,17 +246,52 @@ int main() {
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
-			// Attempt to open the selected device
-			if(icsneo_openDevice(selectedDevice)) {
-				printf("%s successfully opened!\n\n", productDescription);
-			} else {
-				printf("%s failed to open!\n\n", productDescription);
-				printDeviceErrors(selectedDevice);
-				printf("\n");
+			printf("Would you like to open or close %s?\n", productDescription);
+			printf("[1] Open\n[2] Close\n[3] Cancel\n\n");
+
+			char input = getCharInput(3, '1', '2', '3');
+			printf("\n");
+
+			switch(input) {
+			case '1':
+				// Attempt to open the selected device
+				if(icsneo_openDevice(selectedDevice)) {
+					printf("%s successfully opened!\n\n", productDescription);
+				} else {
+					printf("%s failed to open!\n\n", productDescription);
+					printDeviceErrors(selectedDevice);
+					printf("\n");
+				}
+				break;
+			case '2':
+				// Attempt to close the device
+				if(icsneo_closeDevice(selectedDevice)) {
+					numDevices--;
+					printf("Successfully closed %s!\n\n", productDescription);
+
+					// Shifts everything after the removed device 1 index to the left
+					bool startResizing = false;
+					for(int i = 0; i < numDevices; ++i) {
+						if(selectedDevice == devices + i)
+							startResizing = true;
+						if(startResizing)
+							devices[i] = devices[i + 1];
+					}
+
+					selectedDevice = NULL;
+				} else {
+					printf("Failed to close %s!\n\n", productDescription);
+					printDeviceErrors(selectedDevice);
+					printf("\n");
+				}
+				
+				break;
+			default:
+				printf("Canceling!\n\n");
 			}
 		}
 		break;
-		// Go online
+		// Go online/offline
 		case 'D':
 		case 'd':
 		{
@@ -273,17 +306,39 @@ int main() {
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
-			// Attempt to have the selected device go online
-			if(icsneo_goOnline(selectedDevice)) {
-				printf("%s successfully went online!\n\n", productDescription);
-			} else {
-				printf("%s failed to go online!\n\n", productDescription);
-				printDeviceErrors(selectedDevice);
-				printf("\n");
+			printf("Would you like to have %s go online or offline?\n", productDescription);
+			printf("[1] Online\n[2] Offline\n[3] Cancel\n\n");
+
+			char input = getCharInput(3, '1', '2', '3');
+			printf("\n");
+
+			switch(input) {
+			case '1':
+				// Attempt to go online
+				if(icsneo_goOnline(selectedDevice)) {
+					printf("%s successfully went online!\n\n", productDescription);
+				} else {
+					printf("%s failed to go online!\n\n", productDescription);
+					printDeviceErrors(selectedDevice);
+					printf("\n");
+				}
+				break;
+			case '2':
+				// Attempt to go offline
+				if(icsneo_goOffline(selectedDevice)) {
+					printf("%s successfully went offline!\n\n", productDescription);
+				} else {
+					printf("%s failed to go offline!\n\n", productDescription);
+					printDeviceErrors(selectedDevice);
+					printf("\n");
+				}
+				break;
+			default:
+				printf("Canceling!\n\n");
 			}
 		}
 		break;
-		// Enable message polling
+		// Enable/disable message polling
 		case 'E':
 		case 'e':
 		{
@@ -298,25 +353,47 @@ int main() {
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
-			// Attempt to enable message polling
-			if(icsneo_enableMessagePolling(selectedDevice)) {
-				printf("Successfully enabled message polling for %s!\n", productDescription);
-			} else {
-				printf("Failed to enable message polling for %s!\n\n", productDescription);
-				printDeviceErrors(selectedDevice);
-				printf("\n");
-			}
+			printf("Would you like to enable or disable message polling for %s?\n", productDescription);
+			printf("[1] Enable\n[2] Disable\n[3] Cancel\n\n");
 
-			// Manually setting the polling message limit as done below is optional
-			// It will default to 20k if not set
-			// Attempt to set the polling message limit
-			if(icsneo_setPollingMessageLimit(selectedDevice, msgLimit)) {
-				printf("Successfully set message polling limit for %s!\n\n", productDescription);
-			} else {
-				printf("Failed to set polling message limit for %s!\n\n", productDescription);
-				printDeviceErrors(selectedDevice);
-				printf("\n");
-			}
+			char input = getCharInput(3, '1', '2', '3');
+			printf("\n");
+
+			switch(input) {
+			case '1':
+				// Attempt to enable message polling
+				if(icsneo_enableMessagePolling(selectedDevice)) {
+					printf("Successfully enabled message polling for %s!\n\n", productDescription);
+				} else {
+					printf("Failed to enable message polling for %s!\n\n", productDescription);
+					printDeviceErrors(selectedDevice);
+					printf("\n");
+				}
+
+				// Manually setting the polling message limit as done below is optional
+				// It will default to 20k if not set
+				// Attempt to set the polling message limit
+				if(icsneo_setPollingMessageLimit(selectedDevice, msgLimit)) {
+					printf("Successfully set message polling limit for %s!\n\n", productDescription);
+				} else {
+					printf("Failed to set polling message limit for %s!\n\n", productDescription);
+					printDeviceErrors(selectedDevice);
+					printf("\n");
+				}
+				break;
+			case '2':
+				// Attempt to disable message polling
+				if(icsneo_disableMessagePolling(selectedDevice)) {
+					printf("Successfully disabled message polling for %s!\n\n", productDescription);
+				} else {
+					printf("Failed to disable message polling limit for %s!\n\n", productDescription);
+					printDeviceErrors(selectedDevice);
+					printf("\n");
+				}
+				break;
+			default:
+				printf("Canceling!\n\n");
+			}	
 		}
 		break;
 		// Get messages
@@ -476,68 +553,6 @@ int main() {
 				printf("Successfully set HS CAN baudrate for %s to 500k!\n", productDescription);
 			} else {
 				printf("Failed to set HS CAN for %s to 500k!\n\n", productDescription);
-				printDeviceErrors(selectedDevice);
-			}
-			printf("\n");
-		}
-		break;
-		// Disconnect
-		case 'K':
-		case 'k':
-		{
-			// Select a device and get its description
-			if(numDevices == 0) {
-				printf("No devices found! Please scan for new devices.\n\n");
-				break;
-			}
-			selectedDevice = selectDevice();
-
-			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
-			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
-			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
-
-			// Attempt to close the device
-			if(icsneo_closeDevice(selectedDevice)) {
-				numDevices--;
-				printf("Successfully closed %s!\n", productDescription);
-
-				// Shifts everything after the removed device 1 index to the left
-				bool startResizing = false;
-				for(int i = 0; i < numDevices; ++i) {
-					if(selectedDevice == devices + i)
-						startResizing = true;
-					if(startResizing)
-						devices[i] = devices[i + 1];
-				}
-
-				selectedDevice = NULL;
-			} else {
-				printf("Failed to close %s!\n\n", productDescription);
-				printDeviceErrors(selectedDevice);
-			}
-			printf("\n");
-		}
-		break;
-		// Go offline
-		case 'L':
-		case 'l':
-		{
-			// Select a device and get its description
-			if(numDevices == 0) {
-				printf("No devices found! Please scan for new devices.\n\n");
-				break;
-			}
-			selectedDevice = selectDevice();
-
-			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
-			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
-			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
-
-			// Attempt to go offline
-			if(icsneo_goOffline(selectedDevice)) {
-				printf("%s successfully went offline!\n", productDescription);
-			} else {
-				printf("%s failed to go offline!\n\n", productDescription);
 				printDeviceErrors(selectedDevice);
 			}
 			printf("\n");

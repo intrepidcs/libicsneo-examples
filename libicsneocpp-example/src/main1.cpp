@@ -322,7 +322,7 @@ int main() {
 			case '1':
 				// Attempt to enable message polling
 				if(selectedDevice->enableMessagePolling()) {
-					std::cout << "Successfully enabled message polling for " << selectedDevice->describe() << "!" << std::endl;
+					std::cout << "Successfully enabled message polling for " << selectedDevice->describe() << "!" << std::endl << std::endl;
 				} else {
 					std::cout << "Failed to enable message polling for " << selectedDevice->describe() << "!" << std::endl << std::endl;
 					printDeviceWarnings(selectedDevice);
