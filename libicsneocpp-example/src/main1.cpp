@@ -223,6 +223,7 @@ int main() {
 				break;
 			}
 			selectedDevice = selectDevice();
+
 			if(selectedDevice->open()) {
 				std::cout << selectedDevice->describe() << " successfully opened!" << std::endl << std::endl;
 			} else {
@@ -280,7 +281,7 @@ int main() {
 			// It will default to 20k if not set
 			selectedDevice->setPollingMessageLimit(50000);
 			if(selectedDevice->getPollingMessageLimit() == 50000) {
-				std::cout << "Successfully set polling message limit for " << selectedDevice->describe() << "!" << std::endl;
+				std::cout << "Successfully set polling message limit for " << selectedDevice->describe() << "!" << std::endl << std::endl;
 			} else {
 				std::cout << "Failed to set polling message limit for " << selectedDevice->describe() << "!" << std::endl << std::endl;
 				printDeviceWarnings(selectedDevice);
@@ -303,7 +304,8 @@ int main() {
 
 			std::vector<std::shared_ptr<icsneo::Message>> msgs;
 
-			// Attempt to get messages
+			// Attempt to get messages, limiting the number of messages at once to 50,000
+			// A third parameter of type std::chrono::milliseconds is also accepted if a timeout is desired
 			if(!selectedDevice->getMessages(msgs, msgLimit)) {
 				std::cout << "Failed to get messages for " << selectedDevice->describe() << "!" << std::endl << std::endl;
 				printDeviceWarnings(selectedDevice);
@@ -312,10 +314,23 @@ int main() {
 				break;
 			}
 
+			// Alternative way to get messages using default options (no limit on msg count and no timeout)
+			// Important to check both if the returned vector has size 1 and contains a nullptr for error checking purposes.
+			/*
+			auto ret = selectedDevice->getMessages();
+			if(ret.size() == 1 && ret.at(0) == nullptr) {
+				std::cout << "Failed to get messages for " << selectedDevice->describe() << "!" << std::endl << std::endl;
+				printDeviceWarnings(selectedDevice);
+				printDeviceErrors(selectedDevice);
+				std::cout << std::endl;
+				break;
+			}
+			*/
+
 			if(msgs.size() == 1) {
-				std::cout << "1 message received from " << selectedDevice << "!" << std::endl;
+				std::cout << "1 message received from " << selectedDevice->describe() << "!" << std::endl;
 			} else {
-				std::cout << msgs.size() << " messages received from " << selectedDevice << "!" << std::endl;
+				std::cout << msgs.size() << " messages received from " << selectedDevice->describe() << "!" << std::endl;
 			}
 
 			// Print out the received messages
