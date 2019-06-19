@@ -3,7 +3,7 @@
 #include <thread>
 #include <chrono>
 
-#include <icsneo/icsneocpp.h>
+#include "icsneo/icsneocpp.h"
 
 int main() {
 	// Print version

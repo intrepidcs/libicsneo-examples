@@ -1,6 +1,6 @@
 # libicsneo C++ Example
 
-This is an example console application which uses libicsneo to connect to an Intrepid Control Systems hardware device. It has examples for sending and receiving CAN & CAN FD traffic.
+This is an example console application which uses libicsneo to connect to an Intrepid Control Systems hardware device. It has both interactive and simple examples for sending and receiving CAN & CAN FD traffic.
 
 ## Building
 
@@ -24,7 +24,7 @@ If you haven't done this, `third-party/libicsneo` will be empty and you won't be
 3. Navigate to the libicsneocpp-example folder and select the CMakeLists.txt file
 4. Visual Studio will process the CMake project
 5. Choose the dropdown attached to the green play button (labelled "select startup item...") in the toolbar
-6. Select `libicsneocpp-example.exe`
+6. Select `libicsneocpp-interactive-example.exe` or `libicsneocpp-simple-example.exe`
 7. Press the green play button to compile and run the example
 
 ### Ubuntu 18.04 LTS
@@ -34,10 +34,11 @@ If you haven't done this, `third-party/libicsneo` will be empty and you won't be
 3. Enter the build directory with `cd build`
 4. Run `cmake ..` to generate your Makefile
 	- Hint! Running `cmake -DCMAKE_BUILD_TYPE=Debug ..` will generate the proper scripts to build debug, and `cmake -DCMAKE_BUILD_TYPE=Release ..` will generate the proper scripts to build with all optimizations on
-5. Run `make libicsneocpp-example` to build
-	- Hint! Speed up your build by using multiple processors! Use `make libicsneocpp-example -j#` where `#` is the number of cores/threads your system has plus one. For instance, on a standard 8 thread Intel i7, you might use `-j9` for an ~8x speedup.
-6. Now run `sudo ./libicsneocpp-example` to run the example
+5. Run `make libicsneocpp-interactive-example` to build
+	- Hint! Speed up your build by using multiple processors! Use `make libicsneocpp-interactive-example -j#` where `#` is the number of cores/threads your system has plus one. For instance, on a standard 8 thread Intel i7, you might use `-j9` for an ~8x speedup.
+6. Now run `sudo ./libicsneocpp-interactive-example` to run the example
 	- Hint! In order to run without sudo, you will need to set up the udev rules. Instructions for doing so are coming soon.
+7. If you wish to run the simple example instead, replace any instances of "interactive" with "simple" in steps 5 and 6.
 
 ### macOS
 

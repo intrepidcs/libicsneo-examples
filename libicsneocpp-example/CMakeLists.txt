@@ -22,5 +22,7 @@ endif()
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../third-party/libicsneo ${CMAKE_CURRENT_BINARY_DIR}/third-party/libicsneo)
 
-add_executable(libicsneocpp-example src/main1.cpp)
-target_link_libraries(libicsneocpp-example icsneocpp)
+add_executable(libicsneocpp-interactive-example src/InteractiveExample.cpp)
+add_executable(libicsneocpp-simple-example src/SimpleExample.cpp)
+target_link_libraries(libicsneocpp-interactive-example icsneocpp)
+target_link_libraries(libicsneocpp-simple-example icsneocpp)
