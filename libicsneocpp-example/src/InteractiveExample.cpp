@@ -167,10 +167,10 @@ std::shared_ptr<icsneo::Device> selectDevice() {
 
 	int selectedDeviceNum = 10;
 
-	while(selectedDeviceNum > devices.size()) {
+	while((size_t) selectedDeviceNum > devices.size()) {
 		char deviceSelection = getCharInput(std::vector<char> {'1', '2', '3', '4', '5', '6', '7', '8', '9'});
 		selectedDeviceNum = deviceSelection - '0';
-		if(selectedDeviceNum > devices.size()) {
+		if((size_t) selectedDeviceNum > devices.size()) {
 			std::cout << "Selected device out of range!" << std::endl;
 		}
 	}
@@ -223,10 +223,10 @@ int main() {
 
 			std::cout << "Would you like to open or close " << selectedDevice->describe() << "?" << std::endl;
 			std::cout << "[1] Open" << std::endl << "[2] Close" << std::endl <<  "[3] Cancel" << std::endl << std::endl;
-			char input = getCharInput(std::vector<char> {'1', '2', '3'});
+			char selection = getCharInput(std::vector<char> {'1', '2', '3'});
 			std::cout << std::endl;
 			
-			switch(input) {
+			switch(selection) {
 			case '1':
 				if(selectedDevice->open()) {
 					std::cout << selectedDevice->describe() << " successfully opened!" << std::endl << std::endl;
@@ -270,10 +270,10 @@ int main() {
 
 			std::cout << "Would you like to have " << selectedDevice->describe() << " go online or offline?" << std::endl;
 			std::cout << "[1] Online" << std::endl << "[2] Offline" << std::endl << "[3] Cancel" << std::endl << std::endl;
-			char input = getCharInput(std::vector<char> {'1', '2', '3'});
+			char selection = getCharInput(std::vector<char> {'1', '2', '3'});
 			std::cout << std::endl;
 
-			switch(input) {
+			switch(selection) {
 			case '1':
 				// Attempt to have the selected device go online
 				if(selectedDevice->goOnline()) {
@@ -315,10 +315,10 @@ int main() {
 
 			std::cout << "Would you like to enable or disable message polling for " << selectedDevice->describe() << "?" << std::endl;
 			std::cout << "[1] Enable" << std::endl << "[2] Disable" << std::endl << "[3] Cancel" << std::endl << std::endl;
-			char input = getCharInput(std::vector<char> {'1', '2', '3'});
+			char selection = getCharInput(std::vector<char> {'1', '2', '3'});
 			std::cout << std::endl;
 
-			switch(input) {
+			switch(selection) {
 			case '1':
 				// Attempt to enable message polling
 				if(selectedDevice->enableMessagePolling()) {
