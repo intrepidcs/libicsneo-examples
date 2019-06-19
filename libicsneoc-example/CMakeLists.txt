@@ -4,7 +4,15 @@ project(libicsneoc-example VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 11)
 
 include(GNUInstallDirs)
-
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../third-party/libicsneo/include)
 
-add_executable(libicsneoc-example src/main.c)
+if(UNIX)   
+    set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS)
+    
+    find_library(libname NAMES libicsneoc.so PATHS /usr/local/lib/)
+
+    add_executable(libicsneoc-example src/main.c)
+    target_link_libraries(libicsneoc-example ${libname} ${CMAKE_DL_LIBS})
+elseif(WIN32)
+    add_executable(libicsneoc-example src/main.c)
+endif()

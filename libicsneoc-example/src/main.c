@@ -2,6 +2,7 @@
 #define ICSNEOC_DYNAMICLOAD
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
 #include <ctype.h>
@@ -446,15 +447,15 @@ int main() {
 				neomessage_t* msg = &msgs[i];
 				switch(msg->type) {
 				case ICSNEO_NETWORK_TYPE_CAN: // CAN
-					printf("\t0x%03x [%lu] ", ((neomessage_can_t*) msg)->arbid, (int) msg->length);
+					printf("\t0x%03x [%zu] ", ((neomessage_can_t*) msg)->arbid, msg->length);
 					for(size_t i = 0; i < msg->length; i++) {
 						printf("%02x ", msg->data[i]);
 					}
-					printf("(%lu)\n", (int) msg->timestamp);
+					printf("(%llu)\n", msg->timestamp);
 					break;
 				default:
 					if(msg->netid != 0)
-						printf("\tMessage on netid %d with length %lu\n", msg->netid, (int) msg->length);
+						printf("\tMessage on netid %d with length %zu\n", msg->netid, msg->length);
 				}
 			}
 			printf("\n");
