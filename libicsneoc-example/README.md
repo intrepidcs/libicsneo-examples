@@ -16,9 +16,9 @@ git submodule update --recursive --init
 ```
 If you haven't done this, `third-party/libicsneo` will be empty and you won't be able to build!
 
-## Building on Windows using Visual Studio
+## Windows using Visual Studio
 
-### Building the dll
+### Building the DLL
 First, we are going to build the icsneoc library into a .dll file that we can later use in order to access the library functions.
 1. Launch Visual Studio and open the libicsneo-examples folder
 2. Choose File->Open->Cmake...
@@ -38,6 +38,29 @@ Although the example program will build without successfully completing the step
 5. Click on the dropdown arrow attached to the green play button (labelled "Select Startup Item") and select libicsneoc-example.exe
 6. Click on the green play button to run the example
 
-## Building on other operating systems
+## Ubuntu 18.04 LTS
 
-Unfortunately, the C API currently only supports Windows.
+### Building the .so
+First, we are going to build the icsneoc library into a .so file that we can later use in order to access the library functions.
+1. Install dependencies with `sudo apt update` then `sudo apt install ???`
+2. Change directories to libicsneo-examples/third-party/ and create a build directory by running `mkdir -p build`
+3. Enter the build directory with `cd build`
+4. Run `cmake ..` to generate your Makefile
+	- Hint! Running `cmake -DCMAKE_BUILD_TYPE=Debug ..` will generate the proper scripts to build debug, and `cmake -DCMAKE_BUILD_TYPE=Release ..` will generate the proper scripts to build with all optimizations on
+5. Run `make` to build the library
+	- Hint! Speed up your build by using multiple processors! Use `make -j#` where `#` is the number of cores/threads your system has plus one. For instance, on a standard 8 thread Intel i7, you might use `-j9` for an ~8x speedup.
+6. Run `cp libicsneoc.so /usr/lib` so that it can be found via the default ubuntu .so search path. For more information, see http://man7.org/linux/man-pages/man8/ld.so.8.html.
+
+### Building the example program
+Although the example program will build without successfully completing the steps above, it will exit immediately upon running due to a failure to load any library functions.
+1. Change directories to libicsneo-examples/libicsneoc-example/ and create a build directory by running `mkdir -p build`
+2. Enter the build directory with `cd build`
+3. Run `cmake ..` to generate your Makefile
+	- Hint! Running `cmake -DCMAKE_BUILD_TYPE=Debug ..` will generate the proper scripts to build debug, and `cmake -DCMAKE_BUILD_TYPE=Release ..` will generate the proper scripts to build with all optimizations on
+4. Run `make` to build the library
+	- Hint! Speed up your build by using multiple processors! Use `make -j#` where `#` is the number of cores/threads your system has plus one. For instance, on a standard 8 thread Intel i7, you might use `-j9` for an ~8x speedup.
+5. Run `./libicsneoc-example` to run the example.
+
+## macOS
+
+Coming soon&trade;
