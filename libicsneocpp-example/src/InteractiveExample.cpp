@@ -1,9 +1,9 @@
-#define ICSNEOC_DYNAMICLOAD
-
 #include <iostream>
 #include <string>
 #include <ctype.h>
 #include <vector>
+
+// Include icsneo/icsneoc.h to access library functions
 #include "icsneo/icsneocpp.h"
 
 size_t msgLimit = 50000;

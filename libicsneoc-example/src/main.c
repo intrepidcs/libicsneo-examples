@@ -1,4 +1,4 @@
-// Signal to dynamically load the library from a .dll file
+// Signal to dynamically load the library
 #define ICSNEOC_DYNAMICLOAD
 
 #include <stdio.h>
