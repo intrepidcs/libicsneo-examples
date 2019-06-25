@@ -80,50 +80,57 @@ void printMainMenu() {
 	printf("E - Enable/disable message polling\n");
 	printf("F - Get messages\n");
 	printf("G - Send message\n");
-	printf("H - Get errors\n");
+	printf("H - Get events\n");
 	printf("I - Set HS CAN to 250K\n");
 	printf("J - Set HS CAN to 500K\n");
 	printf("X - Exit\n");
 }
 
+void printLastError() {
+	neoevent_t error;
+	if(icsneo_getLastError(&error))
+		printf("Error 0x%u: %s\n", error.eventNumber, error.description);
+	else
+		printf("No errors found!\n");
+}
+
 /**
- * \brief Gets all current API errors and prints them to output
- * Flushes the API error cache, meaning future calls (barring any new errors) will not detect any further API errors
- * Does not get any device errors
+ * \brief Gets all current API events and prints them to output
+ * Flushes the API event cache, meaning future calls (barring any new events) will not detect any further API events
  */
-void printAPIErrors() {
-	neoerror_t errors[99];
-	size_t errorCount = 99;
-	if(icsneo_getErrors(errors, &errorCount)) {
-		if(errorCount == 1) {
-			printf("1 API error found!\n");
-			printf("Error 0x%u: %s\n", errors[0].errorNumber, errors[0].description);
+void printAPIEvents() {
+	neoevent_t events[99];
+	size_t eventCount = 99;
+	if(icsneo_getEvents(events, &eventCount)) {
+		if(eventCount == 1) {
+			printf("1 API event found!\n");
+			printf("Event 0x%u: %s\n", events[0].eventNumber, events[0].description);
 		} else {
-			printf("%d API errors found!\n", (int) errorCount);
-			for(int i = 0; i < errorCount; ++i) {
-				printf("Error 0x%u: %s\n", errors[i].errorNumber, errors[i].description);
+			printf("%d API events found!\n", (int) eventCount);
+			for(int i = 0; i < eventCount; ++i) {
+				printf("Event 0x%u: %s\n", events[i].eventNumber, events[i].description);
 			}
 		}
 	} else {
-		printf("Failed to get API errors!\n");
+		printf("Failed to get API events!\n");
 	}
 }
 
 /**
- * \brief Gets all current device errors and prints them to output. If no device errors were found, printAPIErrors() is called
- * Flushes the device error cache, meaning future calls (barring any new errors) will not detect any further device errors
+ * \brief Gets all current device events and prints them to output. If no device events were found, printAPIEvents() is called
+ * Flushes the device event cache, meaning future calls (barring any new events) will not detect any further device events for this device
  */
-void printDeviceErrors(neodevice_t* device) {
-	neoerror_t errors[99];
-	size_t errorCount = 99;
-	if(icsneo_getDeviceErrors(selectedDevice, errors, &errorCount)) {
-		if(errorCount == 1) {
-			printf("1 device error found!\n");
-			printf("Error 0x%x: %s\n", errors[0].errorNumber, errors[0].description);
+void printDeviceEvents(neodevice_t* device) {
+	neoevent_t events[99];
+	size_t eventCount = 99;
+	if(icsneo_getDeviceEvents(selectedDevice, events, &eventCount)) {
+		if(eventCount == 1) {
+			printf("1 device event found!\n");
+			printf("Event 0x%x: %s\n", events[0].eventNumber, events[0].description);
 		} else {
-			printf("%d device errors found!\n", (int) errorCount);
-			for(int i = 0; i < errorCount; ++i) {
-				printf("Error 0x%x: %s\n", errors[i].errorNumber, errors[i].description);
+			printf("%d device events found!\n", (int) eventCount);
+			for(int i = 0; i < eventCount; ++i) {
+				printf("Event 0x%x: %s\n", events[i].eventNumber, events[i].description);
 			}
 		}
 	}
@@ -203,9 +210,15 @@ int main() {
 
 	// Attempt to initialize the library and access its functions
 	// This call searches for icsneoc.dll according to the standard dynamic-link library search order
-	if(icsneo_init() != 0) {
-		printf("An error occurred when initializing the library!\n");
-		return 1;
+	int ret = icsneo_init();
+	if(ret == 1) {
+		printf("The library was already initialized!\n");
+		return ret;
+	}
+
+	if(ret == 2) {
+		printf("The library could not be found!\n");
+		return ret;
 	}
 
 	neoversion_t ver = icsneo_getVersion();
@@ -266,7 +279,7 @@ int main() {
 					printf("%s successfully opened!\n\n", productDescription);
 				} else {
 					printf("%s failed to open!\n\n", productDescription);
-					printDeviceErrors(selectedDevice);
+					printLastError();
 					printf("\n");
 				}
 				break;
@@ -288,7 +301,7 @@ int main() {
 					selectedDevice = NULL;
 				} else {
 					printf("Failed to close %s!\n\n", productDescription);
-					printDeviceErrors(selectedDevice);
+					printLastError();
 					printf("\n");
 				}
 				
@@ -327,7 +340,7 @@ int main() {
 					printf("%s successfully went online!\n\n", productDescription);
 				} else {
 					printf("%s failed to go online!\n\n", productDescription);
-					printDeviceErrors(selectedDevice);
+					printLastError();
 					printf("\n");
 				}
 				break;
@@ -337,7 +350,7 @@ int main() {
 					printf("%s successfully went offline!\n\n", productDescription);
 				} else {
 					printf("%s failed to go offline!\n\n", productDescription);
-					printDeviceErrors(selectedDevice);
+					printLastError();
 					printf("\n");
 				}
 				break;
@@ -375,7 +388,7 @@ int main() {
 					printf("Successfully enabled message polling for %s!\n\n", productDescription);
 				} else {
 					printf("Failed to enable message polling for %s!\n\n", productDescription);
-					printDeviceErrors(selectedDevice);
+					printLastError();
 					printf("\n");
 				}
 
@@ -386,7 +399,7 @@ int main() {
 					printf("Successfully set message polling limit for %s!\n\n", productDescription);
 				} else {
 					printf("Failed to set polling message limit for %s!\n\n", productDescription);
-					printDeviceErrors(selectedDevice);
+					printLastError();
 					printf("\n");
 				}
 				break;
@@ -396,7 +409,7 @@ int main() {
 					printf("Successfully disabled message polling for %s!\n\n", productDescription);
 				} else {
 					printf("Failed to disable message polling limit for %s!\n\n", productDescription);
-					printDeviceErrors(selectedDevice);
+					printLastError();
 					printf("\n");
 				}
 				break;
@@ -430,7 +443,7 @@ int main() {
 			// Attempt to get messages
 			if(!icsneo_getMessages(selectedDevice, msgs, &msgCount, 0)) {
 				printf("Failed to get messages for %s!\n\n", productDescription);
-				printDeviceErrors(selectedDevice);
+				printLastError();
 				free(msgs);
 				printf("\n");
 				break;
@@ -504,17 +517,17 @@ int main() {
 				printf("Message transmit successful!\n\n");
 			} else {
 				printf("Failed to transmit message to %s!\n\n", productDescription);
-				printDeviceErrors(selectedDevice);
+				printLastError();
 				printf("\n");
 			}
 		}
 		break;
-		// Get errors
+		// Get events
 		case 'H':
 		case 'h':
 		{
-			// API errors only, no device specific ones
-			printAPIErrors();
+			// All API events
+			printAPIEvents();
 			printf("\n");
 		}
 		break;
@@ -539,7 +552,7 @@ int main() {
 				printf("Successfully set HS CAN baudrate for %s to 250k!\n\n", productDescription);
 			} else {
 				printf("Failed to set HS CAN for %s to 250k!\n\n", productDescription);
-				printDeviceErrors(selectedDevice);
+				printLastError();
 				printf("\n");
 			}
 		}
@@ -565,7 +578,7 @@ int main() {
 				printf("Successfully set HS CAN baudrate for %s to 500k!\n\n", productDescription);
 			} else {
 				printf("Failed to set HS CAN for %s to 500k!\n\n", productDescription);
-				printDeviceErrors(selectedDevice);
+				printLastError();
 				printf("\n");
 			}
 		}

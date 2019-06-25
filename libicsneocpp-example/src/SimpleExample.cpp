@@ -28,9 +28,7 @@ int main() {
 		bool ret = device->open();
 		if(!ret) { // Failed to open
 			std::cout << "FAIL" << std::endl;
-			for(auto& err : icsneo::GetErrors())
-				std::cout << "\t" << err << "\n";
-			std::cout << std::endl;
+			std::cout << icsneo::GetLastError() << std::endl << std::endl;
 			continue;
 		}
 		std::cout << "OK" << std::endl;

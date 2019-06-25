@@ -41,83 +41,85 @@ void printMainMenu() {
 	std::cout << "E - Enable/disable message polling" << std::endl;
 	std::cout << "F - Get messages" << std::endl;
 	std::cout << "G - Send message" << std::endl;
-	std::cout << "H - Get errors" << std::endl;
+	std::cout << "H - Get events" << std::endl;
 	std::cout << "I - Set HS CAN to 250K" << std::endl;
 	std::cout << "J - Set LSFT CAN to 250K" << std::endl;
 	std::cout << "X - Exit" << std::endl;
 }
 
 /**
- * \brief Gets all current API errors and prints them to output
- * Flushes all current API errors, meaning future calls (barring any new errors) will not detect any further API errors
- * Does not get any device errors
+ * \brief Gets all current API events (info and warning level) and prints them to output
+ * Flushes all current API events, meaning future calls (barring any new events) will not detect any further API events
  */
-void printAPIErrors() {
-	auto errors = icsneo::GetErrors(icsneo::ErrorFilter(nullptr, icsneo::APIError::Severity::Error));
+void printAPIEvents() {
+	// Match all events
+	auto events = icsneo::GetEvents(icsneo::EventFilter());
 
-	if(errors.size() == 1) {
-		std::cout << "1 API error found!" << std::endl;
+	if(events.size() == 1) {
+		std::cout << "1 API event found!" << std::endl;
 	} else {
-		std::cout << errors.size() << " API errors found!" << std::endl;
+		std::cout << events.size() << " API events found!" << std::endl;
 	}
 
-	for(auto error : errors) {
-		std::cout << error.describe() << std::endl;
+	for(auto event : events) {
+		std::cout << event << std::endl;
 	}
 }
 
 /**
  * \brief Gets all current API warnings and prints them to output
  * Flushes all current API warnings, meaning future calls (barring any new warnings) will not detect any further API warnings
- * Does not get any device warnings
  */
 void printAPIWarnings() {
-	auto errors = icsneo::GetErrors(icsneo::ErrorFilter(nullptr, icsneo::APIError::Severity::Warning));
+	// Match all warning events, regardless of device
+	auto warnings = icsneo::GetEvents(icsneo::EventFilter(nullptr, icsneo::APIEvent::Severity::EventWarning));
 
-	if(errors.size() == 1) {
+	if(warnings.size() == 1) {
 		std::cout << "1 API warning found!" << std::endl;
 	} else {
-		std::cout << errors.size() << " API warnings found!" << std::endl;
+		std::cout << warnings.size() << " API warnings found!" << std::endl;
 	}
 
-	for(auto error : errors) {
-		std::cout << error.describe() << std::endl;
+	for(auto warning : warnings) {
+		std::cout << warning << std::endl;
 	}
 }
 
 /**
- * \brief Gets all current device errors and prints them to output.
- * Flushes all current device errors, meaning future calls (barring any new errors) will not detect any further device errors
+ * \brief Gets all current device events and prints them to output.
+ * Flushes all current device events, meaning future calls (barring any new events) will not detect any further device events for this device
  */
-void printDeviceErrors(std::shared_ptr<icsneo::Device> device) {
-	auto errors = icsneo::GetErrors(icsneo::ErrorFilter(device.get(), icsneo::APIError::Severity::Error));
+void printDeviceEvents(std::shared_ptr<icsneo::Device> device) {
+	// Match all events for the specified device
+	auto events = icsneo::GetEvents(icsneo::EventFilter(device.get()));
 
-	if(errors.size() == 1) {
-		std::cout << "1 device error found!" << std::endl;
+	if(events.size() == 1) {
+		std::cout << "1 device event found!" << std::endl;
 	} else {
-		std::cout << errors.size() << " device errors found!" << std::endl;
+		std::cout << events.size() << " device events found!" << std::endl;
 	}
 
-	for(auto error : errors) {
-		std::cout << error.describe() << std::endl;
+	for(auto event : events) {
+		std::cout << event << std::endl;
 	}
 }
 
 /**
  * \brief Gets all current device warnings and prints them to output.
- * Flushes all current device warnings, meaning future calls (barring any new warnings) will not detect any further device warnings
+ * Flushes all current device warnings, meaning future calls (barring any new warnings) will not detect any further device warnings for this device
  */
 void printDeviceWarnings(std::shared_ptr<icsneo::Device> device) {
-	auto errors = icsneo::GetErrors(icsneo::ErrorFilter(device.get(), icsneo::APIError::Severity::Warning));
+	// Match all warning events for the specified device
+	auto events = icsneo::GetEvents(icsneo::EventFilter(device.get(), icsneo::APIEvent::Severity::EventWarning));
 
-	if(errors.size() == 1) {
+	if(events.size() == 1) {
 		std::cout << "1 device warning found!" << std::endl;
 	} else {
-		std::cout << errors.size() << " device warnings found!" << std::endl;
+		std::cout << events.size() << " device warnings found!" << std::endl;
 	}
 
-	for(auto error : errors) {
-		std::cout << error.describe() << std::endl;
+	for(auto event : events) {
+		std::cout << event << std::endl;
 	}
 }
 
@@ -232,8 +234,7 @@ int main() {
 					std::cout << selectedDevice->describe() << " successfully opened!" << std::endl << std::endl;
 				} else {
 					std::cout << selectedDevice->describe() << " failed to open!" << std::endl << std::endl;
-					printDeviceWarnings(selectedDevice);
-					printDeviceErrors(selectedDevice);
+					std::cout << icsneo::GetLastError() << std::endl;
 					std::cout << std::endl;
 				}
 				
@@ -245,8 +246,7 @@ int main() {
 					selectedDevice = NULL;
 				} else {
 					std::cout << "Failed to close " << selectedDevice->describe() << "!" << std::endl << std::endl;
-					printDeviceWarnings(selectedDevice);
-					printDeviceErrors(selectedDevice);
+					std::cout << icsneo::GetLastError() << std::endl;;
 					std::cout << std::endl;
 				}
 				
@@ -280,8 +280,7 @@ int main() {
 					std::cout << selectedDevice->describe() << " succecssfully went online!" << std::endl << std::endl;
 				} else {
 					std::cout << selectedDevice->describe() << " failed to go online!" << std::endl << std::endl;
-					printDeviceWarnings(selectedDevice);
-					printDeviceErrors(selectedDevice);
+					std::cout << icsneo::GetLastError() << std::endl;;
 					std::cout << std::endl;
 				}
 				break;
@@ -291,8 +290,7 @@ int main() {
 					std::cout << selectedDevice->describe() << " successfully went offline!" << std::endl << std::endl;
 				} else {
 					std::cout << selectedDevice->describe() << " failed to go offline!" << std::endl << std::endl;
-					printDeviceWarnings(selectedDevice);
-					printDeviceErrors(selectedDevice);
+					std::cout << icsneo::GetLastError() << std::endl;;
 					std::cout << std::endl;
 				}
 				break;
@@ -325,8 +323,7 @@ int main() {
 					std::cout << "Successfully enabled message polling for " << selectedDevice->describe() << "!" << std::endl << std::endl;
 				} else {
 					std::cout << "Failed to enable message polling for " << selectedDevice->describe() << "!" << std::endl << std::endl;
-					printDeviceWarnings(selectedDevice);
-					printDeviceErrors(selectedDevice);
+					std::cout << icsneo::GetLastError() << std::endl;;
 					std::cout << std::endl;
 				}
 				// Manually setting the polling message limit as done below is optional
@@ -336,8 +333,7 @@ int main() {
 					std::cout << "Successfully set polling message limit for " << selectedDevice->describe() << "!" << std::endl << std::endl;
 				} else {
 					std::cout << "Failed to set polling message limit for " << selectedDevice->describe() << "!" << std::endl << std::endl;
-					printDeviceWarnings(selectedDevice);
-					printDeviceErrors(selectedDevice);
+					std::cout << icsneo::GetLastError() << std::endl;;
 					std::cout << std::endl;
 				}
 				break;
@@ -347,8 +343,7 @@ int main() {
 					std::cout << "Successfully disabled message polling for " << selectedDevice->describe() << "!" << std::endl;
 				} else {
 					std::cout << "Failed to disable message polling for " << selectedDevice->describe() << "!" << std::endl << std::endl;
-					printDeviceWarnings(selectedDevice);
-					printDeviceErrors(selectedDevice);
+					std::cout << icsneo::GetLastError() << std::endl;;
 					std::cout << std::endl;
 				}
 				break;
@@ -375,8 +370,7 @@ int main() {
 			// A third parameter of type std::chrono::milliseconds is also accepted if a timeout is desired
 			if(!selectedDevice->getMessages(msgs, msgLimit)) {
 				std::cout << "Failed to get messages for " << selectedDevice->describe() << "!" << std::endl << std::endl;
-				printDeviceWarnings(selectedDevice);
-				printDeviceErrors(selectedDevice);
+				std::cout << icsneo::GetLastError() << std::endl;;
 				std::cout << std::endl;
 				break;
 			}
@@ -387,8 +381,7 @@ int main() {
 			auto ret = selectedDevice->getMessages();
 			if(ret.size() == 1 && ret.at(0) == nullptr) {
 				std::cout << "Failed to get messages for " << selectedDevice->describe() << "!" << std::endl << std::endl;
-				printDeviceWarnings(selectedDevice);
-				printDeviceErrors(selectedDevice);
+				std::cout << icsneo::GetLastError() << std::endl;;
 				std::cout << std::endl;
 				break;
 			}
@@ -435,20 +428,18 @@ int main() {
 				std::cout << "Message transmit successful!" << std::endl;
 			} else {
 				std::cout << "Failed to transmit message to " << selectedDevice->describe() << "!" << std::endl << std::endl;
-				printDeviceWarnings(selectedDevice);
-				printDeviceErrors(selectedDevice);
+				std::cout << icsneo::GetLastError() << std::endl;;
 			}
 
 			std::cout << std::endl;
 		}
 		break;
-		// Get errors
+		// Get events
 		case 'H':
 		case 'h':
 		{
-			// API errors only, no device specific ones
-			printAPIWarnings();
-			printAPIErrors();
+			// Prints all events
+			printAPIEvents();
 			std::cout << std::endl;
 		}
 		break;
@@ -468,8 +459,7 @@ int main() {
 				std::cout << "Successfully set HS CAN baudrate for " << selectedDevice->describe() << " to 250k!" << std::endl;
 			} else {
 				std::cout << "Failed to set HS CAN baudrate for " << selectedDevice->describe() << " to 250k!" << std::endl << std::endl;
-				printDeviceWarnings(selectedDevice);
-				printDeviceErrors(selectedDevice);
+				std::cout << icsneo::GetLastError() << std::endl;;
 			}
 			std::cout << std::endl;
 		}
@@ -490,8 +480,7 @@ int main() {
 				std::cout << "Successfully set LSFT CAN baudrate for " << selectedDevice->describe() << " to 250k!" << std::endl;
 			} else {
 				std::cout << "Failed to set LSFT CAN baudrate for " << selectedDevice->describe() << " to 250k!" << std::endl << std::endl;
-				printDeviceWarnings(selectedDevice);
-				printDeviceErrors(selectedDevice);
+				std::cout << icsneo::GetLastError() << std::endl;;
 			}
 			std::cout << std::endl;
 		}
