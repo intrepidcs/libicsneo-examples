@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-project(libicsneocpp-example VERSION 0.1.0)
+project(libicsneocpp-example-baudrate-setter VERSION 0.1.0)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -22,5 +22,5 @@ endif()
 
 add_subdirectory("third-party/libicsneo")
 
-add_executable(libicsneocpp-example src/main.cpp)
-target_link_libraries(libicsneocpp-example icsneocpp)
+add_executable(libicsneocpp-example-baudrate-setter src/main.cpp)
+target_link_libraries(libicsneocpp-example-baudrate-setter icsneocpp)
