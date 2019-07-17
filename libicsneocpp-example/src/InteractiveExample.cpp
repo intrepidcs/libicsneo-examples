@@ -40,7 +40,7 @@ void printMainMenu() {
 	std::cout << "D - Go online/offline" << std::endl;
 	std::cout << "E - Enable/disable message polling" << std::endl;
 	std::cout << "F - Get messages" << std::endl;
-	std::cout << "G - Send message" << std::endl;
+	std::cout << "G - Send messages" << std::endl;
 	std::cout << "H - Get events" << std::endl;
 	std::cout << "I - Set HS CAN to 250K" << std::endl;
 	std::cout << "J - Set LSFT CAN to 250K" << std::endl;
@@ -277,7 +277,7 @@ int main() {
 			case '1':
 				// Attempt to have the selected device go online
 				if(selectedDevice->goOnline()) {
-					std::cout << selectedDevice->describe() << " succecssfully went online!" << std::endl << std::endl;
+					std::cout << selectedDevice->describe() << " successfully went online!" << std::endl << std::endl;
 				} else {
 					std::cout << selectedDevice->describe() << " failed to go online!" << std::endl << std::endl;
 					std::cout << icsneo::GetLastError() << std::endl;;
@@ -376,6 +376,7 @@ int main() {
 			}
 
 			// Alternative way to get messages using default options (no limit on msg count and no timeout)
+			// If there are no messages, getMessages() will return a vector with a single nullptr element.
 			// Important to check both if the returned vector has size 1 and contains a nullptr for error checking purposes.
 			/*
 			auto ret = selectedDevice->getMessages();
@@ -395,14 +396,33 @@ int main() {
 
 			// Print out the received messages
 			for(auto msg : msgs) {
-				std::cout << msg->description << std::endl;
+				switch(msg->network.getType()) {
+				case icsneo::Network::Type::CAN:
+				{
+					// A message of type CAN is guaranteed to be a CANMessage, so we can static cast safely
+					auto canMsg = std::static_pointer_cast<icsneo::CANMessage>(msg);
+					std::cout << "\t0x" << std::setfill('0') << std::setw(3) << std::hex << (int) canMsg->arbid << " [" << canMsg->data.size() << "] " << std::dec;
+					
+					for(auto data : canMsg->data) {
+						std::cout << std::setfill('0') << std::setw(2) << std::hex << (int) data << " " << std::dec;
+					}
+
+					std::cout << canMsg->timestamp << std::endl;
+					break;
+				}
+				default:
+					if(msg->network.getNetID() != icsneo::Network::NetID::Device) {
+						std::cout << "\tMessage on netid " << msg->network.GetNetIDString(msg->network.getNetID()) << " with length " << msg->data.size() << std::endl;
+					}
+					break;
+				}
 			}
 						
 			std::cout << std::endl;
 		}
 
 		break;
-		// Send message
+		// Send messages
 		case 'G':
 		case 'g':
 		{
@@ -413,7 +433,22 @@ int main() {
 			}
 			selectedDevice = selectDevice();
 
-			// We can transmit messages
+			std::cout << "Transmitting a normal CAN frame..." << std::endl;
+			auto msg = std::make_shared<icsneo::CANMessage>();
+			msg->network = icsneo::Network::NetID::HSCAN;
+			msg->arbid = 0x120;
+			msg->data.insert(msg->data.end(), {0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff});
+			msg->isExtended = false;
+			msg->isCANFD = false;
+
+			// Attempt to transmit the sample msg
+			if(selectedDevice->transmit(msg)) {
+				std::cout << "Message transmit successful!" << std::endl;
+			} else {
+				std::cout << "Failed to transmit message to " << selectedDevice->describe() << "!" << std::endl << std::endl;
+				std::cout << icsneo::GetLastError() << std::endl;;
+			}
+			
 			std::cout << "Transmitting an extended CAN FD frame... " << std::endl;
 			auto txMessage = std::make_shared<icsneo::CANMessage>();
 			txMessage->network = icsneo::Network::NetID::HSCAN;
@@ -425,9 +460,9 @@ int main() {
 
 			// Attempt to transmit the sample msg
 			if(selectedDevice->transmit(txMessage)) {
-				std::cout << "Message transmit successful!" << std::endl;
+				std::cout << "Extended CAN FD frame transmit successful!" << std::endl;
 			} else {
-				std::cout << "Failed to transmit message to " << selectedDevice->describe() << "!" << std::endl << std::endl;
+				std::cout << "Failed to transmit extended CAN FD frame to " << selectedDevice->describe() << "!" << std::endl << std::endl;
 				std::cout << icsneo::GetLastError() << std::endl;;
 			}
 

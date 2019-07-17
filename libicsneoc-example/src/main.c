@@ -13,7 +13,7 @@
 size_t msgLimit = 50000;
 size_t numDevices = 0;
 neodevice_t devices[99];
-neodevice_t* selectedDevice = NULL;
+const neodevice_t* selectedDevice = NULL;
 
 /**
  * \brief Prints all current known devices to output in the following format:
@@ -27,12 +27,11 @@ void printAllDevices() {
 		printf("No devices found! Please scan for new devices.\n");
 	}
 	for(int i = 0; i < numDevices; i++) {
-		char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
+		char productDescription[ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION];
 		size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 
 		// Updates productDescription and descriptionLength for each device
 		if(icsneo_describeDevice(devices + i, productDescription, &descriptionLength)) {
-
 			printf("[%d] %s\tConnected: ", i + 1, productDescription);
 			if(icsneo_isOpen(devices + i)) {
 				printf("Yes\t");
@@ -186,7 +185,7 @@ char getCharInput(int numArgs, ...) {
  * \returns a pointer to the device in devices[] selected by the user
  * Requires an input from 1-9, so a maximum of 9 devices are supported
  */
-neodevice_t* selectDevice() {
+const neodevice_t* selectDevice() {
 	printf("Please select a device:\n");
 	printAllDevices();
 	printf("\n");
@@ -262,7 +261,7 @@ int main() {
 			selectedDevice = selectDevice();
 
 			// Get the product description for the device
-			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
+			char productDescription[ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION];
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
@@ -323,7 +322,7 @@ int main() {
 			selectedDevice = selectDevice();
 
 			// Get the product description for the device
-			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
+			char productDescription[ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION];
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
@@ -371,7 +370,7 @@ int main() {
 			selectedDevice = selectDevice();
 
 			// Get the product description for the device
-			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
+			char productDescription[ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION];
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
@@ -430,18 +429,18 @@ int main() {
 			selectedDevice = selectDevice();
 
 			// Get the product description for the device
-			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
+			char productDescription[ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION];
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
 			// Prepare the array of neomessage_t ptrs for reading in the messages
-			neomessage_t* msgs = malloc(msgLimit * sizeof(neomessage_t));
+			neomessage_t* msgs = (neomessage_t*) malloc(msgLimit * sizeof(neomessage_t*));
 
 			// Get messages
-			size_t msgCount;
+			size_t msgCount = msgLimit;
 
 			// Attempt to get messages
-			if(!icsneo_getMessages(selectedDevice, msgs, &msgCount, 0)) {
+			if(!icsneo_getMessages(selectedDevice, msgs, &msgCount, (uint64_t) 0)) {
 				printf("Failed to get messages for %s!\n\n", productDescription);
 				printLastError();
 				free(msgs);
@@ -459,16 +458,20 @@ int main() {
 			for(size_t i = 0; i < msgCount; i++) {
 				neomessage_t* msg = &msgs[i];
 				switch(msg->type) {
-				case ICSNEO_NETWORK_TYPE_CAN: // CAN
-					printf("\t0x%03x [%zu] ", ((neomessage_can_t*) msg)->arbid, msg->length);
-					for(size_t i = 0; i < msg->length; i++) {
-						printf("%02x ", msg->data[i]);
+				case ICSNEO_NETWORK_TYPE_CAN: // CAN 
+				{
+					neomessage_can_t* canMsg = (neomessage_can_t*) msg;
+					printf("\t0x%03x [%zu] ", canMsg->arbid, canMsg->length);
+					for(size_t i = 0; i < canMsg->length; i++) {
+						printf("%02x ", canMsg->data[i]);
 					}
-					printf("(%llu)\n", msg->timestamp);
+					printf("(%llu)\n", canMsg->timestamp);
 					break;
+				}
 				default:
 					if(msg->netid != 0)
 						printf("\tMessage on netid %d with length %zu\n", msg->netid, msg->length);
+					break;
 				}
 			}
 			printf("\n");
@@ -489,12 +492,12 @@ int main() {
 			selectedDevice = selectDevice();
 
 			// Get the product description for the device
-			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
+			char productDescription[ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION];
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
 			// Start generating sample msg
-			uint8_t sendMessageData[8];
+			uint8_t sendMessageData[6];
 			sendMessageData[0] = 0xaa;
 			sendMessageData[1] = 0xbb;
 			sendMessageData[2] = 0xcc;
@@ -502,7 +505,7 @@ int main() {
 			sendMessageData[4] = 0xee;
 			sendMessageData[5] = 0xff;
 
-			neomessage_can_t msg;
+			neomessage_can_t msg = {0};
 			msg.arbid = 0x120;
 			msg.length = 6;
 			msg.netid = ICSNEO_NETID_HSCAN;
@@ -513,7 +516,7 @@ int main() {
 			// End generating sample msg
 
 			// Attempt to transmit the sample msg
-			if(icsneo_transmit(selectedDevice, &msg)) {
+			if(icsneo_transmit(selectedDevice, (const neomessage_t*) &msg)) {
 				printf("Message transmit successful!\n\n");
 			} else {
 				printf("Failed to transmit message to %s!\n\n", productDescription);
@@ -543,7 +546,7 @@ int main() {
 			selectedDevice = selectDevice();
 
 			// Get the product description for the device
-			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
+			char productDescription[ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION];
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
@@ -569,7 +572,7 @@ int main() {
 			selectedDevice = selectDevice();
 
 			// Get the product description for the device
-			char productDescription[ICSNEO_DEVICETYPE_LONGEST_NAME];
+			char productDescription[ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION];
 			size_t descriptionLength = ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 			icsneo_describeDevice(selectedDevice, productDescription, &descriptionLength);
 
