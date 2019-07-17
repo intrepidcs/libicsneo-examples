@@ -5,3 +5,6 @@ Thumbs.db
 **/.vscode/
 .vs
 CMakeSettings.json
+libicsneocsharp-example/obj
+libicsneocsharp-example/build
+libicsneocsharp-example/bin/
