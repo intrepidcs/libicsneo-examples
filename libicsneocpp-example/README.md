@@ -7,14 +7,17 @@ This is an example console application which uses libicsneo to connect to an Int
 This example shows how to use the C++ version of libicsneo with CMake. It will build libicsneo along with your project.
 
 First, you need to clone the repository onto your local machine. Run:
+
 ```shell
 git clone https://github.com/intrepidcs/libicsneo-examples --recursive
 ```
 
 Alternatively, if you cloned without the `--recursive flag`, you must enter the `libicsneo-examples` folder and run the following:
+
 ```shell
 git submodule update --recursive --init 
 ```
+
 If you haven't done this, `third-party/libicsneo` will be empty and you won't be able to build!
 
 ### Windows using Visual Studio 2017+
@@ -33,11 +36,11 @@ If you haven't done this, `third-party/libicsneo` will be empty and you won't be
 2. Change directories to your `libicsneo-examples/libicsneocpp-example` folder and create a build directory by running `mkdir -p build`
 3. Enter the build directory with `cd build`
 4. Run `cmake ..` to generate your Makefile.
-	- Hint! Running `cmake -DCMAKE_BUILD_TYPE=Debug ..` will generate the proper scripts to build debug, and `cmake -DCMAKE_BUILD_TYPE=Release ..` will generate the proper scripts to build with all optimizations on.
+    * Hint! Running `cmake -DCMAKE_BUILD_TYPE=Debug ..` will generate the proper scripts to build debug, and `cmake -DCMAKE_BUILD_TYPE=Release ..` will generate the proper scripts to build with all optimizations on.
 5. Run `make libicsneocpp-interactive-example` to build.
-	- Hint! Speed up your build by using multiple processors! Use `make libicsneocpp-interactive-example -j#` where `#` is the number of cores/threads your system has plus one. For instance, on a standard 8 thread Intel i7, you might use `-j9` for an ~8x speedup.
+    * Hint! Speed up your build by using multiple processors! Use `make libicsneocpp-interactive-example -j#` where `#` is the number of cores/threads your system has plus one. For instance, on a standard 8 thread Intel i7, you might use `-j9` for an ~8x speedup.
 6. Now run `sudo ./libicsneocpp-interactive-example` to run the example.
-	- Hint! In order to run without sudo, you will need to set up the udev rules. Instructions for doing so are coming soon.
+    * Hint! In order to run without sudo, you will need to set up the udev rules. Instructions for doing so are coming soon.
 7. If you wish to run the simple example instead, replace any instances of "interactive" with "simple" in steps 5 and 6.
 
 ### macOS
