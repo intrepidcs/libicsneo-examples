@@ -373,9 +373,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_serialNumToString(unsigned int
   bool result;
   
   arg1 = (uint32_t)jarg1; 
-  
-  arg2 = jarg2;
-  
+  arg2 = (char *)jarg2; 
   arg3 = (size_t *)jarg3; 
   result = (bool)icsneo_serialNumToString(arg1,arg2,arg3);
   jresult = result; 
@@ -388,9 +386,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_serialStringToNum(char * jarg1
   char *arg1 = (char *) 0 ;
   uint32_t result;
   
-  
-  arg1 = jarg1;
-  
+  arg1 = (char *)jarg1; 
   result = (uint32_t)icsneo_serialStringToNum((char const *)arg1);
   jresult = result; 
   return jresult;
@@ -569,9 +565,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_getProductName(void * jarg1, c
   bool result;
   
   arg1 = (neodevice_t *)jarg1; 
-  
-  arg2 = jarg2;
-  
+  arg2 = (char *)jarg2; 
   arg3 = (size_t *)jarg3; 
   result = (bool)icsneo_getProductName((neodevice_t const *)arg1,arg2,arg3);
   jresult = result; 
@@ -587,9 +581,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_getProductNameForType(unsigned
   bool result;
   
   arg1 = (devicetype_t)jarg1; 
-  
-  arg2 = jarg2;
-  
+  arg2 = (char *)jarg2; 
   arg3 = (size_t *)jarg3; 
   result = (bool)icsneo_getProductNameForType(arg1,arg2,arg3);
   jresult = result; 
@@ -803,9 +795,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_describeDevice(void * jarg1, c
   bool result;
   
   arg1 = (neodevice_t *)jarg1; 
-  
-  arg2 = jarg2;
-  
+  arg2 = (char *)jarg2; 
   arg3 = (size_t *)jarg3; 
   result = (bool)icsneo_describeDevice((neodevice_t const *)arg1,arg2,arg3);
   jresult = result; 

@@ -199,10 +199,10 @@ class icsneocsharpPINVOKE {
   public static extern void icsneo_freeUnconnectedDevices();
 
   [global::System.Runtime.InteropServices.DllImport("libicsneocsharp.dll", EntryPoint="CSharp_icsneo_serialNumToString")]
-  public static extern bool icsneo_serialNumToString(uint jarg1, char[] jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+  public static extern bool icsneo_serialNumToString(uint jarg1, System.Text.StringBuilder jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
 
   [global::System.Runtime.InteropServices.DllImport("libicsneocsharp.dll", EntryPoint="CSharp_icsneo_serialStringToNum")]
-  public static extern uint icsneo_serialStringToNum(char[] jarg1);
+  public static extern uint icsneo_serialStringToNum(System.Text.StringBuilder jarg1);
 
   [global::System.Runtime.InteropServices.DllImport("libicsneocsharp.dll", EntryPoint="CSharp_icsneo_isValidNeoDevice")]
   public static extern bool icsneo_isValidNeoDevice(global::System.Runtime.InteropServices.HandleRef jarg1);
@@ -244,10 +244,10 @@ class icsneocsharpPINVOKE {
   public static extern bool icsneo_setPollingMessageLimit(global::System.Runtime.InteropServices.HandleRef jarg1, uint jarg2);
 
   [global::System.Runtime.InteropServices.DllImport("libicsneocsharp.dll", EntryPoint="CSharp_icsneo_getProductName")]
-  public static extern bool icsneo_getProductName(global::System.Runtime.InteropServices.HandleRef jarg1, char[] jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+  public static extern bool icsneo_getProductName(global::System.Runtime.InteropServices.HandleRef jarg1, System.Text.StringBuilder jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
 
   [global::System.Runtime.InteropServices.DllImport("libicsneocsharp.dll", EntryPoint="CSharp_icsneo_getProductNameForType")]
-  public static extern bool icsneo_getProductNameForType(uint jarg1, char[] jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+  public static extern bool icsneo_getProductNameForType(uint jarg1, System.Text.StringBuilder jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
 
   [global::System.Runtime.InteropServices.DllImport("libicsneocsharp.dll", EntryPoint="CSharp_icsneo_settingsRefresh")]
   public static extern bool icsneo_settingsRefresh(global::System.Runtime.InteropServices.HandleRef jarg1);
@@ -292,7 +292,7 @@ class icsneocsharpPINVOKE {
   public static extern bool icsneo_transmitMessages(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, uint jarg3);
 
   [global::System.Runtime.InteropServices.DllImport("libicsneocsharp.dll", EntryPoint="CSharp_icsneo_describeDevice")]
-  public static extern bool icsneo_describeDevice(global::System.Runtime.InteropServices.HandleRef jarg1, char[] jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+  public static extern bool icsneo_describeDevice(global::System.Runtime.InteropServices.HandleRef jarg1, System.Text.StringBuilder jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
 
   [global::System.Runtime.InteropServices.DllImport("libicsneocsharp.dll", EntryPoint="CSharp_icsneo_getVersion")]
   public static extern global::System.IntPtr icsneo_getVersion();

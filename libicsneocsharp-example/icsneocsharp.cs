@@ -18,12 +18,12 @@ public class icsneocsharp {
     icsneocsharpPINVOKE.icsneo_freeUnconnectedDevices();
   }
 
-  public static bool icsneo_serialNumToString(uint num, char[] str, SWIGTYPE_p_size_t count) {
+  public static bool icsneo_serialNumToString(uint num, System.Text.StringBuilder str, SWIGTYPE_p_size_t count) {
     bool ret = icsneocsharpPINVOKE.icsneo_serialNumToString(num, str, SWIGTYPE_p_size_t.getCPtr(count));
     return ret;
   }
 
-  public static uint icsneo_serialStringToNum(char[] str) {
+  public static uint icsneo_serialStringToNum(System.Text.StringBuilder str) {
     uint ret = icsneocsharpPINVOKE.icsneo_serialStringToNum(str);
     return ret;
   }
@@ -93,12 +93,12 @@ public class icsneocsharp {
     return ret;
   }
 
-  public static bool icsneo_getProductName(neodevice_t device, char[] str, SWIGTYPE_p_size_t maxLength) {
+  public static bool icsneo_getProductName(neodevice_t device, System.Text.StringBuilder str, SWIGTYPE_p_size_t maxLength) {
     bool ret = icsneocsharpPINVOKE.icsneo_getProductName(neodevice_t.getCPtr(device), str, SWIGTYPE_p_size_t.getCPtr(maxLength));
     return ret;
   }
 
-  public static bool icsneo_getProductNameForType(uint type, char[] str, SWIGTYPE_p_size_t maxLength) {
+  public static bool icsneo_getProductNameForType(uint type, System.Text.StringBuilder str, SWIGTYPE_p_size_t maxLength) {
     bool ret = icsneocsharpPINVOKE.icsneo_getProductNameForType(type, str, SWIGTYPE_p_size_t.getCPtr(maxLength));
     return ret;
   }
@@ -173,7 +173,7 @@ public class icsneocsharp {
     return ret;
   }
 
-  public static bool icsneo_describeDevice(neodevice_t device, char[] str, SWIGTYPE_p_size_t maxLength) {
+  public static bool icsneo_describeDevice(neodevice_t device, System.Text.StringBuilder str, SWIGTYPE_p_size_t maxLength) {
     bool ret = icsneocsharpPINVOKE.icsneo_describeDevice(neodevice_t.getCPtr(device), str, SWIGTYPE_p_size_t.getCPtr(maxLength));
     return ret;
   }

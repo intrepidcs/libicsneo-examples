@@ -15,13 +15,11 @@
 	$1 = $input;
 %}
 
-
 %typemap(csvarin) uint8_t const *data %{
 	set {
 		icsneocsharpPINVOKE.$csclazznamedata_set(swigCPtr, value);
 	}
 %}
-
 
 %typemap(csvarout, excode=SWIGEXCODE2) uint8_t const *data %{
 	get {
@@ -32,16 +30,9 @@
 	}
 %}
 
-
 %typemap(ctype) char *str "char *"
-%typemap(imtype, out="System.IntPtr") char *str "char[]"
-%typemap(cstype) char *str "char[]" 
-
-%typemap(in) char *str %{
-	$1 = $input;
-%} 
-
-%typemap(csin) char ** str "$csinput" 
+%typemap(imtype) char *str "System.Text.StringBuilder"
+%typemap(cstype) char *str "System.Text.StringBuilder" 
 
 %{
 #include "icsneo/icsneoc.h"

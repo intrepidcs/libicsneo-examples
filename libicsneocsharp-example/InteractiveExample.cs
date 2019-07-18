@@ -15,12 +15,12 @@ namespace libicsneocsharp_example {
             }
 
             for(int i = 0; i < numDevices; i++) {
-                char[] description = new char[icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION];
+                System.Text.StringBuilder description = new System.Text.StringBuilder(icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
                 GCHandle lenHandle = GCHandle.Alloc((uint)icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION, GCHandleType.Pinned);
                 SWIGTYPE_p_size_t maxLength = new SWIGTYPE_p_size_t(lenHandle.AddrOfPinnedObject(), true);
 
                 if(icsneocsharp.icsneo_describeDevice(devices[i], description, maxLength)) {
-                    System.Console.Write("[" + (i + 1) + "] " + new string(description) + "\tConnected: ");
+                    System.Console.Write("[" + (i + 1) + "] " + description.ToString() + "\tConnected: ");
 
                     if(icsneocsharp.icsneo_isOpen(devices[i])) {
                         System.Console.Write("Yes\t");
@@ -209,7 +209,7 @@ namespace libicsneocsharp_example {
                     selectedDevice = SelectDevice();
 
                     // Get the product description for the device
-                    char[] description = new char[icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION];
+                    System.Text.StringBuilder description = new System.Text.StringBuilder(icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
                     GCHandle lenHandle = GCHandle.Alloc((uint)icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION, GCHandleType.Pinned);
                     SWIGTYPE_p_size_t maxLength = new SWIGTYPE_p_size_t(lenHandle.AddrOfPinnedObject(), true);
 
@@ -240,7 +240,7 @@ namespace libicsneocsharp_example {
                             devices.Remove(selectedDevice);
                             selectedDevice = null;
                         } else {
-                            System.Console.WriteLine("Failed to close " + new string(description) + "!\n");
+                            System.Console.WriteLine("Failed to close " + description.ToString() + "!\n");
                             PrintLastError();
                             System.Console.WriteLine();
                         }
@@ -263,13 +263,13 @@ namespace libicsneocsharp_example {
                     selectedDevice = SelectDevice();
 
                     // Get the product description for the device
-                    char[] description = new char[icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION];
+                    System.Text.StringBuilder description = new System.Text.StringBuilder(icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
                     GCHandle lenHandle = GCHandle.Alloc((uint)icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION, GCHandleType.Pinned);
                     SWIGTYPE_p_size_t maxLength = new SWIGTYPE_p_size_t(lenHandle.AddrOfPinnedObject(), true);
 
                     icsneocsharp.icsneo_describeDevice(selectedDevice, description, maxLength);
 
-                    System.Console.WriteLine("Would you like to have " + new string(description) + " go online or offline?");
+                    System.Console.WriteLine("Would you like to have " + description.ToString() + " go online or offline?");
                     System.Console.WriteLine("[1] Online\n[2] Offline\n[3] Cancel\n");
 
                     char option = GetCharInput(new List<char> { '1', '2', '3' });
@@ -314,13 +314,13 @@ namespace libicsneocsharp_example {
                     selectedDevice = SelectDevice();
 
                     // Get the product description for the device
-                    char[] description = new char[icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION];
+                    System.Text.StringBuilder description = new System.Text.StringBuilder(icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
                     GCHandle lenHandle = GCHandle.Alloc((uint)icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION, GCHandleType.Pinned);
                     SWIGTYPE_p_size_t maxLength = new SWIGTYPE_p_size_t(lenHandle.AddrOfPinnedObject(), true);
 
                     icsneocsharp.icsneo_describeDevice(selectedDevice, description, maxLength);
 
-                    System.Console.WriteLine("Would you like to enable or disable message polling for " + new string(description) + "?");
+                    System.Console.WriteLine("Would you like to enable or disable message polling for " + description.ToString() + "?");
                     System.Console.WriteLine("[1] Enable\n[2] Disable\n[3] Cancel\n");
 
                     char option = GetCharInput(new List<char> { '1', '2', '3' });
@@ -330,9 +330,9 @@ namespace libicsneocsharp_example {
                     case '1':
                         // Attempt to enable message polling
                         if(icsneocsharp.icsneo_enableMessagePolling(selectedDevice)) {
-                            System.Console.WriteLine("Successfully enabled message polling for " + new string(description) + "!\n");
+                            System.Console.WriteLine("Successfully enabled message polling for " + description.ToString() + "!\n");
                         } else {
-                            System.Console.WriteLine("Failed to enable message polling for " + new string(description) + "!\n");
+                            System.Console.WriteLine("Failed to enable message polling for " + description.ToString() + "!\n");
                             PrintLastError();
                             System.Console.WriteLine();
                         }
@@ -341,9 +341,9 @@ namespace libicsneocsharp_example {
                         // It will default to 20k if not set
                         // Attempt to set the polling message limit
                         if(icsneocsharp.icsneo_setPollingMessageLimit(selectedDevice, msgLimit)) {
-                            System.Console.WriteLine("Successfully set message polling limit for " + new string(description) + "!\n");
+                            System.Console.WriteLine("Successfully set message polling limit for " + description.ToString() + "!\n");
                         } else {
-                            System.Console.WriteLine("Failed to set polling message limit for " + new string(description) + "!\n");
+                            System.Console.WriteLine("Failed to set polling message limit for " + description.ToString() + "!\n");
                             PrintLastError();
                             System.Console.WriteLine();
                         }
@@ -351,9 +351,9 @@ namespace libicsneocsharp_example {
                     case '2':
                         // Attempt to disable message polling
                         if(icsneocsharp.icsneo_disableMessagePolling(selectedDevice)) {
-                            System.Console.WriteLine("Successfully disabled message polling for " + new string(description) + "!\n");
+                            System.Console.WriteLine("Successfully disabled message polling for " + description.ToString() + "!\n");
                         } else {
-                            System.Console.WriteLine("Failed to disable message polling for " + new string(description) + "!\n");
+                            System.Console.WriteLine("Failed to disable message polling for " + description.ToString() + "!\n");
                             PrintLastError();
                             System.Console.WriteLine();
                         }
@@ -375,7 +375,7 @@ namespace libicsneocsharp_example {
                     selectedDevice = SelectDevice();
 
                     // Get the product description for the device
-                    char[] description = new char[icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION];
+                    System.Text.StringBuilder description = new System.Text.StringBuilder(icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
                     GCHandle lenHandle = GCHandle.Alloc((uint)icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION, GCHandleType.Pinned);
                     SWIGTYPE_p_size_t maxLength = new SWIGTYPE_p_size_t(lenHandle.AddrOfPinnedObject(), true);
 
@@ -387,7 +387,7 @@ namespace libicsneocsharp_example {
                     SWIGTYPE_p_size_t msgCountPtr = new SWIGTYPE_p_size_t(gcHandle.AddrOfPinnedObject(), true);
 
                     if(!icsneocsharp.icsneo_getMessages(selectedDevice, msgs, msgCountPtr, 0)) {
-                        System.Console.WriteLine("Failed to get messages for " + new string(description) + "!\n");
+                        System.Console.WriteLine("Failed to get messages for " + description.ToString() + "!\n");
                         PrintLastError();
                         System.Console.WriteLine();
                         break;
@@ -395,9 +395,9 @@ namespace libicsneocsharp_example {
 
                     uint msgCount = Marshal.PtrToStructure<uint>(SWIGTYPE_p_size_t.getCPtr(msgCountPtr).Handle);
                     if(msgCount == 1) {
-                        System.Console.WriteLine("1 message received from " + new string(description) + "!");
+                        System.Console.WriteLine("1 message received from " + description.ToString() + "!");
                     } else {
-                        System.Console.WriteLine(msgCount + " messages received from " + new string(description) + "!");
+                        System.Console.WriteLine(msgCount + " messages received from " + description.ToString() + "!");
                     }
 
                     // Print out the received messages
@@ -428,7 +428,7 @@ namespace libicsneocsharp_example {
                     selectedDevice = SelectDevice();
 
                     // Get the product description for the device
-                    char[] description = new char[icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION];
+                    System.Text.StringBuilder description = new System.Text.StringBuilder(icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
                     GCHandle lenHandle = GCHandle.Alloc((uint)icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION, GCHandleType.Pinned);
                     SWIGTYPE_p_size_t maxLength = new SWIGTYPE_p_size_t(lenHandle.AddrOfPinnedObject(), true);
 
@@ -449,7 +449,7 @@ namespace libicsneocsharp_example {
                     if(icsneocsharp.icsneo_transmit(selectedDevice, icsneocsharp.from_can_neomessage_t_cast(msg))) {
                         System.Console.WriteLine("Message transmit successful!");
                     } else {
-                        System.Console.WriteLine("Failed to transmit message to " + new string(description) + "!\n");
+                        System.Console.WriteLine("Failed to transmit message to " + description.ToString() + "!\n");
                         PrintLastError();
                         System.Console.WriteLine();
                     }
@@ -474,7 +474,7 @@ namespace libicsneocsharp_example {
                     selectedDevice = SelectDevice();
 
                     // Get the product description for the device
-                    char[] description = new char[icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION];
+                    System.Text.StringBuilder description = new System.Text.StringBuilder(icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
                     GCHandle lenHandle = GCHandle.Alloc((uint)icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION, GCHandleType.Pinned);
                     SWIGTYPE_p_size_t maxLength = new SWIGTYPE_p_size_t(lenHandle.AddrOfPinnedObject(), true);
 
@@ -482,9 +482,9 @@ namespace libicsneocsharp_example {
 
                     // Attempt to set baudrate and apply settings
                     if(icsneocsharp.icsneo_setBaudrate(selectedDevice, (ushort)icsneocsharp.ICSNEO_NETID_HSCAN, 250000) && icsneocsharp.icsneo_settingsApply(selectedDevice)) {
-                        System.Console.WriteLine("Successfully set HS CAN baudrate for " + new string(description) + "to 250k!\n");
+                        System.Console.WriteLine("Successfully set HS CAN baudrate for " + description.ToString() + "to 250k!\n");
                     } else {
-                        System.Console.WriteLine("Failed to set HS CAN for " + new string(description) + " to 250k!\n");
+                        System.Console.WriteLine("Failed to set HS CAN for " + description.ToString() + " to 250k!\n");
                         PrintLastError();
                         System.Console.WriteLine();
                     }
@@ -502,7 +502,7 @@ namespace libicsneocsharp_example {
                     selectedDevice = SelectDevice();
 
                     // Get the product description for the device
-                    char[] description = new char[icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION];
+                    System.Text.StringBuilder description = new System.Text.StringBuilder(icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
                     GCHandle lenHandle = GCHandle.Alloc((uint)icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION, GCHandleType.Pinned);
                     SWIGTYPE_p_size_t maxLength = new SWIGTYPE_p_size_t(lenHandle.AddrOfPinnedObject(), true);
 
@@ -510,9 +510,9 @@ namespace libicsneocsharp_example {
 
                     // Attempt to set baudrate and apply settings
                     if(icsneocsharp.icsneo_setBaudrate(selectedDevice, (ushort)icsneocsharp.ICSNEO_NETID_HSCAN, 500000) && icsneocsharp.icsneo_settingsApply(selectedDevice)) {
-                        System.Console.WriteLine("Successfully set HS CAN baudrate for " + new string(description) + "to 500k!\n");
+                        System.Console.WriteLine("Successfully set HS CAN baudrate for " + description.ToString() + "to 500k!\n");
                     } else {
-                        System.Console.WriteLine("Failed to set HS CAN for " + new string(description) + " to 500k!\n");
+                        System.Console.WriteLine("Failed to set HS CAN for " + description.ToString() + " to 500k!\n");
                         PrintLastError();
                         System.Console.WriteLine();
                     }
