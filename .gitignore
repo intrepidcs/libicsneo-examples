@@ -4,6 +4,8 @@ build*/
 Thumbs.db
 **/.vscode/
 .vs
+*.iml
+.idea
 CMakeSettings.json
 libicsneocsharp-example/obj
 libicsneocsharp-example/build
