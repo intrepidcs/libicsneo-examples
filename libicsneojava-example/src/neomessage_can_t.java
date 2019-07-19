@@ -60,11 +60,11 @@ public class neomessage_can_t {
     return icsneojavaJNI.neomessage_can_t_timestampReserved_get(swigCPtr, this);
   }
 
-  public void setData(byte[] value) {
+  public void setData(int[] value) {
     icsneojavaJNI.neomessage_can_t_data_set(swigCPtr, this, SWIGTYPE_p_unsigned_char.getCPtr(value));
   }
 
-  public byte[] getData() {
+  public int[] getData() {
     long cPtr = icsneojavaJNI.neomessage_can_t_data_get(swigCPtr, this);
     return (cPtr == 0) ? null : new SWIGTYPE_p_unsigned_char(cPtr, false);
   }

@@ -8,8 +8,8 @@
 #define DLLExport
 
 %typemap(jni) uint8_t const *data "unsigned char *"
-%typemap(jtype, out="System.IntPtr") uint8_t const *data "byte[]"
-%typemap(jstype) uint8_t const *data "byte[]"
+%typemap(jtype) uint8_t const *data "int[]"
+%typemap(jstype) uint8_t const *data "int[]"
 
 %typemap(in) uint8_t const *data %{
 	$1 = $input;
