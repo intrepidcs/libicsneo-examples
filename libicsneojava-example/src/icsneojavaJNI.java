@@ -8,9 +8,9 @@
 
 
 public class icsneojavaJNI {
-  public final static native void icsneo_findAllDevices(long jarg1, neodevice_t jarg1_, long jarg2);
+  public final static native void icsneo_findAllDevices(long jarg1, neodevice_t jarg1_, int[] jarg2);
   public final static native void icsneo_freeUnconnectedDevices();
-  public final static native boolean icsneo_serialNumToString(long jarg1, String jarg2, long jarg3);
+  public final static native boolean icsneo_serialNumToString(long jarg1, String jarg2, int[] jarg3);
   public final static native long icsneo_serialStringToNum(String jarg1);
   public final static native boolean icsneo_isValidNeoDevice(long jarg1, neodevice_t jarg1_);
   public final static native boolean icsneo_openDevice(long jarg1, neodevice_t jarg1_);
@@ -22,11 +22,11 @@ public class icsneojavaJNI {
   public final static native boolean icsneo_enableMessagePolling(long jarg1, neodevice_t jarg1_);
   public final static native boolean icsneo_disableMessagePolling(long jarg1, neodevice_t jarg1_);
   public final static native boolean icsneo_isMessagePollingEnabled(long jarg1, neodevice_t jarg1_);
-  public final static native boolean icsneo_getMessages(long jarg1, neodevice_t jarg1_, long jarg2, neomessage_t jarg2_, long jarg3, java.math.BigInteger jarg4);
+  public final static native boolean icsneo_getMessages(long jarg1, neodevice_t jarg1_, long jarg2, neomessage_t jarg2_, int[] jarg3, java.math.BigInteger jarg4);
   public final static native long icsneo_getPollingMessageLimit(long jarg1, neodevice_t jarg1_);
   public final static native boolean icsneo_setPollingMessageLimit(long jarg1, neodevice_t jarg1_, long jarg2);
-  public final static native boolean icsneo_getProductName(long jarg1, neodevice_t jarg1_, String jarg2, long jarg3);
-  public final static native boolean icsneo_getProductNameForType(long jarg1, String jarg2, long jarg3);
+  public final static native boolean icsneo_getProductName(long jarg1, neodevice_t jarg1_, String jarg2, int[] jarg3);
+  public final static native boolean icsneo_getProductNameForType(long jarg1, String jarg2, int[] jarg3);
   public final static native boolean icsneo_settingsRefresh(long jarg1, neodevice_t jarg1_);
   public final static native boolean icsneo_settingsApply(long jarg1, neodevice_t jarg1_);
   public final static native boolean icsneo_settingsApplyTemporary(long jarg1, neodevice_t jarg1_);
@@ -41,16 +41,16 @@ public class icsneojavaJNI {
   public final static native boolean icsneo_setFDBaudrate(long jarg1, neodevice_t jarg1_, int jarg2, long jarg3);
   public final static native boolean icsneo_transmit(long jarg1, neodevice_t jarg1_, long jarg2, neomessage_t jarg2_);
   public final static native boolean icsneo_transmitMessages(long jarg1, neodevice_t jarg1_, long jarg2, neomessage_t jarg2_, long jarg3);
-  public final static native boolean icsneo_describeDevice(long jarg1, neodevice_t jarg1_, String jarg2, long jarg3);
+  public final static native boolean icsneo_describeDevice(long jarg1, neodevice_t jarg1_, String jarg2, int[] jarg3);
   public final static native long icsneo_getVersion();
-  public final static native boolean icsneo_getEvents(long jarg1, neoevent_t jarg1_, long jarg2);
-  public final static native boolean icsneo_getDeviceEvents(long jarg1, neodevice_t jarg1_, long jarg2, neoevent_t jarg2_, long jarg3);
+  public final static native boolean icsneo_getEvents(long jarg1, neoevent_t jarg1_, int[] jarg2);
+  public final static native boolean icsneo_getDeviceEvents(long jarg1, neodevice_t jarg1_, long jarg2, neoevent_t jarg2_, int[] jarg3);
   public final static native boolean icsneo_getLastError(long jarg1, neoevent_t jarg1_);
   public final static native void icsneo_discardAllEvents();
   public final static native void icsneo_discardDeviceEvents(long jarg1, neodevice_t jarg1_);
   public final static native void icsneo_setEventLimit(long jarg1);
   public final static native long icsneo_getEventLimit();
-  public final static native boolean icsneo_getSupportedDevices(long jarg1, long jarg2);
+  public final static native boolean icsneo_getSupportedDevices(long jarg1, int[] jarg2);
   public final static native boolean icsneo_getTimestampResolution(long jarg1, neodevice_t jarg1_, long jarg2);
   public final static native void neodevice_t_device_set(long jarg1, neodevice_t jarg1_, long jarg2);
   public final static native long neodevice_t_device_get(long jarg1, neodevice_t jarg1_);

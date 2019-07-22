@@ -61,13 +61,14 @@ public class neomessage_t {
   }
 
   public void setData(int[] value) {
-    icsneojavaJNI.neomessage_t_data_set(swigCPtr, this, SWIGTYPE_p_unsigned_char.getCPtr(value));
+    icsneojavaJNI.neomessage_t_data_set(swigCPtr, this, 
+    value
+);
   }
 
   public int[] getData() {
-    long cPtr = icsneojavaJNI.neomessage_t_data_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new SWIGTYPE_p_unsigned_char(cPtr, false);
-  }
+    return icsneojavaJNI.neomessage_t_data_get(swigCPtr, this);
+}
 
   public void setLength(long value) {
     icsneojavaJNI.neomessage_t_length_set(swigCPtr, this, value);

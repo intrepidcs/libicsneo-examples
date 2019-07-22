@@ -8,16 +8,16 @@
 
 
 public class icsneojava implements icsneojavaConstants {
-  public static void icsneo_findAllDevices(neodevice_t devices, SWIGTYPE_p_size_t count) {
-    icsneojavaJNI.icsneo_findAllDevices(neodevice_t.getCPtr(devices), devices, SWIGTYPE_p_size_t.getCPtr(count));
+  public static void icsneo_findAllDevices(neodevice_t devices, int[] count) {
+    icsneojavaJNI.icsneo_findAllDevices(neodevice_t.getCPtr(devices), devices, count);
   }
 
   public static void icsneo_freeUnconnectedDevices() {
     icsneojavaJNI.icsneo_freeUnconnectedDevices();
   }
 
-  public static boolean icsneo_serialNumToString(long num, String str, SWIGTYPE_p_size_t count) {
-    return icsneojavaJNI.icsneo_serialNumToString(num, str, SWIGTYPE_p_size_t.getCPtr(count));
+  public static boolean icsneo_serialNumToString(long num, String str, int[] count) {
+    return icsneojavaJNI.icsneo_serialNumToString(num, str, count);
   }
 
   public static long icsneo_serialStringToNum(String str) {
@@ -64,8 +64,8 @@ public class icsneojava implements icsneojavaConstants {
     return icsneojavaJNI.icsneo_isMessagePollingEnabled(neodevice_t.getCPtr(device), device);
   }
 
-  public static boolean icsneo_getMessages(neodevice_t device, neomessage_t messages, SWIGTYPE_p_size_t items, java.math.BigInteger timeout) {
-    return icsneojavaJNI.icsneo_getMessages(neodevice_t.getCPtr(device), device, neomessage_t.getCPtr(messages), messages, SWIGTYPE_p_size_t.getCPtr(items), timeout);
+  public static boolean icsneo_getMessages(neodevice_t device, neomessage_t messages, int[] items, java.math.BigInteger timeout) {
+    return icsneojavaJNI.icsneo_getMessages(neodevice_t.getCPtr(device), device, neomessage_t.getCPtr(messages), messages, items, timeout);
   }
 
   public static long icsneo_getPollingMessageLimit(neodevice_t device) {
@@ -76,12 +76,12 @@ public class icsneojava implements icsneojavaConstants {
     return icsneojavaJNI.icsneo_setPollingMessageLimit(neodevice_t.getCPtr(device), device, newLimit);
   }
 
-  public static boolean icsneo_getProductName(neodevice_t device, String str, SWIGTYPE_p_size_t maxLength) {
-    return icsneojavaJNI.icsneo_getProductName(neodevice_t.getCPtr(device), device, str, SWIGTYPE_p_size_t.getCPtr(maxLength));
+  public static boolean icsneo_getProductName(neodevice_t device, String str, int[] maxLength) {
+    return icsneojavaJNI.icsneo_getProductName(neodevice_t.getCPtr(device), device, str, maxLength);
   }
 
-  public static boolean icsneo_getProductNameForType(long type, String str, SWIGTYPE_p_size_t maxLength) {
-    return icsneojavaJNI.icsneo_getProductNameForType(type, str, SWIGTYPE_p_size_t.getCPtr(maxLength));
+  public static boolean icsneo_getProductNameForType(long type, String str, int[] maxLength) {
+    return icsneojavaJNI.icsneo_getProductNameForType(type, str, maxLength);
   }
 
   public static boolean icsneo_settingsRefresh(neodevice_t device) {
@@ -140,20 +140,20 @@ public class icsneojava implements icsneojavaConstants {
     return icsneojavaJNI.icsneo_transmitMessages(neodevice_t.getCPtr(device), device, neomessage_t.getCPtr(messages), messages, count);
   }
 
-  public static boolean icsneo_describeDevice(neodevice_t device, String str, SWIGTYPE_p_size_t maxLength) {
-    return icsneojavaJNI.icsneo_describeDevice(neodevice_t.getCPtr(device), device, str, SWIGTYPE_p_size_t.getCPtr(maxLength));
+  public static boolean icsneo_describeDevice(neodevice_t device, String str, int[] maxLength) {
+    return icsneojavaJNI.icsneo_describeDevice(neodevice_t.getCPtr(device), device, str, maxLength);
   }
 
   public static neoversion_t icsneo_getVersion() {
     return new neoversion_t(icsneojavaJNI.icsneo_getVersion(), true);
   }
 
-  public static boolean icsneo_getEvents(neoevent_t events, SWIGTYPE_p_size_t size) {
-    return icsneojavaJNI.icsneo_getEvents(neoevent_t.getCPtr(events), events, SWIGTYPE_p_size_t.getCPtr(size));
+  public static boolean icsneo_getEvents(neoevent_t events, int[] size) {
+    return icsneojavaJNI.icsneo_getEvents(neoevent_t.getCPtr(events), events, size);
   }
 
-  public static boolean icsneo_getDeviceEvents(neodevice_t device, neoevent_t events, SWIGTYPE_p_size_t size) {
-    return icsneojavaJNI.icsneo_getDeviceEvents(neodevice_t.getCPtr(device), device, neoevent_t.getCPtr(events), events, SWIGTYPE_p_size_t.getCPtr(size));
+  public static boolean icsneo_getDeviceEvents(neodevice_t device, neoevent_t events, int[] size) {
+    return icsneojavaJNI.icsneo_getDeviceEvents(neodevice_t.getCPtr(device), device, neoevent_t.getCPtr(events), events, size);
   }
 
   public static boolean icsneo_getLastError(neoevent_t error) {
@@ -176,8 +176,8 @@ public class icsneojava implements icsneojavaConstants {
     return icsneojavaJNI.icsneo_getEventLimit();
   }
 
-  public static boolean icsneo_getSupportedDevices(SWIGTYPE_p_unsigned_int devices, SWIGTYPE_p_size_t count) {
-    return icsneojavaJNI.icsneo_getSupportedDevices(SWIGTYPE_p_unsigned_int.getCPtr(devices), SWIGTYPE_p_size_t.getCPtr(count));
+  public static boolean icsneo_getSupportedDevices(SWIGTYPE_p_unsigned_int devices, int[] count) {
+    return icsneojavaJNI.icsneo_getSupportedDevices(SWIGTYPE_p_unsigned_int.getCPtr(devices), count);
   }
 
   public static boolean icsneo_getTimestampResolution(neodevice_t device, SWIGTYPE_p_unsigned_short resolution) {

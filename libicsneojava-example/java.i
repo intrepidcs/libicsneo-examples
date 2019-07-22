@@ -3,25 +3,38 @@
 %include <typemaps.i>
 %include <stdint.i>
 %include <carrays.i>
+%include <various.i>
+%include <java.i>
 %include <arrays_java.i>
 
 #define DLLExport
 
-%typemap(jni) uint8_t const *data "unsigned char *"
-%typemap(jtype) uint8_t const *data "int[]"
 %typemap(jstype) uint8_t const *data "int[]"
+%typemap(jtype) uint8_t const *data "int[]"
+%typemap(jni) uint8_t const *data "char *"
 
-%typemap(in) uint8_t const *data %{
-	$1 = $input;
+%typemap(out) uint8_t const *data %{
+// in java_wrap and can use to cast output properly
 %}
 
-%typemap(jni) char *str "char *"
-%typemap(jtype) char *str "String"
-%typemap(jstype) char *str "String"
+%typemap(javaout) uint8_t const *data {
+    return $jnicall;
+}
+
+%typemap(javain) uint8_t const *data %{
+    value
+%}
+
+//%typemap(jni) char *str "char *"
+//%typemap(jtype) char *str "char[]"
+//%typemap(jstype) char *str "char[]"
 
 %{
 #include "icsneo/icsneoc.h"
 %}
+
+%apply int *INOUT {size_t *};
+//%apply int *INOUT {size_t *maxLength};
 
 %include "icsneo/icsneoc.h"
 %include "icsneo/device/neodevice.h"

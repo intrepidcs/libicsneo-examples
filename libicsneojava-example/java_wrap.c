@@ -851,7 +851,7 @@ static void neomessage_t_array_setitem(neomessage_t *ary, int index, neomessage_
 extern "C" {
 #endif
 
-SWIGEXPORT void JNICALL Java_icsneojavaJNI_icsneo_1findAllDevices(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2) {
+SWIGEXPORT void JNICALL Java_icsneojavaJNI_icsneo_1findAllDevices(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jintArray jarg2) {
   neodevice_t *arg1 = (neodevice_t *) 0 ;
   size_t *arg2 = (size_t *) 0 ;
   
@@ -859,8 +859,22 @@ SWIGEXPORT void JNICALL Java_icsneojavaJNI_icsneo_1findAllDevices(JNIEnv *jenv, 
   (void)jcls;
   (void)jarg1_;
   arg1 = *(neodevice_t **)&jarg1; 
-  arg2 = *(size_t **)&jarg2; 
+  {
+    if (!jarg2) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "array null");
+      return ;
+    }
+    if ((*jenv)->GetArrayLength(jenv, jarg2) == 0) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, "Array must contain at least 1 element");
+      return ;
+    }
+    arg2 = (size_t *) (*jenv)->GetIntArrayElements(jenv, jarg2, 0); 
+  }
   icsneo_findAllDevices(arg1,arg2);
+  {
+    (*jenv)->ReleaseIntArrayElements(jenv, jarg2, (jint *)arg2, 0); 
+  }
+  
 }
 
 
@@ -871,7 +885,7 @@ SWIGEXPORT void JNICALL Java_icsneojavaJNI_icsneo_1freeUnconnectedDevices(JNIEnv
 }
 
 
-SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1serialNumToString(JNIEnv *jenv, jclass jcls, jlong jarg1, char * jarg2, jlong jarg3) {
+SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1serialNumToString(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jintArray jarg3) {
   jboolean jresult = 0 ;
   uint32_t arg1 ;
   char *arg2 = (char *) 0 ;
@@ -886,15 +900,29 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1serialNumToString(JNIEnv 
     arg2 = (char *)(*jenv)->GetStringUTFChars(jenv, jarg2, 0);
     if (!arg2) return 0;
   }
-  arg3 = *(size_t **)&jarg3; 
+  {
+    if (!jarg3) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "array null");
+      return 0;
+    }
+    if ((*jenv)->GetArrayLength(jenv, jarg3) == 0) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, "Array must contain at least 1 element");
+      return 0;
+    }
+    arg3 = (size_t *) (*jenv)->GetIntArrayElements(jenv, jarg3, 0); 
+  }
   result = (bool)icsneo_serialNumToString(arg1,arg2,arg3);
   jresult = (jboolean)result; 
+  {
+    (*jenv)->ReleaseIntArrayElements(jenv, jarg3, (jint *)arg3, 0); 
+  }
   if (arg2) (*jenv)->ReleaseStringUTFChars(jenv, jarg2, (const char *)arg2);
+  
   return jresult;
 }
 
 
-SWIGEXPORT jlong JNICALL Java_icsneojavaJNI_icsneo_1serialStringToNum(JNIEnv *jenv, jclass jcls, char * jarg1) {
+SWIGEXPORT jlong JNICALL Java_icsneojavaJNI_icsneo_1serialStringToNum(JNIEnv *jenv, jclass jcls, jstring jarg1) {
   jlong jresult = 0 ;
   char *arg1 = (char *) 0 ;
   uint32_t result;
@@ -1063,7 +1091,7 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1isMessagePollingEnabled(J
 }
 
 
-SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getMessages(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2, jobject jarg2_, jlong jarg3, jobject jarg4) {
+SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getMessages(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2, jobject jarg2_, jintArray jarg3, jobject jarg4) {
   jboolean jresult = 0 ;
   neodevice_t *arg1 = (neodevice_t *) 0 ;
   neomessage_t *arg2 = (neomessage_t *) 0 ;
@@ -1077,7 +1105,17 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getMessages(JNIEnv *jenv,
   (void)jarg2_;
   arg1 = *(neodevice_t **)&jarg1; 
   arg2 = *(neomessage_t **)&jarg2; 
-  arg3 = *(size_t **)&jarg3; 
+  {
+    if (!jarg3) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "array null");
+      return 0;
+    }
+    if ((*jenv)->GetArrayLength(jenv, jarg3) == 0) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, "Array must contain at least 1 element");
+      return 0;
+    }
+    arg3 = (size_t *) (*jenv)->GetIntArrayElements(jenv, jarg3, 0); 
+  }
   {
     jclass clazz;
     jmethodID mid;
@@ -1106,6 +1144,10 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getMessages(JNIEnv *jenv,
   }
   result = (bool)icsneo_getMessages((neodevice_t const *)arg1,arg2,arg3,arg4);
   jresult = (jboolean)result; 
+  {
+    (*jenv)->ReleaseIntArrayElements(jenv, jarg3, (jint *)arg3, 0); 
+  }
+  
   return jresult;
 }
 
@@ -1142,7 +1184,7 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1setPollingMessageLimit(JN
 }
 
 
-SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getProductName(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, char * jarg2, jlong jarg3) {
+SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getProductName(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2, jintArray jarg3) {
   jboolean jresult = 0 ;
   neodevice_t *arg1 = (neodevice_t *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -1158,15 +1200,29 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getProductName(JNIEnv *je
     arg2 = (char *)(*jenv)->GetStringUTFChars(jenv, jarg2, 0);
     if (!arg2) return 0;
   }
-  arg3 = *(size_t **)&jarg3; 
+  {
+    if (!jarg3) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "array null");
+      return 0;
+    }
+    if ((*jenv)->GetArrayLength(jenv, jarg3) == 0) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, "Array must contain at least 1 element");
+      return 0;
+    }
+    arg3 = (size_t *) (*jenv)->GetIntArrayElements(jenv, jarg3, 0); 
+  }
   result = (bool)icsneo_getProductName((neodevice_t const *)arg1,arg2,arg3);
   jresult = (jboolean)result; 
+  {
+    (*jenv)->ReleaseIntArrayElements(jenv, jarg3, (jint *)arg3, 0); 
+  }
   if (arg2) (*jenv)->ReleaseStringUTFChars(jenv, jarg2, (const char *)arg2);
+  
   return jresult;
 }
 
 
-SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getProductNameForType(JNIEnv *jenv, jclass jcls, jlong jarg1, char * jarg2, jlong jarg3) {
+SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getProductNameForType(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jintArray jarg3) {
   jboolean jresult = 0 ;
   devicetype_t arg1 ;
   char *arg2 = (char *) 0 ;
@@ -1181,10 +1237,24 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getProductNameForType(JNI
     arg2 = (char *)(*jenv)->GetStringUTFChars(jenv, jarg2, 0);
     if (!arg2) return 0;
   }
-  arg3 = *(size_t **)&jarg3; 
+  {
+    if (!jarg3) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "array null");
+      return 0;
+    }
+    if ((*jenv)->GetArrayLength(jenv, jarg3) == 0) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, "Array must contain at least 1 element");
+      return 0;
+    }
+    arg3 = (size_t *) (*jenv)->GetIntArrayElements(jenv, jarg3, 0); 
+  }
   result = (bool)icsneo_getProductNameForType(arg1,arg2,arg3);
   jresult = (jboolean)result; 
+  {
+    (*jenv)->ReleaseIntArrayElements(jenv, jarg3, (jint *)arg3, 0); 
+  }
   if (arg2) (*jenv)->ReleaseStringUTFChars(jenv, jarg2, (const char *)arg2);
+  
   return jresult;
 }
 
@@ -1431,7 +1501,7 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1transmitMessages(JNIEnv *
 }
 
 
-SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1describeDevice(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, char * jarg2, jlong jarg3) {
+SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1describeDevice(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2, jintArray jarg3) {
   jboolean jresult = 0 ;
   neodevice_t *arg1 = (neodevice_t *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -1447,10 +1517,24 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1describeDevice(JNIEnv *je
     arg2 = (char *)(*jenv)->GetStringUTFChars(jenv, jarg2, 0);
     if (!arg2) return 0;
   }
-  arg3 = *(size_t **)&jarg3; 
+  {
+    if (!jarg3) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "array null");
+      return 0;
+    }
+    if ((*jenv)->GetArrayLength(jenv, jarg3) == 0) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, "Array must contain at least 1 element");
+      return 0;
+    }
+    arg3 = (size_t *) (*jenv)->GetIntArrayElements(jenv, jarg3, 0); 
+  }
   result = (bool)icsneo_describeDevice((neodevice_t const *)arg1,arg2,arg3);
   jresult = (jboolean)result; 
+  {
+    (*jenv)->ReleaseIntArrayElements(jenv, jarg3, (jint *)arg3, 0); 
+  }
   if (arg2) (*jenv)->ReleaseStringUTFChars(jenv, jarg2, (const char *)arg2);
+  
   return jresult;
 }
 
@@ -1471,7 +1555,7 @@ SWIGEXPORT jlong JNICALL Java_icsneojavaJNI_icsneo_1getVersion(JNIEnv *jenv, jcl
 }
 
 
-SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getEvents(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2) {
+SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getEvents(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jintArray jarg2) {
   jboolean jresult = 0 ;
   neoevent_t *arg1 = (neoevent_t *) 0 ;
   size_t *arg2 = (size_t *) 0 ;
@@ -1481,14 +1565,28 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getEvents(JNIEnv *jenv, j
   (void)jcls;
   (void)jarg1_;
   arg1 = *(neoevent_t **)&jarg1; 
-  arg2 = *(size_t **)&jarg2; 
+  {
+    if (!jarg2) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "array null");
+      return 0;
+    }
+    if ((*jenv)->GetArrayLength(jenv, jarg2) == 0) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, "Array must contain at least 1 element");
+      return 0;
+    }
+    arg2 = (size_t *) (*jenv)->GetIntArrayElements(jenv, jarg2, 0); 
+  }
   result = (bool)icsneo_getEvents(arg1,arg2);
   jresult = (jboolean)result; 
+  {
+    (*jenv)->ReleaseIntArrayElements(jenv, jarg2, (jint *)arg2, 0); 
+  }
+  
   return jresult;
 }
 
 
-SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getDeviceEvents(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2, jobject jarg2_, jlong jarg3) {
+SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getDeviceEvents(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2, jobject jarg2_, jintArray jarg3) {
   jboolean jresult = 0 ;
   neodevice_t *arg1 = (neodevice_t *) 0 ;
   neoevent_t *arg2 = (neoevent_t *) 0 ;
@@ -1501,9 +1599,23 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getDeviceEvents(JNIEnv *j
   (void)jarg2_;
   arg1 = *(neodevice_t **)&jarg1; 
   arg2 = *(neoevent_t **)&jarg2; 
-  arg3 = *(size_t **)&jarg3; 
+  {
+    if (!jarg3) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "array null");
+      return 0;
+    }
+    if ((*jenv)->GetArrayLength(jenv, jarg3) == 0) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, "Array must contain at least 1 element");
+      return 0;
+    }
+    arg3 = (size_t *) (*jenv)->GetIntArrayElements(jenv, jarg3, 0); 
+  }
   result = (bool)icsneo_getDeviceEvents((neodevice_t const *)arg1,arg2,arg3);
   jresult = (jboolean)result; 
+  {
+    (*jenv)->ReleaseIntArrayElements(jenv, jarg3, (jint *)arg3, 0); 
+  }
+  
   return jresult;
 }
 
@@ -1563,7 +1675,7 @@ SWIGEXPORT jlong JNICALL Java_icsneojavaJNI_icsneo_1getEventLimit(JNIEnv *jenv, 
 }
 
 
-SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getSupportedDevices(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2) {
+SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getSupportedDevices(JNIEnv *jenv, jclass jcls, jlong jarg1, jintArray jarg2) {
   jboolean jresult = 0 ;
   devicetype_t *arg1 = (devicetype_t *) 0 ;
   size_t *arg2 = (size_t *) 0 ;
@@ -1572,9 +1684,23 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getSupportedDevices(JNIEn
   (void)jenv;
   (void)jcls;
   arg1 = *(devicetype_t **)&jarg1; 
-  arg2 = *(size_t **)&jarg2; 
+  {
+    if (!jarg2) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "array null");
+      return 0;
+    }
+    if ((*jenv)->GetArrayLength(jenv, jarg2) == 0) {
+      SWIG_JavaThrowException(jenv, SWIG_JavaIndexOutOfBoundsException, "Array must contain at least 1 element");
+      return 0;
+    }
+    arg2 = (size_t *) (*jenv)->GetIntArrayElements(jenv, jarg2, 0); 
+  }
   result = (bool)icsneo_getSupportedDevices(arg1,arg2);
   jresult = (jboolean)result; 
+  {
+    (*jenv)->ReleaseIntArrayElements(jenv, jarg2, (jint *)arg2, 0); 
+  }
+  
   return jresult;
 }
 
@@ -3513,7 +3639,7 @@ SWIGEXPORT jobject JNICALL Java_icsneojavaJNI_neomessage_1t_1timestampReserved_1
 }
 
 
-SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1t_1data_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, unsigned char * jarg2) {
+SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1t_1data_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, char * jarg2) {
   neomessage_t *arg1 = (neomessage_t *) 0 ;
   uint8_t *arg2 = (uint8_t *) 0 ;
   
@@ -3521,15 +3647,13 @@ SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1t_1data_1set(JNIEnv *jenv
   (void)jcls;
   (void)jarg1_;
   arg1 = *(neomessage_t **)&jarg1; 
-  
-  arg2 = jarg2;
-  
+  arg2 = *(uint8_t **)&jarg2; 
   if (arg1) (arg1)->data = (uint8_t const *)arg2;
 }
 
 
-SWIGEXPORT unsigned char * JNICALL Java_icsneojavaJNI_neomessage_1t_1data_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
-  unsigned char * jresult = 0 ;
+SWIGEXPORT char * JNICALL Java_icsneojavaJNI_neomessage_1t_1data_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  char * jresult = 0 ;
   neomessage_t *arg1 = (neomessage_t *) 0 ;
   uint8_t *result = 0 ;
   
@@ -3538,7 +3662,9 @@ SWIGEXPORT unsigned char * JNICALL Java_icsneojavaJNI_neomessage_1t_1data_1get(J
   (void)jarg1_;
   arg1 = *(neomessage_t **)&jarg1; 
   result = (uint8_t *) ((arg1)->data);
-  *(uint8_t **)&jresult = result; 
+  
+  // in java_wrap and can use to cast output properly
+  
   return jresult;
 }
 
@@ -3896,7 +4022,7 @@ SWIGEXPORT jobject JNICALL Java_icsneojavaJNI_neomessage_1can_1t_1timestampReser
 }
 
 
-SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1can_1t_1data_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, unsigned char * jarg2) {
+SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1can_1t_1data_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, char * jarg2) {
   neomessage_can_t *arg1 = (neomessage_can_t *) 0 ;
   uint8_t *arg2 = (uint8_t *) 0 ;
   
@@ -3904,15 +4030,13 @@ SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1can_1t_1data_1set(JNIEnv 
   (void)jcls;
   (void)jarg1_;
   arg1 = *(neomessage_can_t **)&jarg1; 
-  
-  arg2 = jarg2;
-  
+  arg2 = *(uint8_t **)&jarg2; 
   if (arg1) (arg1)->data = (uint8_t const *)arg2;
 }
 
 
-SWIGEXPORT unsigned char * JNICALL Java_icsneojavaJNI_neomessage_1can_1t_1data_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
-  unsigned char * jresult = 0 ;
+SWIGEXPORT char * JNICALL Java_icsneojavaJNI_neomessage_1can_1t_1data_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  char * jresult = 0 ;
   neomessage_can_t *arg1 = (neomessage_can_t *) 0 ;
   uint8_t *result = 0 ;
   
@@ -3921,7 +4045,9 @@ SWIGEXPORT unsigned char * JNICALL Java_icsneojavaJNI_neomessage_1can_1t_1data_1
   (void)jarg1_;
   arg1 = *(neomessage_can_t **)&jarg1; 
   result = (uint8_t *) ((arg1)->data);
-  *(uint8_t **)&jresult = result; 
+  
+  // in java_wrap and can use to cast output properly
+  
   return jresult;
 }
 
@@ -4296,7 +4422,7 @@ SWIGEXPORT jobject JNICALL Java_icsneojavaJNI_neomessage_1eth_1t_1timestampReser
 }
 
 
-SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1eth_1t_1data_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, unsigned char * jarg2) {
+SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1eth_1t_1data_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, char * jarg2) {
   neomessage_eth_t *arg1 = (neomessage_eth_t *) 0 ;
   uint8_t *arg2 = (uint8_t *) 0 ;
   
@@ -4304,15 +4430,13 @@ SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1eth_1t_1data_1set(JNIEnv 
   (void)jcls;
   (void)jarg1_;
   arg1 = *(neomessage_eth_t **)&jarg1; 
-  
-  arg2 = jarg2;
-  
+  arg2 = *(uint8_t **)&jarg2; 
   if (arg1) (arg1)->data = (uint8_t const *)arg2;
 }
 
 
-SWIGEXPORT unsigned char * JNICALL Java_icsneojavaJNI_neomessage_1eth_1t_1data_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
-  unsigned char * jresult = 0 ;
+SWIGEXPORT char * JNICALL Java_icsneojavaJNI_neomessage_1eth_1t_1data_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  char * jresult = 0 ;
   neomessage_eth_t *arg1 = (neomessage_eth_t *) 0 ;
   uint8_t *result = 0 ;
   
@@ -4321,7 +4445,9 @@ SWIGEXPORT unsigned char * JNICALL Java_icsneojavaJNI_neomessage_1eth_1t_1data_1
   (void)jarg1_;
   arg1 = *(neomessage_eth_t **)&jarg1; 
   result = (uint8_t *) ((arg1)->data);
-  *(uint8_t **)&jresult = result; 
+  
+  // in java_wrap and can use to cast output properly
+  
   return jresult;
 }
 
