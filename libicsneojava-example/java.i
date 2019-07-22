@@ -25,16 +25,64 @@
     value
 %}
 
-//%typemap(jni) char *str "char *"
-//%typemap(jtype) char *str "char[]"
-//%typemap(jstype) char *str "char[]"
+%typemap(jni) char *str "jobject"
+%typemap(jtype) char *str "StringBuffer"
+%typemap(jstype) char *str "StringBuffer"
+/* How to convert Java(JNI) type to requested C type */
+%typemap(in) char *str {
+
+  $1 = NULL;
+  if($input != NULL) {
+    /* Get the String from the StringBuffer */
+    jmethodID setLengthID;
+    jclass strClass = (*jenv)->GetObjectClass(jenv, $input);
+    jmethodID toStringID = (*jenv)->GetMethodID(jenv, strClass, "toString", "()Ljava/lang/String;");
+    jstring js = (jstring) (*jenv)->CallObjectMethod(jenv, $input, toStringID);
+
+    /* Convert the String to a C string */
+    const char *pCharStr = (*jenv)->GetStringUTFChars(jenv, js, 0);
+
+    /* Take a copy of the C string as the typemap is for a non const C string */
+    jmethodID capacityID = (*jenv)->GetMethodID(jenv, strClass, "capacity", "()I");
+    jint capacity = (*jenv)->CallIntMethod(jenv, $input, capacityID);
+    $1 = (char *) malloc(capacity+1);
+    strcpy($1, pCharStr);
+
+    /* Release the UTF string we obtained with GetStringUTFChars */
+    (*jenv)->ReleaseStringUTFChars(jenv,  js, pCharStr);
+
+    /* Zero the original StringBuffer, so we can replace it with the result */
+    setLengthID = (*jenv)->GetMethodID(jenv, strClass, "setLength", "(I)V");
+    (*jenv)->CallVoidMethod(jenv, $input, setLengthID, (jint) 0);
+  }
+}
+
+/* How to convert the C type to the Java(JNI) type */
+%typemap(argout) char *str {
+
+  if($1 != NULL) {
+    /* Append the result to the empty StringBuffer */
+    jstring newString = (*jenv)->NewStringUTF(jenv, $1);
+    jclass strClass = (*jenv)->GetObjectClass(jenv, $input);
+    jmethodID appendStringID = (*jenv)->GetMethodID(jenv, strClass, "append", "(Ljava/lang/String;)Ljava/lang/StringBuffer;");
+    (*jenv)->CallObjectMethod(jenv, $input, appendStringID, newString);
+
+    /* Clean up the string object, no longer needed */
+    free($1);
+    $1 = NULL;
+  }
+}
+/* Prevent the default freearg typemap from being used */
+%typemap(freearg) char *str ""
+
+/* Convert the jstype to jtype typemap type */
+%typemap(javain) char *str "$javainput"
 
 %{
 #include "icsneo/icsneoc.h"
 %}
 
 %apply int *INOUT {size_t *};
-//%apply int *INOUT {size_t *maxLength};
 
 %include "icsneo/icsneoc.h"
 %include "icsneo/device/neodevice.h"

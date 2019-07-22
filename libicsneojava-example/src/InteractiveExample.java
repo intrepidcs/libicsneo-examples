@@ -15,8 +15,8 @@ public class InteractiveExample {
         }
 
         for(int i = 0; i < numDevices; i++) {
-            String description = new String(new StringBuilder(icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION));
-            int maxLength[] = {icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION};
+            StringBuffer description = new StringBuffer(icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
+            int[] maxLength = {icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION};
 
             if(icsneojava.icsneo_describeDevice(devices.get(i), description, maxLength)) {
                 System.out.print("[" + (i + 1) + "] " + description + "\tConnected: ");
@@ -80,7 +80,7 @@ public class InteractiveExample {
 
     private void printAPIEvents() {
         neoevent_t events = icsneojava.new_neoevent_t_array(99);
-        int eventCount[] = {99};
+        int[] eventCount = {99};
         if(icsneojava.icsneo_getEvents(events, eventCount)) {
             if(eventCount[0] == 1) {
                 neoevent_t evt = icsneojava.neoevent_t_array_getitem(events, 0);
@@ -100,7 +100,7 @@ public class InteractiveExample {
 
     private void printDeviceEvents(neodevice_t device) {
         neoevent_t events = icsneojava.new_neoevent_t_array(99);
-        int eventCount[] = {99};
+        int[] eventCount = {99};
         if(icsneojava.icsneo_getDeviceEvents(device, events, eventCount)) {
              if(eventCount[0] == 1) {
                 neoevent_t evt = icsneojava.neoevent_t_array_getitem(events, 0);
@@ -118,7 +118,7 @@ public class InteractiveExample {
         }
     }
 
-    private char getCharInput(char allowed[]) {
+    private char getCharInput(char[] allowed) {
         boolean found = false;
         char key = '0';
         Scanner sc = new Scanner(System.in);
@@ -199,8 +199,8 @@ public class InteractiveExample {
                     selectedDevice = selectDevice();
 
                     // Get the product description for the device
-                    String description = new String(new StringBuilder(icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION));
-                    int maxLength[] = {icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION};
+                    StringBuffer description = new StringBuffer(icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
+                    int[] maxLength = {icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION};
 
                     icsneojava.icsneo_describeDevice(selectedDevice, description, maxLength);
 
@@ -251,8 +251,8 @@ public class InteractiveExample {
                     selectedDevice = selectDevice();
 
                     // Get the product description for the device
-                    String description = new String(new StringBuilder(icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION));
-                    int maxLength[] = {icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION};
+                    StringBuffer description = new StringBuffer(icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
+                    int[] maxLength = {icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION};
 
                     icsneojava.icsneo_describeDevice(selectedDevice, description, maxLength);
 
@@ -300,8 +300,8 @@ public class InteractiveExample {
                     selectedDevice = selectDevice();
 
                     // Get the product description for the device
-                    String description = new String(new StringBuilder(icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION));
-                    int maxLength[] = {icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION};
+                    StringBuffer description = new StringBuffer(icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
+                    int[] maxLength = {icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION};
 
                     icsneojava.icsneo_describeDevice(selectedDevice, description, maxLength);
 
@@ -359,14 +359,14 @@ public class InteractiveExample {
                     selectedDevice = selectDevice();
 
                     // Get the product description for the device
-                    String description = new String(new StringBuilder(icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION));
-                    int maxLength[] = {icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION};
+                    StringBuffer description = new StringBuffer(icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
+                    int[] maxLength = {icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION};
 
                     icsneojava.icsneo_describeDevice(selectedDevice, description, maxLength);
 
                     // Prepare the neomessage_t array and size for reading in the messages
                     neomessage_t msgs = icsneojava.new_neomessage_t_array((int)msgLimit);
-                    int msgCount[] = {msgLimit};
+                    int[] msgCount = {msgLimit};
 
                     if(!icsneojava.icsneo_getMessages(selectedDevice, msgs, msgCount, BigInteger.ZERO)) {
                         System.out.println("Failed to get messages for " + description + "!\n");
@@ -378,7 +378,7 @@ public class InteractiveExample {
                     if(msgCount[0] == 1) {
                         System.out.println("1 message received from " + description + "!");
                     } else {
-                        System.out.println(msgCount + " messages received from " + description + "!");
+                        System.out.println(msgCount[0] + " messages received from " + description + "!");
                     }
 
                     // Print out the received messages
@@ -408,8 +408,8 @@ public class InteractiveExample {
                     selectedDevice = selectDevice();
 
                     // Get the product description for the device
-                    String description = new String(new StringBuilder(icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION));
-                    int maxLength[] = {icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION};
+                    StringBuffer description = new StringBuffer(icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
+                    int[] maxLength = {icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION};
 
                     icsneojava.icsneo_describeDevice(selectedDevice, description, maxLength);
 
@@ -451,8 +451,8 @@ public class InteractiveExample {
                     selectedDevice = selectDevice();
 
                     // Get the product description for the device
-                    String description = new String(new StringBuilder(icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION));
-                    int maxLength[] = {icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION};
+                    StringBuffer description = new StringBuffer(icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
+                    int[] maxLength = {icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION};
 
                     icsneojava.icsneo_describeDevice(selectedDevice, description, maxLength);
 
@@ -477,8 +477,8 @@ public class InteractiveExample {
                     selectedDevice = selectDevice();
 
                     // Get the product description for the device
-                    String description = new String(new StringBuilder(icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION));
-                    int maxLength[] = {icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION};
+                    StringBuffer description = new StringBuffer(icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
+                    int[] maxLength = {icsneojava.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION};
 
                     icsneojava.icsneo_describeDevice(selectedDevice, description, maxLength);
 

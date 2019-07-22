@@ -16,11 +16,11 @@ public class icsneojava implements icsneojavaConstants {
     icsneojavaJNI.icsneo_freeUnconnectedDevices();
   }
 
-  public static boolean icsneo_serialNumToString(long num, String str, int[] count) {
+  public static boolean icsneo_serialNumToString(long num, StringBuffer str, int[] count) {
     return icsneojavaJNI.icsneo_serialNumToString(num, str, count);
   }
 
-  public static long icsneo_serialStringToNum(String str) {
+  public static long icsneo_serialStringToNum(StringBuffer str) {
     return icsneojavaJNI.icsneo_serialStringToNum(str);
   }
 
@@ -76,11 +76,11 @@ public class icsneojava implements icsneojavaConstants {
     return icsneojavaJNI.icsneo_setPollingMessageLimit(neodevice_t.getCPtr(device), device, newLimit);
   }
 
-  public static boolean icsneo_getProductName(neodevice_t device, String str, int[] maxLength) {
+  public static boolean icsneo_getProductName(neodevice_t device, StringBuffer str, int[] maxLength) {
     return icsneojavaJNI.icsneo_getProductName(neodevice_t.getCPtr(device), device, str, maxLength);
   }
 
-  public static boolean icsneo_getProductNameForType(long type, String str, int[] maxLength) {
+  public static boolean icsneo_getProductNameForType(long type, StringBuffer str, int[] maxLength) {
     return icsneojavaJNI.icsneo_getProductNameForType(type, str, maxLength);
   }
 
@@ -140,7 +140,7 @@ public class icsneojava implements icsneojavaConstants {
     return icsneojavaJNI.icsneo_transmitMessages(neodevice_t.getCPtr(device), device, neomessage_t.getCPtr(messages), messages, count);
   }
 
-  public static boolean icsneo_describeDevice(neodevice_t device, String str, int[] maxLength) {
+  public static boolean icsneo_describeDevice(neodevice_t device, StringBuffer str, int[] maxLength) {
     return icsneojavaJNI.icsneo_describeDevice(neodevice_t.getCPtr(device), device, str, maxLength);
   }
 

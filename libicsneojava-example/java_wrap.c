@@ -885,7 +885,7 @@ SWIGEXPORT void JNICALL Java_icsneojavaJNI_icsneo_1freeUnconnectedDevices(JNIEnv
 }
 
 
-SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1serialNumToString(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jintArray jarg3) {
+SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1serialNumToString(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg2, jintArray jarg3) {
   jboolean jresult = 0 ;
   uint32_t arg1 ;
   char *arg2 = (char *) 0 ;
@@ -895,10 +895,31 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1serialNumToString(JNIEnv 
   (void)jenv;
   (void)jcls;
   arg1 = (uint32_t)jarg1; 
-  arg2 = 0;
-  if (jarg2) {
-    arg2 = (char *)(*jenv)->GetStringUTFChars(jenv, jarg2, 0);
-    if (!arg2) return 0;
+  {
+    arg2 = NULL;
+    if(jarg2 != NULL) {
+      /* Get the String from the StringBuffer */
+      jmethodID setLengthID;
+      jclass strClass = (*jenv)->GetObjectClass(jenv, jarg2);
+      jmethodID toStringID = (*jenv)->GetMethodID(jenv, strClass, "toString", "()Ljava/lang/String;");
+      jstring js = (jstring) (*jenv)->CallObjectMethod(jenv, jarg2, toStringID);
+      
+      /* Convert the String to a C string */
+      const char *pCharStr = (*jenv)->GetStringUTFChars(jenv, js, 0);
+      
+      /* Take a copy of the C string as the typemap is for a non const C string */
+      jmethodID capacityID = (*jenv)->GetMethodID(jenv, strClass, "capacity", "()I");
+      jint capacity = (*jenv)->CallIntMethod(jenv, jarg2, capacityID);
+      arg2 = (char *) malloc(capacity+1);
+      strcpy(arg2, pCharStr);
+      
+      /* Release the UTF string we obtained with GetStringUTFChars */
+      (*jenv)->ReleaseStringUTFChars(jenv,  js, pCharStr);
+      
+      /* Zero the original StringBuffer, so we can replace it with the result */
+      setLengthID = (*jenv)->GetMethodID(jenv, strClass, "setLength", "(I)V");
+      (*jenv)->CallVoidMethod(jenv, jarg2, setLengthID, (jint) 0);
+    }
   }
   {
     if (!jarg3) {
@@ -914,29 +935,76 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1serialNumToString(JNIEnv 
   result = (bool)icsneo_serialNumToString(arg1,arg2,arg3);
   jresult = (jboolean)result; 
   {
+    if(arg2 != NULL) {
+      /* Append the result to the empty StringBuffer */
+      jstring newString = (*jenv)->NewStringUTF(jenv, arg2);
+      jclass strClass = (*jenv)->GetObjectClass(jenv, jarg2);
+      jmethodID appendStringID = (*jenv)->GetMethodID(jenv, strClass, "append", "(Ljava/lang/String;)Ljava/lang/StringBuffer;");
+      (*jenv)->CallObjectMethod(jenv, jarg2, appendStringID, newString);
+      
+      /* Clean up the string object, no longer needed */
+      free(arg2);
+      arg2 = NULL;
+    }
+  }
+  {
     (*jenv)->ReleaseIntArrayElements(jenv, jarg3, (jint *)arg3, 0); 
   }
-  if (arg2) (*jenv)->ReleaseStringUTFChars(jenv, jarg2, (const char *)arg2);
+  
   
   return jresult;
 }
 
 
-SWIGEXPORT jlong JNICALL Java_icsneojavaJNI_icsneo_1serialStringToNum(JNIEnv *jenv, jclass jcls, jstring jarg1) {
+SWIGEXPORT jlong JNICALL Java_icsneojavaJNI_icsneo_1serialStringToNum(JNIEnv *jenv, jclass jcls, jobject jarg1) {
   jlong jresult = 0 ;
   char *arg1 = (char *) 0 ;
   uint32_t result;
   
   (void)jenv;
   (void)jcls;
-  arg1 = 0;
-  if (jarg1) {
-    arg1 = (char *)(*jenv)->GetStringUTFChars(jenv, jarg1, 0);
-    if (!arg1) return 0;
+  {
+    arg1 = NULL;
+    if(jarg1 != NULL) {
+      /* Get the String from the StringBuffer */
+      jmethodID setLengthID;
+      jclass strClass = (*jenv)->GetObjectClass(jenv, jarg1);
+      jmethodID toStringID = (*jenv)->GetMethodID(jenv, strClass, "toString", "()Ljava/lang/String;");
+      jstring js = (jstring) (*jenv)->CallObjectMethod(jenv, jarg1, toStringID);
+      
+      /* Convert the String to a C string */
+      const char *pCharStr = (*jenv)->GetStringUTFChars(jenv, js, 0);
+      
+      /* Take a copy of the C string as the typemap is for a non const C string */
+      jmethodID capacityID = (*jenv)->GetMethodID(jenv, strClass, "capacity", "()I");
+      jint capacity = (*jenv)->CallIntMethod(jenv, jarg1, capacityID);
+      arg1 = (char *) malloc(capacity+1);
+      strcpy(arg1, pCharStr);
+      
+      /* Release the UTF string we obtained with GetStringUTFChars */
+      (*jenv)->ReleaseStringUTFChars(jenv,  js, pCharStr);
+      
+      /* Zero the original StringBuffer, so we can replace it with the result */
+      setLengthID = (*jenv)->GetMethodID(jenv, strClass, "setLength", "(I)V");
+      (*jenv)->CallVoidMethod(jenv, jarg1, setLengthID, (jint) 0);
+    }
   }
   result = (uint32_t)icsneo_serialStringToNum((char const *)arg1);
   jresult = (jlong)result; 
-  if (arg1) (*jenv)->ReleaseStringUTFChars(jenv, jarg1, (const char *)arg1);
+  {
+    if(arg1 != NULL) {
+      /* Append the result to the empty StringBuffer */
+      jstring newString = (*jenv)->NewStringUTF(jenv, arg1);
+      jclass strClass = (*jenv)->GetObjectClass(jenv, jarg1);
+      jmethodID appendStringID = (*jenv)->GetMethodID(jenv, strClass, "append", "(Ljava/lang/String;)Ljava/lang/StringBuffer;");
+      (*jenv)->CallObjectMethod(jenv, jarg1, appendStringID, newString);
+      
+      /* Clean up the string object, no longer needed */
+      free(arg1);
+      arg1 = NULL;
+    }
+  }
+  
   return jresult;
 }
 
@@ -1184,7 +1252,7 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1setPollingMessageLimit(JN
 }
 
 
-SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getProductName(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2, jintArray jarg3) {
+SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getProductName(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jobject jarg2, jintArray jarg3) {
   jboolean jresult = 0 ;
   neodevice_t *arg1 = (neodevice_t *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -1195,10 +1263,31 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getProductName(JNIEnv *je
   (void)jcls;
   (void)jarg1_;
   arg1 = *(neodevice_t **)&jarg1; 
-  arg2 = 0;
-  if (jarg2) {
-    arg2 = (char *)(*jenv)->GetStringUTFChars(jenv, jarg2, 0);
-    if (!arg2) return 0;
+  {
+    arg2 = NULL;
+    if(jarg2 != NULL) {
+      /* Get the String from the StringBuffer */
+      jmethodID setLengthID;
+      jclass strClass = (*jenv)->GetObjectClass(jenv, jarg2);
+      jmethodID toStringID = (*jenv)->GetMethodID(jenv, strClass, "toString", "()Ljava/lang/String;");
+      jstring js = (jstring) (*jenv)->CallObjectMethod(jenv, jarg2, toStringID);
+      
+      /* Convert the String to a C string */
+      const char *pCharStr = (*jenv)->GetStringUTFChars(jenv, js, 0);
+      
+      /* Take a copy of the C string as the typemap is for a non const C string */
+      jmethodID capacityID = (*jenv)->GetMethodID(jenv, strClass, "capacity", "()I");
+      jint capacity = (*jenv)->CallIntMethod(jenv, jarg2, capacityID);
+      arg2 = (char *) malloc(capacity+1);
+      strcpy(arg2, pCharStr);
+      
+      /* Release the UTF string we obtained with GetStringUTFChars */
+      (*jenv)->ReleaseStringUTFChars(jenv,  js, pCharStr);
+      
+      /* Zero the original StringBuffer, so we can replace it with the result */
+      setLengthID = (*jenv)->GetMethodID(jenv, strClass, "setLength", "(I)V");
+      (*jenv)->CallVoidMethod(jenv, jarg2, setLengthID, (jint) 0);
+    }
   }
   {
     if (!jarg3) {
@@ -1214,15 +1303,28 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getProductName(JNIEnv *je
   result = (bool)icsneo_getProductName((neodevice_t const *)arg1,arg2,arg3);
   jresult = (jboolean)result; 
   {
+    if(arg2 != NULL) {
+      /* Append the result to the empty StringBuffer */
+      jstring newString = (*jenv)->NewStringUTF(jenv, arg2);
+      jclass strClass = (*jenv)->GetObjectClass(jenv, jarg2);
+      jmethodID appendStringID = (*jenv)->GetMethodID(jenv, strClass, "append", "(Ljava/lang/String;)Ljava/lang/StringBuffer;");
+      (*jenv)->CallObjectMethod(jenv, jarg2, appendStringID, newString);
+      
+      /* Clean up the string object, no longer needed */
+      free(arg2);
+      arg2 = NULL;
+    }
+  }
+  {
     (*jenv)->ReleaseIntArrayElements(jenv, jarg3, (jint *)arg3, 0); 
   }
-  if (arg2) (*jenv)->ReleaseStringUTFChars(jenv, jarg2, (const char *)arg2);
+  
   
   return jresult;
 }
 
 
-SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getProductNameForType(JNIEnv *jenv, jclass jcls, jlong jarg1, jstring jarg2, jintArray jarg3) {
+SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getProductNameForType(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg2, jintArray jarg3) {
   jboolean jresult = 0 ;
   devicetype_t arg1 ;
   char *arg2 = (char *) 0 ;
@@ -1232,10 +1334,31 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getProductNameForType(JNI
   (void)jenv;
   (void)jcls;
   arg1 = (devicetype_t)jarg1; 
-  arg2 = 0;
-  if (jarg2) {
-    arg2 = (char *)(*jenv)->GetStringUTFChars(jenv, jarg2, 0);
-    if (!arg2) return 0;
+  {
+    arg2 = NULL;
+    if(jarg2 != NULL) {
+      /* Get the String from the StringBuffer */
+      jmethodID setLengthID;
+      jclass strClass = (*jenv)->GetObjectClass(jenv, jarg2);
+      jmethodID toStringID = (*jenv)->GetMethodID(jenv, strClass, "toString", "()Ljava/lang/String;");
+      jstring js = (jstring) (*jenv)->CallObjectMethod(jenv, jarg2, toStringID);
+      
+      /* Convert the String to a C string */
+      const char *pCharStr = (*jenv)->GetStringUTFChars(jenv, js, 0);
+      
+      /* Take a copy of the C string as the typemap is for a non const C string */
+      jmethodID capacityID = (*jenv)->GetMethodID(jenv, strClass, "capacity", "()I");
+      jint capacity = (*jenv)->CallIntMethod(jenv, jarg2, capacityID);
+      arg2 = (char *) malloc(capacity+1);
+      strcpy(arg2, pCharStr);
+      
+      /* Release the UTF string we obtained with GetStringUTFChars */
+      (*jenv)->ReleaseStringUTFChars(jenv,  js, pCharStr);
+      
+      /* Zero the original StringBuffer, so we can replace it with the result */
+      setLengthID = (*jenv)->GetMethodID(jenv, strClass, "setLength", "(I)V");
+      (*jenv)->CallVoidMethod(jenv, jarg2, setLengthID, (jint) 0);
+    }
   }
   {
     if (!jarg3) {
@@ -1251,9 +1374,22 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1getProductNameForType(JNI
   result = (bool)icsneo_getProductNameForType(arg1,arg2,arg3);
   jresult = (jboolean)result; 
   {
+    if(arg2 != NULL) {
+      /* Append the result to the empty StringBuffer */
+      jstring newString = (*jenv)->NewStringUTF(jenv, arg2);
+      jclass strClass = (*jenv)->GetObjectClass(jenv, jarg2);
+      jmethodID appendStringID = (*jenv)->GetMethodID(jenv, strClass, "append", "(Ljava/lang/String;)Ljava/lang/StringBuffer;");
+      (*jenv)->CallObjectMethod(jenv, jarg2, appendStringID, newString);
+      
+      /* Clean up the string object, no longer needed */
+      free(arg2);
+      arg2 = NULL;
+    }
+  }
+  {
     (*jenv)->ReleaseIntArrayElements(jenv, jarg3, (jint *)arg3, 0); 
   }
-  if (arg2) (*jenv)->ReleaseStringUTFChars(jenv, jarg2, (const char *)arg2);
+  
   
   return jresult;
 }
@@ -1501,7 +1637,7 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1transmitMessages(JNIEnv *
 }
 
 
-SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1describeDevice(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jstring jarg2, jintArray jarg3) {
+SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1describeDevice(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jobject jarg2, jintArray jarg3) {
   jboolean jresult = 0 ;
   neodevice_t *arg1 = (neodevice_t *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -1512,10 +1648,31 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1describeDevice(JNIEnv *je
   (void)jcls;
   (void)jarg1_;
   arg1 = *(neodevice_t **)&jarg1; 
-  arg2 = 0;
-  if (jarg2) {
-    arg2 = (char *)(*jenv)->GetStringUTFChars(jenv, jarg2, 0);
-    if (!arg2) return 0;
+  {
+    arg2 = NULL;
+    if(jarg2 != NULL) {
+      /* Get the String from the StringBuffer */
+      jmethodID setLengthID;
+      jclass strClass = (*jenv)->GetObjectClass(jenv, jarg2);
+      jmethodID toStringID = (*jenv)->GetMethodID(jenv, strClass, "toString", "()Ljava/lang/String;");
+      jstring js = (jstring) (*jenv)->CallObjectMethod(jenv, jarg2, toStringID);
+      
+      /* Convert the String to a C string */
+      const char *pCharStr = (*jenv)->GetStringUTFChars(jenv, js, 0);
+      
+      /* Take a copy of the C string as the typemap is for a non const C string */
+      jmethodID capacityID = (*jenv)->GetMethodID(jenv, strClass, "capacity", "()I");
+      jint capacity = (*jenv)->CallIntMethod(jenv, jarg2, capacityID);
+      arg2 = (char *) malloc(capacity+1);
+      strcpy(arg2, pCharStr);
+      
+      /* Release the UTF string we obtained with GetStringUTFChars */
+      (*jenv)->ReleaseStringUTFChars(jenv,  js, pCharStr);
+      
+      /* Zero the original StringBuffer, so we can replace it with the result */
+      setLengthID = (*jenv)->GetMethodID(jenv, strClass, "setLength", "(I)V");
+      (*jenv)->CallVoidMethod(jenv, jarg2, setLengthID, (jint) 0);
+    }
   }
   {
     if (!jarg3) {
@@ -1531,9 +1688,22 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1describeDevice(JNIEnv *je
   result = (bool)icsneo_describeDevice((neodevice_t const *)arg1,arg2,arg3);
   jresult = (jboolean)result; 
   {
+    if(arg2 != NULL) {
+      /* Append the result to the empty StringBuffer */
+      jstring newString = (*jenv)->NewStringUTF(jenv, arg2);
+      jclass strClass = (*jenv)->GetObjectClass(jenv, jarg2);
+      jmethodID appendStringID = (*jenv)->GetMethodID(jenv, strClass, "append", "(Ljava/lang/String;)Ljava/lang/StringBuffer;");
+      (*jenv)->CallObjectMethod(jenv, jarg2, appendStringID, newString);
+      
+      /* Clean up the string object, no longer needed */
+      free(arg2);
+      arg2 = NULL;
+    }
+  }
+  {
     (*jenv)->ReleaseIntArrayElements(jenv, jarg3, (jint *)arg3, 0); 
   }
-  if (arg2) (*jenv)->ReleaseStringUTFChars(jenv, jarg2, (const char *)arg2);
+  
   
   return jresult;
 }
