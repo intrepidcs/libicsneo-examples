@@ -350,7 +350,7 @@ static void neomessage_t_array_setitem(neomessage_t *ary, int index, neomessage_
 extern "C" {
 #endif
 
-SWIGEXPORT void SWIGSTDCALL CSharp_icsneo_findAllDevices(void * jarg1, void * jarg2) {
+SWIGEXPORT void SWIGSTDCALL CSharp_icsneo_findAllDevices(void * jarg1, int * jarg2) {
   neodevice_t *arg1 = (neodevice_t *) 0 ;
   size_t *arg2 = (size_t *) 0 ;
   
@@ -365,7 +365,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_icsneo_freeUnconnectedDevices() {
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_serialNumToString(unsigned int jarg1, char * jarg2, void * jarg3) {
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_serialNumToString(unsigned int jarg1, char * jarg2, int * jarg3) {
   unsigned int jresult ;
   uint32_t arg1 ;
   char *arg2 = (char *) 0 ;
@@ -513,7 +513,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_isMessagePollingEnabled(void *
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_getMessages(void * jarg1, void * jarg2, void * jarg3, unsigned long long jarg4) {
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_getMessages(void * jarg1, void * jarg2, int * jarg3, unsigned long long jarg4) {
   unsigned int jresult ;
   neodevice_t *arg1 = (neodevice_t *) 0 ;
   neomessage_t *arg2 = (neomessage_t *) 0 ;
@@ -557,7 +557,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_setPollingMessageLimit(void * 
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_getProductName(void * jarg1, char * jarg2, void * jarg3) {
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_getProductName(void * jarg1, char * jarg2, int * jarg3) {
   unsigned int jresult ;
   neodevice_t *arg1 = (neodevice_t *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -573,7 +573,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_getProductName(void * jarg1, c
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_getProductNameForType(unsigned int jarg1, char * jarg2, void * jarg3) {
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_getProductNameForType(unsigned int jarg1, char * jarg2, int * jarg3) {
   unsigned int jresult ;
   devicetype_t arg1 ;
   char *arg2 = (char *) 0 ;
@@ -787,7 +787,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_transmitMessages(void * jarg1,
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_describeDevice(void * jarg1, char * jarg2, void * jarg3) {
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_describeDevice(void * jarg1, char * jarg2, int * jarg3) {
   unsigned int jresult ;
   neodevice_t *arg1 = (neodevice_t *) 0 ;
   char *arg2 = (char *) 0 ;
@@ -817,7 +817,7 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_icsneo_getVersion() {
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_getEvents(void * jarg1, void * jarg2) {
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_getEvents(void * jarg1, int * jarg2) {
   unsigned int jresult ;
   neoevent_t *arg1 = (neoevent_t *) 0 ;
   size_t *arg2 = (size_t *) 0 ;
@@ -831,7 +831,7 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_getEvents(void * jarg1, void *
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_getDeviceEvents(void * jarg1, void * jarg2, void * jarg3) {
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_getDeviceEvents(void * jarg1, void * jarg2, int * jarg3) {
   unsigned int jresult ;
   neodevice_t *arg1 = (neodevice_t *) 0 ;
   neoevent_t *arg2 = (neoevent_t *) 0 ;
@@ -890,7 +890,7 @@ SWIGEXPORT unsigned long SWIGSTDCALL CSharp_icsneo_getEventLimit() {
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_getSupportedDevices(void * jarg1, void * jarg2) {
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_getSupportedDevices(void * jarg1, int * jarg2) {
   unsigned int jresult ;
   devicetype_t *arg1 = (devicetype_t *) 0 ;
   size_t *arg2 = (size_t *) 0 ;

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 namespace libicsneocsharp_example {
     class InteractiveExample {
@@ -16,10 +15,9 @@ namespace libicsneocsharp_example {
 
             for(int i = 0; i < numDevices; i++) {
                 System.Text.StringBuilder description = new System.Text.StringBuilder(icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
-                GCHandle lenHandle = GCHandle.Alloc((uint)icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION, GCHandleType.Pinned);
-                SWIGTYPE_p_size_t maxLength = new SWIGTYPE_p_size_t(lenHandle.AddrOfPinnedObject(), true);
+                int maxLength = icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 
-                if(icsneocsharp.icsneo_describeDevice(devices[i], description, maxLength)) {
+                if(icsneocsharp.icsneo_describeDevice(devices[i], description, ref maxLength)) {
                     System.Console.Write("[" + (i + 1) + "] " + description.ToString() + "\tConnected: ");
 
                     if(icsneocsharp.icsneo_isOpen(devices[i])) {
@@ -44,18 +42,17 @@ namespace libicsneocsharp_example {
         private uint ScanNewDevices() {
             neodevice_t newDevices = icsneocsharp.new_neodevice_t_array(99);
 
-            GCHandle gcHandle = GCHandle.Alloc((uint)10, GCHandleType.Pinned);
-            SWIGTYPE_p_size_t count = new SWIGTYPE_p_size_t(gcHandle.AddrOfPinnedObject(), true);
+            int count = 10;
 
-            icsneocsharp.icsneo_findAllDevices(newDevices, count);
+            icsneocsharp.icsneo_findAllDevices(newDevices, ref count);
 
-            numDevices += Marshal.PtrToStructure<uint>(SWIGTYPE_p_size_t.getCPtr(count).Handle);
+            numDevices += (uint) count;
 
             for(int i = 0; i < numDevices; i++) {
                 devices.Add(icsneocsharp.neodevice_t_array_getitem(newDevices, i));
             }
             icsneocsharp.delete_neodevice_t_array(newDevices);
-            return Marshal.PtrToStructure<uint>(SWIGTYPE_p_size_t.getCPtr(count).Handle);
+            return (uint) count;
         }
 
         private void PrintMainMenu() {
@@ -83,18 +80,15 @@ namespace libicsneocsharp_example {
 
         void PrintAPIEvents() {
             neoevent_t events = icsneocsharp.new_neoevent_t_array(99);
-            GCHandle gcHandle = GCHandle.Alloc((uint)99, GCHandleType.Pinned);
-            SWIGTYPE_p_size_t eventCount = new SWIGTYPE_p_size_t(gcHandle.AddrOfPinnedObject(), true);
-            if(icsneocsharp.icsneo_getEvents(events, eventCount)) {
-                var evtCount = Marshal.PtrToStructure<uint>(SWIGTYPE_p_size_t.getCPtr(eventCount).Handle);
-
-                if(evtCount == 1) {
+            int eventCount = 99;
+            if(icsneocsharp.icsneo_getEvents(events, ref eventCount)) {
+                if(eventCount == 1) {
                     neoevent_t evt = icsneocsharp.neoevent_t_array_getitem(events, 0);
                     System.Console.WriteLine("1 API event found!");
                     System.Console.WriteLine("Event 0x" + evt.eventNumber + ": " + evt.description);
                 } else {
-                    System.Console.WriteLine(evtCount + " API events found!");
-                    for(var i = 0; i < evtCount; ++i) {
+                    System.Console.WriteLine(eventCount + " API events found!");
+                    for(var i = 0; i < eventCount; ++i) {
                         neoevent_t evt = icsneocsharp.neoevent_t_array_getitem(events, i);
                         System.Console.WriteLine("Event 0x" + evt.eventNumber + ": " + evt.description);
                     }
@@ -107,18 +101,15 @@ namespace libicsneocsharp_example {
 
         void PrintDeviceEvents(neodevice_t device) {
             neoevent_t events = icsneocsharp.new_neoevent_t_array(99);
-            GCHandle gcHandle = GCHandle.Alloc((uint)99, GCHandleType.Pinned);
-            SWIGTYPE_p_size_t eventCount = new SWIGTYPE_p_size_t(gcHandle.AddrOfPinnedObject(), true);
-            if(icsneocsharp.icsneo_getDeviceEvents(device, events, eventCount)) {
-                var evtCount = Marshal.PtrToStructure<uint>(SWIGTYPE_p_size_t.getCPtr(eventCount).Handle);
-
-                if(evtCount == 1) {
+            int eventCount = 99;
+            if(icsneocsharp.icsneo_getDeviceEvents(device, events, ref eventCount)) {
+                if(eventCount == 1) {
                     neoevent_t evt = icsneocsharp.neoevent_t_array_getitem(events, 0);
                     System.Console.WriteLine("1 device event found!");
                     System.Console.WriteLine("Event 0x" + evt.eventNumber + ": " + evt.description);
                 } else {
-                    System.Console.WriteLine(evtCount + " device events found!");
-                    for(var i = 0; i < evtCount; ++i) {
+                    System.Console.WriteLine(eventCount + " device events found!");
+                    for(var i = 0; i < eventCount; ++i) {
                         neoevent_t evt = icsneocsharp.neoevent_t_array_getitem(events, i);
                         System.Console.WriteLine("Event 0x" + evt.eventNumber + ": " + evt.description);
                     }
@@ -213,12 +204,11 @@ namespace libicsneocsharp_example {
 
                     // Get the product description for the device
                     System.Text.StringBuilder description = new System.Text.StringBuilder(icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
-                    GCHandle lenHandle = GCHandle.Alloc((uint)icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION, GCHandleType.Pinned);
-                    SWIGTYPE_p_size_t maxLength = new SWIGTYPE_p_size_t(lenHandle.AddrOfPinnedObject(), true);
+                    int maxLength = icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 
-                    icsneocsharp.icsneo_describeDevice(selectedDevice, description, maxLength);
+                    icsneocsharp.icsneo_describeDevice(selectedDevice, description, ref maxLength);
 
-                        System.Console.WriteLine("Would you like to open or close " + description + "?");
+                    System.Console.WriteLine("Would you like to open or close " + description + "?");
                     System.Console.WriteLine("[1] Open\n[2] Close\n[3] Cancel\n");
 
                     char option = GetCharInput(new List<char> { '1', '2', '3' });
@@ -267,10 +257,9 @@ namespace libicsneocsharp_example {
 
                     // Get the product description for the device
                     System.Text.StringBuilder description = new System.Text.StringBuilder(icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
-                    GCHandle lenHandle = GCHandle.Alloc((uint)icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION, GCHandleType.Pinned);
-                    SWIGTYPE_p_size_t maxLength = new SWIGTYPE_p_size_t(lenHandle.AddrOfPinnedObject(), true);
+                    int maxLength = icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 
-                    icsneocsharp.icsneo_describeDevice(selectedDevice, description, maxLength);
+                    icsneocsharp.icsneo_describeDevice(selectedDevice, description, ref maxLength);
 
                     System.Console.WriteLine("Would you like to have " + description.ToString() + " go online or offline?");
                     System.Console.WriteLine("[1] Online\n[2] Offline\n[3] Cancel\n");
@@ -318,10 +307,9 @@ namespace libicsneocsharp_example {
 
                     // Get the product description for the device
                     System.Text.StringBuilder description = new System.Text.StringBuilder(icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
-                    GCHandle lenHandle = GCHandle.Alloc((uint)icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION, GCHandleType.Pinned);
-                    SWIGTYPE_p_size_t maxLength = new SWIGTYPE_p_size_t(lenHandle.AddrOfPinnedObject(), true);
+                    int maxLength = icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 
-                    icsneocsharp.icsneo_describeDevice(selectedDevice, description, maxLength);
+                    icsneocsharp.icsneo_describeDevice(selectedDevice, description, ref maxLength);
 
                     System.Console.WriteLine("Would you like to enable or disable message polling for " + description.ToString() + "?");
                     System.Console.WriteLine("[1] Enable\n[2] Disable\n[3] Cancel\n");
@@ -379,17 +367,15 @@ namespace libicsneocsharp_example {
 
                     // Get the product description for the device
                     System.Text.StringBuilder description = new System.Text.StringBuilder(icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
-                    GCHandle lenHandle = GCHandle.Alloc((uint)icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION, GCHandleType.Pinned);
-                    SWIGTYPE_p_size_t maxLength = new SWIGTYPE_p_size_t(lenHandle.AddrOfPinnedObject(), true);
+                    int maxLength = icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 
-                    icsneocsharp.icsneo_describeDevice(selectedDevice, description, maxLength);
+                    icsneocsharp.icsneo_describeDevice(selectedDevice, description, ref maxLength);
 
                     // Prepare the neomessage_t array and size for reading in the messages
                     neomessage_t msgs = icsneocsharp.new_neomessage_t_array((int)msgLimit);
-                    GCHandle gcHandle = GCHandle.Alloc(msgLimit, GCHandleType.Pinned);
-                    SWIGTYPE_p_size_t msgCountPtr = new SWIGTYPE_p_size_t(gcHandle.AddrOfPinnedObject(), true);
+                    int msgCount = (int)msgLimit;
 
-                    if(!icsneocsharp.icsneo_getMessages(selectedDevice, msgs, msgCountPtr, 0)) {
+                    if(!icsneocsharp.icsneo_getMessages(selectedDevice, msgs, ref msgCount, 0)) {
                         System.Console.WriteLine("Failed to get messages for " + description.ToString() + "!\n");
                         PrintLastError();
                         icsneocsharp.delete_neomessage_t_array(msgs);
@@ -397,7 +383,6 @@ namespace libicsneocsharp_example {
                         break;
                     }
 
-                    uint msgCount = Marshal.PtrToStructure<uint>(SWIGTYPE_p_size_t.getCPtr(msgCountPtr).Handle);
                     if(msgCount == 1) {
                         System.Console.WriteLine("1 message received from " + description.ToString() + "!");
                     } else {
@@ -434,10 +419,9 @@ namespace libicsneocsharp_example {
 
                     // Get the product description for the device
                     System.Text.StringBuilder description = new System.Text.StringBuilder(icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
-                    GCHandle lenHandle = GCHandle.Alloc((uint)icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION, GCHandleType.Pinned);
-                    SWIGTYPE_p_size_t maxLength = new SWIGTYPE_p_size_t(lenHandle.AddrOfPinnedObject(), true);
+                    int maxLength = icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 
-                    icsneocsharp.icsneo_describeDevice(selectedDevice, description, maxLength);
+                    icsneocsharp.icsneo_describeDevice(selectedDevice, description, ref maxLength);
 
                     // Start generating sample msg
                     neomessage_can_t msg = new neomessage_can_t();
@@ -480,10 +464,9 @@ namespace libicsneocsharp_example {
 
                     // Get the product description for the device
                     System.Text.StringBuilder description = new System.Text.StringBuilder(icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
-                    GCHandle lenHandle = GCHandle.Alloc((uint)icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION, GCHandleType.Pinned);
-                    SWIGTYPE_p_size_t maxLength = new SWIGTYPE_p_size_t(lenHandle.AddrOfPinnedObject(), true);
+                    int maxLength = icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 
-                    icsneocsharp.icsneo_describeDevice(selectedDevice, description, maxLength);
+                    icsneocsharp.icsneo_describeDevice(selectedDevice, description, ref maxLength);
 
                     // Attempt to set baudrate and apply settings
                     if(icsneocsharp.icsneo_setBaudrate(selectedDevice, (ushort)icsneocsharp.ICSNEO_NETID_HSCAN, 250000) && icsneocsharp.icsneo_settingsApply(selectedDevice)) {
@@ -508,10 +491,9 @@ namespace libicsneocsharp_example {
 
                     // Get the product description for the device
                     System.Text.StringBuilder description = new System.Text.StringBuilder(icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION);
-                    GCHandle lenHandle = GCHandle.Alloc((uint)icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION, GCHandleType.Pinned);
-                    SWIGTYPE_p_size_t maxLength = new SWIGTYPE_p_size_t(lenHandle.AddrOfPinnedObject(), true);
+                    int maxLength = icsneocsharp.ICSNEO_DEVICETYPE_LONGEST_DESCRIPTION;
 
-                    icsneocsharp.icsneo_describeDevice(selectedDevice, description, maxLength);
+                    icsneocsharp.icsneo_describeDevice(selectedDevice, description, ref maxLength);
 
                     // Attempt to set baudrate and apply settings
                     if(icsneocsharp.icsneo_setBaudrate(selectedDevice, (ushort)icsneocsharp.ICSNEO_NETID_HSCAN, 500000) && icsneocsharp.icsneo_settingsApply(selectedDevice)) {

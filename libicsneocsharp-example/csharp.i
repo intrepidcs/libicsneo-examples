@@ -38,6 +38,8 @@
 #include "icsneo/icsneoc.h"
 %}
 
+%apply int *INOUT {size_t *};
+
 %include "icsneo/icsneoc.h"
 %include "icsneo/device/neodevice.h"
 %include "icsneo/communication/message/neomessage.h"

@@ -10,16 +10,16 @@
 
 
 public class icsneocsharp {
-  public static void icsneo_findAllDevices(neodevice_t devices, SWIGTYPE_p_size_t count) {
-    icsneocsharpPINVOKE.icsneo_findAllDevices(neodevice_t.getCPtr(devices), SWIGTYPE_p_size_t.getCPtr(count));
+  public static void icsneo_findAllDevices(neodevice_t devices, ref int count) {
+    icsneocsharpPINVOKE.icsneo_findAllDevices(neodevice_t.getCPtr(devices), ref count);
   }
 
   public static void icsneo_freeUnconnectedDevices() {
     icsneocsharpPINVOKE.icsneo_freeUnconnectedDevices();
   }
 
-  public static bool icsneo_serialNumToString(uint num, System.Text.StringBuilder str, SWIGTYPE_p_size_t count) {
-    bool ret = icsneocsharpPINVOKE.icsneo_serialNumToString(num, str, SWIGTYPE_p_size_t.getCPtr(count));
+  public static bool icsneo_serialNumToString(uint num, System.Text.StringBuilder str, ref int count) {
+    bool ret = icsneocsharpPINVOKE.icsneo_serialNumToString(num, str, ref count);
     return ret;
   }
 
@@ -78,8 +78,8 @@ public class icsneocsharp {
     return ret;
   }
 
-  public static bool icsneo_getMessages(neodevice_t device, neomessage_t messages, SWIGTYPE_p_size_t items, ulong timeout) {
-    bool ret = icsneocsharpPINVOKE.icsneo_getMessages(neodevice_t.getCPtr(device), neomessage_t.getCPtr(messages), SWIGTYPE_p_size_t.getCPtr(items), timeout);
+  public static bool icsneo_getMessages(neodevice_t device, neomessage_t messages, ref int items, ulong timeout) {
+    bool ret = icsneocsharpPINVOKE.icsneo_getMessages(neodevice_t.getCPtr(device), neomessage_t.getCPtr(messages), ref items, timeout);
     return ret;
   }
 
@@ -93,13 +93,13 @@ public class icsneocsharp {
     return ret;
   }
 
-  public static bool icsneo_getProductName(neodevice_t device, System.Text.StringBuilder str, SWIGTYPE_p_size_t maxLength) {
-    bool ret = icsneocsharpPINVOKE.icsneo_getProductName(neodevice_t.getCPtr(device), str, SWIGTYPE_p_size_t.getCPtr(maxLength));
+  public static bool icsneo_getProductName(neodevice_t device, System.Text.StringBuilder str, ref int maxLength) {
+    bool ret = icsneocsharpPINVOKE.icsneo_getProductName(neodevice_t.getCPtr(device), str, ref maxLength);
     return ret;
   }
 
-  public static bool icsneo_getProductNameForType(uint type, System.Text.StringBuilder str, SWIGTYPE_p_size_t maxLength) {
-    bool ret = icsneocsharpPINVOKE.icsneo_getProductNameForType(type, str, SWIGTYPE_p_size_t.getCPtr(maxLength));
+  public static bool icsneo_getProductNameForType(uint type, System.Text.StringBuilder str, ref int maxLength) {
+    bool ret = icsneocsharpPINVOKE.icsneo_getProductNameForType(type, str, ref maxLength);
     return ret;
   }
 
@@ -173,8 +173,8 @@ public class icsneocsharp {
     return ret;
   }
 
-  public static bool icsneo_describeDevice(neodevice_t device, System.Text.StringBuilder str, SWIGTYPE_p_size_t maxLength) {
-    bool ret = icsneocsharpPINVOKE.icsneo_describeDevice(neodevice_t.getCPtr(device), str, SWIGTYPE_p_size_t.getCPtr(maxLength));
+  public static bool icsneo_describeDevice(neodevice_t device, System.Text.StringBuilder str, ref int maxLength) {
+    bool ret = icsneocsharpPINVOKE.icsneo_describeDevice(neodevice_t.getCPtr(device), str, ref maxLength);
     return ret;
   }
 
@@ -183,13 +183,13 @@ public class icsneocsharp {
     return ret;
   }
 
-  public static bool icsneo_getEvents(neoevent_t events, SWIGTYPE_p_size_t size) {
-    bool ret = icsneocsharpPINVOKE.icsneo_getEvents(neoevent_t.getCPtr(events), SWIGTYPE_p_size_t.getCPtr(size));
+  public static bool icsneo_getEvents(neoevent_t events, ref int size) {
+    bool ret = icsneocsharpPINVOKE.icsneo_getEvents(neoevent_t.getCPtr(events), ref size);
     return ret;
   }
 
-  public static bool icsneo_getDeviceEvents(neodevice_t device, neoevent_t events, SWIGTYPE_p_size_t size) {
-    bool ret = icsneocsharpPINVOKE.icsneo_getDeviceEvents(neodevice_t.getCPtr(device), neoevent_t.getCPtr(events), SWIGTYPE_p_size_t.getCPtr(size));
+  public static bool icsneo_getDeviceEvents(neodevice_t device, neoevent_t events, ref int size) {
+    bool ret = icsneocsharpPINVOKE.icsneo_getDeviceEvents(neodevice_t.getCPtr(device), neoevent_t.getCPtr(events), ref size);
     return ret;
   }
 
@@ -215,8 +215,8 @@ public class icsneocsharp {
     return ret;
   }
 
-  public static bool icsneo_getSupportedDevices(SWIGTYPE_p_unsigned_int devices, SWIGTYPE_p_size_t count) {
-    bool ret = icsneocsharpPINVOKE.icsneo_getSupportedDevices(SWIGTYPE_p_unsigned_int.getCPtr(devices), SWIGTYPE_p_size_t.getCPtr(count));
+  public static bool icsneo_getSupportedDevices(SWIGTYPE_p_unsigned_int devices, ref int count) {
+    bool ret = icsneocsharpPINVOKE.icsneo_getSupportedDevices(SWIGTYPE_p_unsigned_int.getCPtr(devices), ref count);
     return ret;
   }
 
