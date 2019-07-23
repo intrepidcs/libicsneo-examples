@@ -6,24 +6,40 @@
 %include <various.i>
 %include <java.i>
 %include <arrays_java.i>
+%include <javahead.swg>
 
 #define DLLExport
 
-%typemap(jstype) uint8_t const *data "int[]"
-%typemap(jtype) uint8_t const *data "int[]"
-%typemap(jni) uint8_t const *data "char *"
-
-%typemap(out) uint8_t const *data %{
-// in java_wrap and can use to cast output properly
-%}
+%typemap(jni) uint8_t const *data "jbyteArray"
+%typemap(jtype) uint8_t const *data "byte[]"
+%typemap(jstype) uint8_t const *data "byte[]"
+%typemap(javain) uint8_t const *data "$javainput"
 
 %typemap(javaout) uint8_t const *data {
     return $jnicall;
 }
 
-%typemap(javain) uint8_t const *data %{
-    value
+%typemap(out) uint8_t const *data %{
+    $result = (*jenv)->NewByteArray(jenv, (int) arg1->length);
+    (*jenv)->SetByteArrayRegion(jenv, $result, 0, (int) arg1->length, $1);
 %}
+
+%typemap(in) uint8_t const *data %{
+    bool isCopy; // TODO free if true
+    arg2 = (*jenv)->GetByteArrayElements(jenv, jarg2, &isCopy);
+%}
+
+
+/*
+%typemap(out) uint8_t const *data %{
+    $result = $1;
+%}
+
+%typemap(javaout) uint8_t const *data {
+    byte[] ret = new byte[(int) this.getLength()];
+    return $jnicall;
+}
+*/
 
 %typemap(jni) char *str "jobject"
 %typemap(jtype) char *str "StringBuffer"

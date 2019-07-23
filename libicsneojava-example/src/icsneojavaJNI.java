@@ -182,8 +182,8 @@ public class icsneojavaJNI {
   public final static native java.math.BigInteger neomessage_t_timestamp_get(long jarg1, neomessage_t jarg1_);
   public final static native void neomessage_t_timestampReserved_set(long jarg1, neomessage_t jarg1_, java.math.BigInteger jarg2);
   public final static native java.math.BigInteger neomessage_t_timestampReserved_get(long jarg1, neomessage_t jarg1_);
-  public final static native void neomessage_t_data_set(long jarg1, neomessage_t jarg1_, int[] jarg2);
-  public final static native int[] neomessage_t_data_get(long jarg1, neomessage_t jarg1_);
+  public final static native void neomessage_t_data_set(long jarg1, neomessage_t jarg1_, byte[] jarg2);
+  public final static native byte[] neomessage_t_data_get(long jarg1, neomessage_t jarg1_);
   public final static native void neomessage_t_length_set(long jarg1, neomessage_t jarg1_, long jarg2);
   public final static native long neomessage_t_length_get(long jarg1, neomessage_t jarg1_);
   public final static native void neomessage_t_header_set(long jarg1, neomessage_t jarg1_, short[] jarg2);
@@ -202,8 +202,8 @@ public class icsneojavaJNI {
   public final static native java.math.BigInteger neomessage_can_t_timestamp_get(long jarg1, neomessage_can_t jarg1_);
   public final static native void neomessage_can_t_timestampReserved_set(long jarg1, neomessage_can_t jarg1_, java.math.BigInteger jarg2);
   public final static native java.math.BigInteger neomessage_can_t_timestampReserved_get(long jarg1, neomessage_can_t jarg1_);
-  public final static native void neomessage_can_t_data_set(long jarg1, neomessage_can_t jarg1_, int[] jarg2);
-  public final static native int[] neomessage_can_t_data_get(long jarg1, neomessage_can_t jarg1_);
+  public final static native void neomessage_can_t_data_set(long jarg1, neomessage_can_t jarg1_, byte[] jarg2);
+  public final static native byte[] neomessage_can_t_data_get(long jarg1, neomessage_can_t jarg1_);
   public final static native void neomessage_can_t_length_set(long jarg1, neomessage_can_t jarg1_, long jarg2);
   public final static native long neomessage_can_t_length_get(long jarg1, neomessage_can_t jarg1_);
   public final static native void neomessage_can_t_arbid_set(long jarg1, neomessage_can_t jarg1_, long jarg2);
@@ -224,8 +224,8 @@ public class icsneojavaJNI {
   public final static native java.math.BigInteger neomessage_eth_t_timestamp_get(long jarg1, neomessage_eth_t jarg1_);
   public final static native void neomessage_eth_t_timestampReserved_set(long jarg1, neomessage_eth_t jarg1_, java.math.BigInteger jarg2);
   public final static native java.math.BigInteger neomessage_eth_t_timestampReserved_get(long jarg1, neomessage_eth_t jarg1_);
-  public final static native void neomessage_eth_t_data_set(long jarg1, neomessage_eth_t jarg1_, int[] jarg2);
-  public final static native int[] neomessage_eth_t_data_get(long jarg1, neomessage_eth_t jarg1_);
+  public final static native void neomessage_eth_t_data_set(long jarg1, neomessage_eth_t jarg1_, byte[] jarg2);
+  public final static native byte[] neomessage_eth_t_data_get(long jarg1, neomessage_eth_t jarg1_);
   public final static native void neomessage_eth_t_length_set(long jarg1, neomessage_eth_t jarg1_, long jarg2);
   public final static native long neomessage_eth_t_length_get(long jarg1, neomessage_eth_t jarg1_);
   public final static native void neomessage_eth_t_preemptionFlags_set(long jarg1, neomessage_eth_t jarg1_, short jarg2);

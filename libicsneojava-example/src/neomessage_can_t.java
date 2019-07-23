@@ -60,13 +60,11 @@ public class neomessage_can_t {
     return icsneojavaJNI.neomessage_can_t_timestampReserved_get(swigCPtr, this);
   }
 
-  public void setData(int[] value) {
-    icsneojavaJNI.neomessage_can_t_data_set(swigCPtr, this, 
-    value
-);
+  public void setData(byte[] value) {
+    icsneojavaJNI.neomessage_can_t_data_set(swigCPtr, this, value);
   }
 
-  public int[] getData() {
+  public byte[] getData() {
     return icsneojavaJNI.neomessage_can_t_data_get(swigCPtr, this);
 }
 

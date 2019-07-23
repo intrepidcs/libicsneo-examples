@@ -418,7 +418,7 @@ public class InteractiveExample {
                     msg.setArbid(0x120);
                     msg.setLength(6);
                     msg.setNetid(icsneojava.ICSNEO_NETID_HSCAN);
-                    msg.setData(new int[] { 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff});
+                    msg.setData(new byte[] { (byte) 0xaa, (byte) 0xbb, (byte) 0xcc, (byte) 0xdd, (byte) 0xee, (byte) 0xff});
                     msg.getStatus().setCanfdFDF(0);
                     msg.getStatus().setExtendedFrame(0);
                     msg.getStatus().setCanfdBRS(0);

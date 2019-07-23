@@ -3809,7 +3809,7 @@ SWIGEXPORT jobject JNICALL Java_icsneojavaJNI_neomessage_1t_1timestampReserved_1
 }
 
 
-SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1t_1data_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, char * jarg2) {
+SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1t_1data_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jbyteArray jarg2) {
   neomessage_t *arg1 = (neomessage_t *) 0 ;
   uint8_t *arg2 = (uint8_t *) 0 ;
   
@@ -3817,13 +3817,16 @@ SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1t_1data_1set(JNIEnv *jenv
   (void)jcls;
   (void)jarg1_;
   arg1 = *(neomessage_t **)&jarg1; 
-  arg2 = *(uint8_t **)&jarg2; 
+  
+  bool isCopy; // TODO free if true
+  arg2 = (*jenv)->GetByteArrayElements(jenv, jarg2, &isCopy);
+  
   if (arg1) (arg1)->data = (uint8_t const *)arg2;
 }
 
 
-SWIGEXPORT char * JNICALL Java_icsneojavaJNI_neomessage_1t_1data_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
-  char * jresult = 0 ;
+SWIGEXPORT jbyteArray JNICALL Java_icsneojavaJNI_neomessage_1t_1data_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jbyteArray jresult = 0 ;
   neomessage_t *arg1 = (neomessage_t *) 0 ;
   uint8_t *result = 0 ;
   
@@ -3833,7 +3836,8 @@ SWIGEXPORT char * JNICALL Java_icsneojavaJNI_neomessage_1t_1data_1get(JNIEnv *je
   arg1 = *(neomessage_t **)&jarg1; 
   result = (uint8_t *) ((arg1)->data);
   
-  // in java_wrap and can use to cast output properly
+  jresult = (*jenv)->NewByteArray(jenv, (int) arg1->length);
+  (*jenv)->SetByteArrayRegion(jenv, jresult, 0, (int) arg1->length, result);
   
   return jresult;
 }
@@ -4192,7 +4196,7 @@ SWIGEXPORT jobject JNICALL Java_icsneojavaJNI_neomessage_1can_1t_1timestampReser
 }
 
 
-SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1can_1t_1data_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, char * jarg2) {
+SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1can_1t_1data_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jbyteArray jarg2) {
   neomessage_can_t *arg1 = (neomessage_can_t *) 0 ;
   uint8_t *arg2 = (uint8_t *) 0 ;
   
@@ -4200,13 +4204,16 @@ SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1can_1t_1data_1set(JNIEnv 
   (void)jcls;
   (void)jarg1_;
   arg1 = *(neomessage_can_t **)&jarg1; 
-  arg2 = *(uint8_t **)&jarg2; 
+  
+  bool isCopy; // TODO free if true
+  arg2 = (*jenv)->GetByteArrayElements(jenv, jarg2, &isCopy);
+  
   if (arg1) (arg1)->data = (uint8_t const *)arg2;
 }
 
 
-SWIGEXPORT char * JNICALL Java_icsneojavaJNI_neomessage_1can_1t_1data_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
-  char * jresult = 0 ;
+SWIGEXPORT jbyteArray JNICALL Java_icsneojavaJNI_neomessage_1can_1t_1data_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jbyteArray jresult = 0 ;
   neomessage_can_t *arg1 = (neomessage_can_t *) 0 ;
   uint8_t *result = 0 ;
   
@@ -4216,7 +4223,8 @@ SWIGEXPORT char * JNICALL Java_icsneojavaJNI_neomessage_1can_1t_1data_1get(JNIEn
   arg1 = *(neomessage_can_t **)&jarg1; 
   result = (uint8_t *) ((arg1)->data);
   
-  // in java_wrap and can use to cast output properly
+  jresult = (*jenv)->NewByteArray(jenv, (int) arg1->length);
+  (*jenv)->SetByteArrayRegion(jenv, jresult, 0, (int) arg1->length, result);
   
   return jresult;
 }
@@ -4592,7 +4600,7 @@ SWIGEXPORT jobject JNICALL Java_icsneojavaJNI_neomessage_1eth_1t_1timestampReser
 }
 
 
-SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1eth_1t_1data_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, char * jarg2) {
+SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1eth_1t_1data_1set(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jbyteArray jarg2) {
   neomessage_eth_t *arg1 = (neomessage_eth_t *) 0 ;
   uint8_t *arg2 = (uint8_t *) 0 ;
   
@@ -4600,13 +4608,16 @@ SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1eth_1t_1data_1set(JNIEnv 
   (void)jcls;
   (void)jarg1_;
   arg1 = *(neomessage_eth_t **)&jarg1; 
-  arg2 = *(uint8_t **)&jarg2; 
+  
+  bool isCopy; // TODO free if true
+  arg2 = (*jenv)->GetByteArrayElements(jenv, jarg2, &isCopy);
+  
   if (arg1) (arg1)->data = (uint8_t const *)arg2;
 }
 
 
-SWIGEXPORT char * JNICALL Java_icsneojavaJNI_neomessage_1eth_1t_1data_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
-  char * jresult = 0 ;
+SWIGEXPORT jbyteArray JNICALL Java_icsneojavaJNI_neomessage_1eth_1t_1data_1get(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_) {
+  jbyteArray jresult = 0 ;
   neomessage_eth_t *arg1 = (neomessage_eth_t *) 0 ;
   uint8_t *result = 0 ;
   
@@ -4616,7 +4627,8 @@ SWIGEXPORT char * JNICALL Java_icsneojavaJNI_neomessage_1eth_1t_1data_1get(JNIEn
   arg1 = *(neomessage_eth_t **)&jarg1; 
   result = (uint8_t *) ((arg1)->data);
   
-  // in java_wrap and can use to cast output properly
+  jresult = (*jenv)->NewByteArray(jenv, (int) arg1->length);
+  (*jenv)->SetByteArrayRegion(jenv, jresult, 0, (int) arg1->length, result);
   
   return jresult;
 }
