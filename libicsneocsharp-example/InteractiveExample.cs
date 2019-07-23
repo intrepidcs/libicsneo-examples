@@ -54,6 +54,7 @@ namespace libicsneocsharp_example {
             for(int i = 0; i < numDevices; i++) {
                 devices.Add(icsneocsharp.neodevice_t_array_getitem(newDevices, i));
             }
+            icsneocsharp.delete_neodevice_t_array(newDevices);
             return Marshal.PtrToStructure<uint>(SWIGTYPE_p_size_t.getCPtr(count).Handle);
         }
 
@@ -101,6 +102,7 @@ namespace libicsneocsharp_example {
             } else {
                 System.Console.WriteLine("Failed to get API events!");
             }
+            icsneocsharp.delete_neoevent_t_array(events);
         }
 
         void PrintDeviceEvents(neodevice_t device) {
@@ -124,6 +126,7 @@ namespace libicsneocsharp_example {
             } else {
                 System.Console.WriteLine("Failed to get API events!");
             }
+            icsneocsharp.delete_neoevent_t_array(events);
         }
 
         private char GetCharInput(List<char> allowed) {
@@ -389,6 +392,7 @@ namespace libicsneocsharp_example {
                     if(!icsneocsharp.icsneo_getMessages(selectedDevice, msgs, msgCountPtr, 0)) {
                         System.Console.WriteLine("Failed to get messages for " + description.ToString() + "!\n");
                         PrintLastError();
+                        icsneocsharp.delete_neomessage_t_array(msgs);
                         System.Console.WriteLine();
                         break;
                     }
@@ -414,6 +418,7 @@ namespace libicsneocsharp_example {
                                 System.Console.WriteLine("\tMessage on netid " + msg.netid + " with length " + msg.length);
                         }
                     }
+                    icsneocsharp.delete_neomessage_t_array(msgs);
                     break;
                 }
                 // Send message
