@@ -52,6 +52,8 @@ public class InteractiveExample {
         for(int i = 0; i < numDevices; i++) {
             devices.add(icsneojava.neodevice_t_array_getitem(newDevices, i));
         }
+
+        icsneojava.delete_neodevice_t_array(newDevices);
         return count[0];
     }
 
@@ -96,6 +98,7 @@ public class InteractiveExample {
         } else {
             System.out.println("Failed to get API events!");
         }
+        icsneojava.delete_neoevent_t_array(events);
     }
 
     private void printDeviceEvents(neodevice_t device) {
@@ -116,6 +119,7 @@ public class InteractiveExample {
         } else {
             System.out.println("Failed to get API events!");
         }
+        icsneojava.delete_neoevent_t_array(events);
     }
 
     private char getCharInput(char[] allowed) {
@@ -370,6 +374,7 @@ public class InteractiveExample {
 
                     if(!icsneojava.icsneo_getMessages(selectedDevice, msgs, msgCount, BigInteger.ZERO)) {
                         System.out.println("Failed to get messages for " + description + "!\n");
+                        icsneojava.delete_neomessage_t_array(msgs);
                         printLastError();
                         System.out.println();
                         break;
@@ -395,6 +400,7 @@ public class InteractiveExample {
                                 System.out.println("\tMessage on netid " + msg.getNetid() + " with length " + msg.getLength());
                         }
                     }
+                    icsneojava.delete_neomessage_t_array(msgs);
                     break;
                 }
                 // Send message
