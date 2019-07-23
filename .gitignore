@@ -7,6 +7,7 @@ Thumbs.db
 *.iml
 .idea
 CMakeSettings.json
+libicsneoc-example/Debug
 libicsneocsharp-example/obj
 libicsneocsharp-example/build
 libicsneocsharp-example/bin/
