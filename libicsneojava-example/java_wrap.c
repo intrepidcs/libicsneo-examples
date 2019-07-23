@@ -3818,7 +3818,7 @@ SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1t_1data_1set(JNIEnv *jenv
   (void)jarg1_;
   arg1 = *(neomessage_t **)&jarg1; 
   
-  bool isCopy; // TODO free if true
+  bool isCopy;
   arg2 = (*jenv)->GetByteArrayElements(jenv, jarg2, &isCopy);
   
   if (arg1) (arg1)->data = (uint8_t const *)arg2;
@@ -4205,7 +4205,7 @@ SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1can_1t_1data_1set(JNIEnv 
   (void)jarg1_;
   arg1 = *(neomessage_can_t **)&jarg1; 
   
-  bool isCopy; // TODO free if true
+  bool isCopy;
   arg2 = (*jenv)->GetByteArrayElements(jenv, jarg2, &isCopy);
   
   if (arg1) (arg1)->data = (uint8_t const *)arg2;
@@ -4609,7 +4609,7 @@ SWIGEXPORT void JNICALL Java_icsneojavaJNI_neomessage_1eth_1t_1data_1set(JNIEnv 
   (void)jarg1_;
   arg1 = *(neomessage_eth_t **)&jarg1; 
   
-  bool isCopy; // TODO free if true
+  bool isCopy;
   arg2 = (*jenv)->GetByteArrayElements(jenv, jarg2, &isCopy);
   
   if (arg1) (arg1)->data = (uint8_t const *)arg2;

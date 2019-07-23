@@ -6,7 +6,6 @@
 %include <various.i>
 %include <java.i>
 %include <arrays_java.i>
-%include <javahead.swg>
 
 #define DLLExport
 
@@ -25,25 +24,14 @@
 %}
 
 %typemap(in) uint8_t const *data %{
-    bool isCopy; // TODO free if true
+    bool isCopy;
     arg2 = (*jenv)->GetByteArrayElements(jenv, jarg2, &isCopy);
 %}
-
-
-/*
-%typemap(out) uint8_t const *data %{
-    $result = $1;
-%}
-
-%typemap(javaout) uint8_t const *data {
-    byte[] ret = new byte[(int) this.getLength()];
-    return $jnicall;
-}
-*/
 
 %typemap(jni) char *str "jobject"
 %typemap(jtype) char *str "StringBuffer"
 %typemap(jstype) char *str "StringBuffer"
+
 /* How to convert Java(JNI) type to requested C type */
 %typemap(in) char *str {
 
@@ -88,6 +76,7 @@
     $1 = NULL;
   }
 }
+
 /* Prevent the default freearg typemap from being used */
 %typemap(freearg) char *str ""
 
