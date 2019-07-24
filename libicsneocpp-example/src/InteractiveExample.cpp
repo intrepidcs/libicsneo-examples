@@ -375,19 +375,6 @@ int main() {
 				break;
 			}
 
-			// Alternative way to get messages using default options (no limit on msg count and no timeout)
-			// If there are no messages, getMessages() will return a vector with a single nullptr element.
-			// Important to check both if the returned vector has size 1 and contains a nullptr for error checking purposes.
-			/*
-			auto ret = selectedDevice->getMessages();
-			if(ret.size() == 1 && ret.at(0) == nullptr) {
-				std::cout << "Failed to get messages for " << selectedDevice->describe() << "!" << std::endl << std::endl;
-				std::cout << icsneo::GetLastError() << std::endl;;
-				std::cout << std::endl;
-				break;
-			}
-			*/
-
 			if(msgs.size() == 1) {
 				std::cout << "1 message received from " << selectedDevice->describe() << "!" << std::endl;
 			} else {
