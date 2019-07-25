@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-project(libicsneocpp-example VERSION 0.1.0)
+project(libicsneocpp-example VERSION 0.2.0)
 
 set(CMAKE_CXX_STANDARD 11)
 

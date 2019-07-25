@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-project(icsneojava VERSION 0.1.0)
+project(icsneojava VERSION 0.2.0)
 
 find_package(SWIG REQUIRED)
 find_package(Java REQUIRED)
