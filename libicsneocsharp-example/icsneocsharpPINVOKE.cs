@@ -265,7 +265,7 @@ class icsneocsharpPINVOKE {
   public static extern bool icsneo_settingsApplyDefaultsTemporary(global::System.Runtime.InteropServices.HandleRef jarg1);
 
   [global::System.Runtime.InteropServices.DllImport("libicsneocsharp.dll", EntryPoint="CSharp_icsneo_settingsReadStructure")]
-  public static extern uint icsneo_settingsReadStructure(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, uint jarg3);
+  public static extern int icsneo_settingsReadStructure(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, uint jarg3);
 
   [global::System.Runtime.InteropServices.DllImport("libicsneocsharp.dll", EntryPoint="CSharp_icsneo_settingsApplyStructure")]
   public static extern bool icsneo_settingsApplyStructure(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, uint jarg3);
@@ -290,6 +290,9 @@ class icsneocsharpPINVOKE {
 
   [global::System.Runtime.InteropServices.DllImport("libicsneocsharp.dll", EntryPoint="CSharp_icsneo_transmitMessages")]
   public static extern bool icsneo_transmitMessages(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, uint jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("libicsneocsharp.dll", EntryPoint="CSharp_icsneo_setWriteBlocks")]
+  public static extern void icsneo_setWriteBlocks(global::System.Runtime.InteropServices.HandleRef jarg1, bool jarg2);
 
   [global::System.Runtime.InteropServices.DllImport("libicsneocsharp.dll", EntryPoint="CSharp_icsneo_describeDevice")]
   public static extern bool icsneo_describeDevice(global::System.Runtime.InteropServices.HandleRef jarg1, System.Text.StringBuilder jarg2, ref int jarg3);

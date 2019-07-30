@@ -32,7 +32,7 @@ public class icsneojavaJNI {
   public final static native boolean icsneo_settingsApplyTemporary(long jarg1, neodevice_t jarg1_);
   public final static native boolean icsneo_settingsApplyDefaults(long jarg1, neodevice_t jarg1_);
   public final static native boolean icsneo_settingsApplyDefaultsTemporary(long jarg1, neodevice_t jarg1_);
-  public final static native long icsneo_settingsReadStructure(long jarg1, neodevice_t jarg1_, long jarg2, long jarg3);
+  public final static native int icsneo_settingsReadStructure(long jarg1, neodevice_t jarg1_, long jarg2, long jarg3);
   public final static native boolean icsneo_settingsApplyStructure(long jarg1, neodevice_t jarg1_, long jarg2, long jarg3);
   public final static native boolean icsneo_settingsApplyStructureTemporary(long jarg1, neodevice_t jarg1_, long jarg2, long jarg3);
   public final static native long icsneo_getBaudrate(long jarg1, neodevice_t jarg1_, int jarg2);
@@ -41,6 +41,7 @@ public class icsneojavaJNI {
   public final static native boolean icsneo_setFDBaudrate(long jarg1, neodevice_t jarg1_, int jarg2, long jarg3);
   public final static native boolean icsneo_transmit(long jarg1, neodevice_t jarg1_, long jarg2, neomessage_t jarg2_);
   public final static native boolean icsneo_transmitMessages(long jarg1, neodevice_t jarg1_, long jarg2, neomessage_t jarg2_, long jarg3);
+  public final static native void icsneo_setWriteBlocks(long jarg1, neodevice_t jarg1_, boolean jarg2);
   public final static native boolean icsneo_describeDevice(long jarg1, neodevice_t jarg1_, StringBuffer jarg2, int[] jarg3);
   public final static native long icsneo_getVersion();
   public final static native boolean icsneo_getEvents(long jarg1, neoevent_t jarg1_, int[] jarg2);

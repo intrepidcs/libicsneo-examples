@@ -1470,12 +1470,12 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1settingsApplyDefaultsTemp
 }
 
 
-SWIGEXPORT jlong JNICALL Java_icsneojavaJNI_icsneo_1settingsReadStructure(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2, jlong jarg3) {
-  jlong jresult = 0 ;
+SWIGEXPORT jint JNICALL Java_icsneojavaJNI_icsneo_1settingsReadStructure(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jlong jarg2, jlong jarg3) {
+  jint jresult = 0 ;
   neodevice_t *arg1 = (neodevice_t *) 0 ;
   void *arg2 = (void *) 0 ;
   size_t arg3 ;
-  size_t result;
+  int result;
   
   (void)jenv;
   (void)jcls;
@@ -1483,8 +1483,8 @@ SWIGEXPORT jlong JNICALL Java_icsneojavaJNI_icsneo_1settingsReadStructure(JNIEnv
   arg1 = *(neodevice_t **)&jarg1; 
   arg2 = *(void **)&jarg2; 
   arg3 = (size_t)jarg3; 
-  result = icsneo_settingsReadStructure((neodevice_t const *)arg1,arg2,arg3);
-  jresult = (jlong)result; 
+  result = (int)icsneo_settingsReadStructure((neodevice_t const *)arg1,arg2,arg3);
+  jresult = (jint)result; 
   return jresult;
 }
 
@@ -1634,6 +1634,19 @@ SWIGEXPORT jboolean JNICALL Java_icsneojavaJNI_icsneo_1transmitMessages(JNIEnv *
   result = (bool)icsneo_transmitMessages((neodevice_t const *)arg1,(neomessage_t const *)arg2,arg3);
   jresult = (jboolean)result; 
   return jresult;
+}
+
+
+SWIGEXPORT void JNICALL Java_icsneojavaJNI_icsneo_1setWriteBlocks(JNIEnv *jenv, jclass jcls, jlong jarg1, jobject jarg1_, jboolean jarg2) {
+  neodevice_t *arg1 = (neodevice_t *) 0 ;
+  bool arg2 ;
+  
+  (void)jenv;
+  (void)jcls;
+  (void)jarg1_;
+  arg1 = *(neodevice_t **)&jarg1; 
+  arg2 = jarg2 ? true : false; 
+  icsneo_setWriteBlocks((neodevice_t const *)arg1,arg2);
 }
 
 

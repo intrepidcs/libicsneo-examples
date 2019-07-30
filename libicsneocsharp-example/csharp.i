@@ -40,6 +40,9 @@
 
 %apply int *INOUT {size_t *};
 
+%ignore icsneo_addMessageCallback;
+%ignore icsneo_removeMessageCallback;
+
 %include "icsneo/icsneoc.h"
 %include "icsneo/device/neodevice.h"
 %include "icsneo/communication/message/neomessage.h"

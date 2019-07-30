@@ -649,18 +649,18 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_settingsApplyDefaultsTemporary
 }
 
 
-SWIGEXPORT unsigned long SWIGSTDCALL CSharp_icsneo_settingsReadStructure(void * jarg1, void * jarg2, unsigned long jarg3) {
-  unsigned long jresult ;
+SWIGEXPORT int SWIGSTDCALL CSharp_icsneo_settingsReadStructure(void * jarg1, void * jarg2, unsigned long jarg3) {
+  int jresult ;
   neodevice_t *arg1 = (neodevice_t *) 0 ;
   void *arg2 = (void *) 0 ;
   size_t arg3 ;
-  size_t result;
+  int result;
   
   arg1 = (neodevice_t *)jarg1; 
   arg2 = (void *)jarg2; 
   arg3 = (size_t)jarg3; 
-  result = icsneo_settingsReadStructure((neodevice_t const *)arg1,arg2,arg3);
-  jresult = (unsigned long)result; 
+  result = (int)icsneo_settingsReadStructure((neodevice_t const *)arg1,arg2,arg3);
+  jresult = result; 
   return jresult;
 }
 
@@ -784,6 +784,16 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_icsneo_transmitMessages(void * jarg1,
   result = (bool)icsneo_transmitMessages((neodevice_t const *)arg1,(neomessage_t const *)arg2,arg3);
   jresult = result; 
   return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_icsneo_setWriteBlocks(void * jarg1, unsigned int jarg2) {
+  neodevice_t *arg1 = (neodevice_t *) 0 ;
+  bool arg2 ;
+  
+  arg1 = (neodevice_t *)jarg1; 
+  arg2 = jarg2 ? true : false; 
+  icsneo_setWriteBlocks((neodevice_t const *)arg1,arg2);
 }
 
 

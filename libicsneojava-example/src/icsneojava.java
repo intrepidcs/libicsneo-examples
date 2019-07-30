@@ -104,7 +104,7 @@ public class icsneojava implements icsneojavaConstants {
     return icsneojavaJNI.icsneo_settingsApplyDefaultsTemporary(neodevice_t.getCPtr(device), device);
   }
 
-  public static long icsneo_settingsReadStructure(neodevice_t device, SWIGTYPE_p_void structure, long structureSize) {
+  public static int icsneo_settingsReadStructure(neodevice_t device, SWIGTYPE_p_void structure, long structureSize) {
     return icsneojavaJNI.icsneo_settingsReadStructure(neodevice_t.getCPtr(device), device, SWIGTYPE_p_void.getCPtr(structure), structureSize);
   }
 
@@ -138,6 +138,10 @@ public class icsneojava implements icsneojavaConstants {
 
   public static boolean icsneo_transmitMessages(neodevice_t device, neomessage_t messages, long count) {
     return icsneojavaJNI.icsneo_transmitMessages(neodevice_t.getCPtr(device), device, neomessage_t.getCPtr(messages), messages, count);
+  }
+
+  public static void icsneo_setWriteBlocks(neodevice_t device, boolean blocks) {
+    icsneojavaJNI.icsneo_setWriteBlocks(neodevice_t.getCPtr(device), device, blocks);
   }
 
   public static boolean icsneo_describeDevice(neodevice_t device, StringBuffer str, int[] maxLength) {

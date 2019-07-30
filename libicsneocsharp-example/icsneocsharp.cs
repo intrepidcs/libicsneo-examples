@@ -128,8 +128,8 @@ public class icsneocsharp {
     return ret;
   }
 
-  public static uint icsneo_settingsReadStructure(neodevice_t device, SWIGTYPE_p_void structure, uint structureSize) {
-    uint ret = icsneocsharpPINVOKE.icsneo_settingsReadStructure(neodevice_t.getCPtr(device), SWIGTYPE_p_void.getCPtr(structure), structureSize);
+  public static int icsneo_settingsReadStructure(neodevice_t device, SWIGTYPE_p_void structure, uint structureSize) {
+    int ret = icsneocsharpPINVOKE.icsneo_settingsReadStructure(neodevice_t.getCPtr(device), SWIGTYPE_p_void.getCPtr(structure), structureSize);
     return ret;
   }
 
@@ -171,6 +171,10 @@ public class icsneocsharp {
   public static bool icsneo_transmitMessages(neodevice_t device, neomessage_t messages, uint count) {
     bool ret = icsneocsharpPINVOKE.icsneo_transmitMessages(neodevice_t.getCPtr(device), neomessage_t.getCPtr(messages), count);
     return ret;
+  }
+
+  public static void icsneo_setWriteBlocks(neodevice_t device, bool blocks) {
+    icsneocsharpPINVOKE.icsneo_setWriteBlocks(neodevice_t.getCPtr(device), blocks);
   }
 
   public static bool icsneo_describeDevice(neodevice_t device, System.Text.StringBuilder str, ref int maxLength) {
