@@ -2,12 +2,14 @@
 #include <string>
 #include <ctype.h>
 #include <vector>
+#include <map>
 
 // Include icsneo/icsneocpp.h to access library functions
 #include "icsneo/icsneocpp.h"
 
 size_t msgLimit = 50000;
 std::vector<std::shared_ptr<icsneo::Device>> devices;
+std::map<std::shared_ptr<icsneo::Device>, std::vector<int>> callbacks;
 std::shared_ptr<icsneo::Device> selectedDevice;
 
 /**
@@ -44,6 +46,7 @@ void printMainMenu() {
 	std::cout << "H - Get events" << std::endl;
 	std::cout << "I - Set HS CAN to 250K" << std::endl;
 	std::cout << "J - Set LSFT CAN to 250K" << std::endl;
+	std::cout << "K - Add/Remove a message callback" << std::endl;
 	std::cout << "X - Exit" << std::endl;
 }
 
@@ -188,7 +191,7 @@ int main() {
 	while(true) {
 		printMainMenu();
 		std::cout << std::endl;
-		char input = getCharInput(std::vector<char> {'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g', 'H', 'h', 'I', 'i', 'J', 'j', 'X', 'x'});
+		char input = getCharInput(std::vector<char> {'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', 'G', 'g', 'H', 'h', 'I', 'i', 'J', 'j', 'K', 'k', 'X', 'x'});
 		std::cout << std::endl;
 
 		switch(input) {
@@ -203,6 +206,11 @@ int main() {
 		case 'b':
 		{
 			devices = icsneo::FindAllDevices();
+
+			for(auto device : devices) {
+				callbacks.insert({device, std::vector<int>()});
+			}
+
 			if(devices.size() == 1) {
 				std::cout << "1 device found!" << std::endl;
 			} else {
@@ -505,6 +513,73 @@ int main() {
 				std::cout << icsneo::GetLastError() << std::endl;;
 			}
 			std::cout << std::endl;
+		}
+		break;
+		// Add/Remove a message callback
+		case 'K':
+		case 'k':
+		{
+			// Select a device and get its description
+			if(devices.size() == 0) {
+				std::cout << "No devices found! Please scan for new devices." << std::endl << std::endl;
+				break;
+			}
+			selectedDevice = selectDevice();
+
+			std::cout << "Would you like to add or remove a message callback for " << selectedDevice->describe() << "?" << std::endl;
+			std::cout << "[1] Add" << std::endl << "[2] Remove" << std::endl <<  "[3] Cancel" << std::endl << std::endl;
+			char selection = getCharInput(std::vector<char> {'1', '2', '3'});
+			std::cout << std::endl;
+
+			switch(selection) {
+			case '1':
+			{
+				// Define a basic callback and add it
+				int callbackID = selectedDevice->addMessageCallback(icsneo::MessageCallback([](std::shared_ptr<icsneo::Message> msg){ 
+					std::cout << "Message callback being called" << std::endl;
+				}));
+
+				if(callbackID != -1) {
+					std::cout << "Successfully added message callback to " << selectedDevice->describe() << "!" << std::endl;
+					callbacks.find(selectedDevice)->second.push_back(callbackID);
+				} else {
+					std::cout << "Failed to add message callback to " << selectedDevice->describe() << "!" << std::endl << std::endl;
+					std::cout << icsneo::GetLastError() << std::endl;;
+				}
+			}
+			break;
+			case '2':
+			{
+				if(callbacks.find(selectedDevice)->second.size() == 0) {
+					std::cout << "No callbacks found for " << selectedDevice->describe() << "!" << std::endl;
+					break;
+				} else {
+					std::vector<char> allowed;
+					
+					std::cout << "Which id would you like to remove?" << std::endl;
+					for(int id : callbacks.find(selectedDevice)->second) {
+						allowed.push_back(static_cast<char>(id) + '0');
+						std::cout << "[" << id << "]" << std::endl;
+					}
+					std::cout << std::endl;
+
+
+					int removeID = getCharInput(allowed) - '0';
+					std::cout << std::endl;
+
+					if(selectedDevice->removeMessageCallback(removeID)) {
+						std::cout << "Successfully removed callback id " << removeID << " from " << selectedDevice->describe() << "!" << std::endl;
+					} else {
+						std::cout << "Failed to remove message callback id " << removeID << " from " << selectedDevice->describe() << "!" << std::endl << std::endl;
+						std::cout << icsneo::GetLastError() << std::endl;;
+					}					
+				}
+			}
+			break;
+			default:
+				std::cout << "Canceling!" << std::endl << std::endl;
+				break;
+			}
 		}
 		break;
 		// Exit
