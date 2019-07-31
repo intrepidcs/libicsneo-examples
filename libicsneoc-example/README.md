@@ -9,7 +9,7 @@ This will create a copy of the repository on your local machine.
 Run:
 
 ```shell
-git clone https://github.com/intrepidcs/libicsneo-examples --recursive
+git clone https://github.com/intrepidcs/libicsneo-examples -b v0.2.0-dev --recursive
 ```
 
 Alternatively, if you cloned without the `--recursive` flag, you must enter the `libicsneo-examples` folder and run the following:
@@ -65,13 +65,14 @@ First, we are going to build the icsneoc library into a .so file that we can lat
 
 Although the example program will build without successfully completing the steps above, it will exit immediately upon running due to a failure to load any library functions.
 
-1. Change directories to `libicsneo-examples/libicsneoc-example/` and create a build directory by running `mkdir -p build`
-2. Enter the build directory with `cd build`
-3. Run `cmake ..` to generate your Makefile.
+1. Change directories to `libicsneo-examples/libicsneoc-example`
+2. Create a build directory by running `mkdir -p build`
+3. Enter the build directory with `cd build`
+4. Run `cmake ..` to generate your Makefile.
     * Hint! Running `cmake -DCMAKE_BUILD_TYPE=Debug ..` will generate the proper scripts to build debug, and `cmake -DCMAKE_BUILD_TYPE=Release ..` will generate the proper scripts to build with all optimizations on.
-4. Run `make` to build the library.
+5. Run `make` to build the library.
     * Hint! Speed up your build by using multiple processors! Use `make -j#` where `#` is the number of cores/threads your system has plus one. For instance, on a standard 8 thread Intel i7, you might use `-j9` for an ~8x speedup.
-5. Run `./libicsneoc-example` to run the example.
+6. Run `sudo ./libicsneoc-example` to run the example.
 
 ## macOS
 
