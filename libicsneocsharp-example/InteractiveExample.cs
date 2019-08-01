@@ -161,7 +161,7 @@ namespace libicsneocsharp_example {
 
         public void Run() {
             neoversion_t version = icsneocsharp.icsneo_getVersion();
-            System.Console.WriteLine("ICS libicsneocsharp.dll version " + version.major + "." + version.minor + "." + version.patch);
+            System.Console.WriteLine("ICS icsneocsharp.dll version " + version.major + "." + version.minor + "." + version.patch);
             System.Console.WriteLine();
 
             while(true) {

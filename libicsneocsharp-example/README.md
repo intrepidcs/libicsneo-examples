@@ -36,7 +36,7 @@ First, we are going to build the icsneoc library into a .dll file that is used b
 6. Visual Studio will generate the `icsneoc.dll` file, which can then be found by selecting `Project->Cmake Cache (x64-Debug Only)->Open in Explorer`. If the file cannot be found, search in `libicsneo-examples/third-party/libicsneo/out/build/x64-Debug` and double-check that the build succeeded in step 5.
 7. Move the `icsneoc.dll` file to the `/C/Windows/System32` folder.
 
-#### libicsneocsharp
+#### icsneocsharp
 
 Next, we are going to build the wrapper functions into a .dll file that is used to access the library functions in C#.
 
@@ -44,14 +44,14 @@ Next, we are going to build the wrapper functions into a .dll file that is used 
 2. Enter the build directory with `cd build`
 3. Run `cmake ..`
 4. Run `cmake --build .`
-5. The `libicsneocsharp.dll` file will be generated in `libicsneo-examples/libicsneocsharp-example/build/Debug`
-6. Move the `libicsneocsharp.dll` file to the `/C/Windows/System32` folder.
+5. The `icsneocsharp.dll` file will be generated in `libicsneo-examples/libicsneocsharp-example/build/Debug`
+6. Move the `icsneocsharp.dll` file to the `/C/Windows/System32` folder.
 
 ### Building the example program
 
 1. Choose `File->Open->Project/Solution...`
 2. Navigate to `libicsneo-examples/libicsneocsharp-example` and select the `libicsneocsharp-example.sln` there.
 3. Visual Studio will process the project.
-4. Select `Build->Rebuild All`
+4. Select `Build->Rebuild Solution`
 5. Click on the dropdown arrow attached to the green play button (labelled "Select Startup Item") and select `libicsneocsharp-example`
 6. Click on the green play button to run the example.

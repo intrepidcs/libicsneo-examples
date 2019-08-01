@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-project(libicsneocsharp VERSION 0.2.0)
+project(icsneocsharp VERSION 0.2.0)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -22,5 +22,5 @@ endif()
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../third-party/libicsneo ${CMAKE_CURRENT_BINARY_DIR}/third-party/libicsneo)
 
-add_library(libicsneocsharp SHARED ${CMAKE_CURRENT_SOURCE_DIR}/csharp_wrap.c)
-target_link_libraries(libicsneocsharp icsneoc)
+add_library(icsneocsharp SHARED ${CMAKE_CURRENT_SOURCE_DIR}/csharp_wrap.c)
+target_link_libraries(icsneocsharp icsneoc)
