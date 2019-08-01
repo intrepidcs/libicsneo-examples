@@ -15,7 +15,7 @@ git clone https://github.com/intrepidcs/libicsneo-examples --recursive
 Alternatively, if you cloned without the `--recursive flag`, you must enter the `libicsneo-examples` folder and run the following:
 
 ```shell
-git submodule update --recursive --init 
+git submodule update --recursive --init
 ```
 
 If you haven't done this, `third-party/libicsneo` will be empty and you won't be able to build!
@@ -40,7 +40,7 @@ If you haven't done this, `third-party/libicsneo` will be empty and you won't be
 5. Run `make libicsneocpp-interactive-example` to build.
     * Hint! Speed up your build by using multiple processors! Use `make libicsneocpp-interactive-example -j#` where `#` is the number of cores/threads your system has plus one. For instance, on a standard 8 thread Intel i7, you might use `-j9` for an ~8x speedup.
 6. Now run `sudo ./libicsneocpp-interactive-example` to run the example.
-    * Hint! In order to run without sudo, you will need to set up the udev rules. Instructions for doing so are coming soon.
+    * Hint! In order to run without sudo, you will need to set up the udev rules. Copy `libicsneo-examples/third-party/libicsneo/99-intrepidcs.rules` to `/etc/udev/rules.d`, then run `udevadm control --reload-rules && udevadm trigger` afterwards. While the program will still run without setting up these rules, it will fail to open any devices.
 7. If you wish to run the simple example instead, replace any instances of "interactive" with "simple" in steps 5 and 6.
 
 ### macOS

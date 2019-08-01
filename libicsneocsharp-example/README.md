@@ -15,7 +15,7 @@ git clone https://github.com/intrepidcs/libicsneo-examples --recursive
 Alternatively, if you cloned without the `--recursive` flag, you must enter the `libicsneo-examples` folder and run the following:
 
 ```shell
-git submodule update --recursive --init 
+git submodule update --recursive --init
 ```
 
 If you haven't done this, `third-party/libicsneo` will be empty and you won't be able to build!

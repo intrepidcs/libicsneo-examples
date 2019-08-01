@@ -15,7 +15,7 @@ git clone https://github.com/intrepidcs/libicsneo-examples -b v0.2.0-dev --recur
 Alternatively, if you cloned without the `--recursive` flag, you must enter the `libicsneo-examples` folder and run the following:
 
 ```shell
-git submodule update --recursive --init 
+git submodule update --recursive --init
 ```
 
 If you haven't done this, `third-party/libicsneo` will be empty and you won't be able to build!
@@ -59,7 +59,7 @@ First, we are going to build the icsneoc library into a .so file that we can lat
     * Hint! Running `cmake -DCMAKE_BUILD_TYPE=Debug ..` will generate the proper scripts to build debug, and `cmake -DCMAKE_BUILD_TYPE=Release ..` will generate the proper scripts to build with all optimizations on.
 5. Run `make` to build the library.
     * Hint! Speed up your build by using multiple processors! Use `make -j#` where `#` is the number of cores/threads your system has plus one. For instance, on a standard 8 thread Intel i7, you might use `-j9` for an ~8x speedup.
-6. Run `sudo cp libicsneoc.so /usr/lib` so that it can be found via the default ubuntu .so search path. For more information, see http://man7.org/linux/man-pages/man8/ld.so.8.html.
+6. Run `sudo cp libicsneoc.so /usr/lib` so that it can be found via the default ubuntu .so search path. For more information, see the [ld.so.8 man page](http://man7.org/linux/man-pages/man8/ld.so.8.html).
 
 ### Building the example program
 
@@ -73,6 +73,7 @@ Although the example program will build without successfully completing the step
 5. Run `make` to build the library.
     * Hint! Speed up your build by using multiple processors! Use `make -j#` where `#` is the number of cores/threads your system has plus one. For instance, on a standard 8 thread Intel i7, you might use `-j9` for an ~8x speedup.
 6. Run `sudo ./libicsneoc-example` to run the example.
+    * Hint! In order to run without sudo, you will need to set up the udev rules. Copy `libicsneo-examples/third-party/libicsneo/99-intrepidcs.rules` to `/etc/udev/rules.d`, then run `udevadm control --reload-rules && udevadm trigger` afterwards. While the program will still run without setting up these rules, it will fail to open any devices.
 
 ## macOS
 
