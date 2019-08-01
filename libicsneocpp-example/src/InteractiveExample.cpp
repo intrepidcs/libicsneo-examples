@@ -444,6 +444,7 @@ int main() {
 				std::cout << icsneo::GetLastError() << std::endl;;
 			}
 			
+			/** Example of CAN FD
 			std::cout << "Transmitting an extended CAN FD frame... " << std::endl;
 			auto txMessage = std::make_shared<icsneo::CANMessage>();
 			txMessage->network = icsneo::Network::NetID::HSCAN;
@@ -460,6 +461,7 @@ int main() {
 				std::cout << "Failed to transmit extended CAN FD frame to " << selectedDevice->describe() << "!" << std::endl << std::endl;
 				std::cout << icsneo::GetLastError() << std::endl;;
 			}
+			*/
 
 			std::cout << std::endl;
 		}
@@ -534,9 +536,28 @@ int main() {
 			switch(selection) {
 			case '1':
 			{
-				// Define a basic callback and add it
+				// Shameless copy-paste from get messages above, demonstrating a callback
 				int callbackID = selectedDevice->addMessageCallback(icsneo::MessageCallback([](std::shared_ptr<icsneo::Message> msg){ 
-					std::cout << "Message callback being called" << std::endl;
+					switch(msg->network.getType()) {
+					case icsneo::Network::Type::CAN:
+					{
+						// A message of type CAN is guaranteed to be a CANMessage, so we can static cast safely
+						auto canMsg = std::static_pointer_cast<icsneo::CANMessage>(msg);
+						std::cout << "\t0x" << std::setfill('0') << std::setw(3) << std::hex << (int) canMsg->arbid << " [" << canMsg->data.size() << "] " << std::dec;
+						
+						for(auto data : canMsg->data) {
+							std::cout << std::setfill('0') << std::setw(2) << std::hex << (int) data << " " << std::dec;
+						}
+
+						std::cout << canMsg->timestamp << std::endl;
+						break;
+					}
+					default:
+						if(msg->network.getNetID() != icsneo::Network::NetID::Device) {
+							std::cout << "\tMessage on netid " << msg->network.GetNetIDString(msg->network.getNetID()) << " with length " << msg->data.size() << std::endl;
+						}
+						break;
+					}
 				}));
 
 				if(callbackID != -1) {
