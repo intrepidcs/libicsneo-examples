@@ -42,6 +42,8 @@
 
 %ignore icsneo_addMessageCallback;
 %ignore icsneo_removeMessageCallback;
+%ignore icsneo_addEventCallback;
+%ignore icsneo_removeEventCallback;
 
 %include "icsneo/icsneoc.h"
 %include "icsneo/device/neodevice.h"
