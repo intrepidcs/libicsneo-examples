@@ -220,6 +220,11 @@ int main() {
 		return ret;
 	}
 
+	if(ret == 3) {
+		printf("The library is missing functions!\n");
+		return ret;
+	}
+
 	neoversion_t ver = icsneo_getVersion();
 	printf("ICS icsneoc.dll version %u.%u.%u\n\n", ver.major, ver.minor, ver.patch);
 
