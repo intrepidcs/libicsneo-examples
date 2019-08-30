@@ -29,13 +29,14 @@ to get all dependencies. If you haven't done this, `third-party/libicsneo` will 
 ### Ubuntu 18.04 LTS
 
 1. Install dependencies with `sudo apt install build-essential ninja cmake libusb-1.0-0-dev`
-2. Create a build directory by running `mkdir -p build` within your clone
-3. Enter the build directory with `cd build`
-4. Run `cmake ..` to generate your Makefile
+2. Install PCAP file `sudo apt-get install libpcap-dev`
+3. Create a build directory by running `mkdir -p build` within your clone
+4. Enter the build directory with `cd build`
+5. Run `cmake ..` to generate your Makefile
 	- Hint! Running `cmake -DCMAKE_BUILD_TYPE=Debug ..` will generate the proper scripts to build debug, and `cmake -DCMAKE_BUILD_TYPE=Release ..` will generate the proper scripts to build with all optimizations on
-5. Run `make libicsneocpp-example` to build
+6. Run `make libicsneocpp-example` to build
 	- Hint! Speed up your build by using multiple processors! Use `make libicsneocpp-example -j#` where `#` is the number of cores/threads your system has plus one. For instance, on a standard 8 thread Intel i7, you might use `-j9` for an ~8x speedup.
-6. Now run `sudo ./libicsneocpp-example` to run the example
+7. Now run `sudo ./libicsneocpp-example` to run the example
 	- Hint! In order to run without sudo, you will need to set up the udev rules. Instructions for doing so are coming soon.
 
 ### macOS
