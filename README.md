@@ -1,7 +1,3 @@
 # libicsneo Examples
 
-See the `README.md` documents within each example for more information.
-
-[C++ Example](libicsneocpp-example/)
-
-[C Example](libicsneoc-example/)
+> :warning: **The examples have moved!** They are now included in the [libicsneo](https://github.com/intrepidcs/libicsneo/tree/master/examples) repository.
